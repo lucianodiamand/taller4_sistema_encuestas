@@ -13,7 +13,7 @@ El sistema se compone de:
 
 La empresa encuestadora necesita generar diferentes encuestas adaptadas a las necesidades de cada cliente. Estas encuestas son respondidas por usuarios anónimos y cada encuestado podrá completarlas una única vez.
 
-El acceso a la encuesta se realiza a través de un *enlace de un solo uso* proporcionado por un encuestador. Dicho enlace posee una *fecha y hora de expiración. Una vez respondida la encuesta, la respuesta vuelve al encuestador, quien podrá **aprobarla o rechazarla* en caso de detectar contenido no válido o spam. Si la encuesta no es respondida dentro del plazo establecido, el sistema *notificará* al encuestador correspondiente.
+El acceso a la encuesta se realiza a través de un *enlace de un solo uso* proporcionado por un encuestador. Una vez respondida la encuesta, la respuesta vuelve al encuestador, quien podrá **aprobarla o rechazarla* en caso de detectar contenido no válido o spam.
 
 ## 3. Objetivo
 
@@ -28,13 +28,13 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 - Gestiona clientes (empresas/personas para quienes se crean las encuestas).
 - Tiene visibilidad total sobre todas las encuestas del sistema.
 - Puede ver reportes/estadísticas globales.
-- Crea y gestiona sus propias encuestas (preguntas, opciones, configuración).
+- Crea, puede cambiar de estado (activa → cerrada y viceversa) gestiona sus propias encuestas (preguntas, opciones, configuración).
 - Asocia encuestas a un cliente.
 
 ### 4.2 Encuestador
 - Genera enlaces de un solo uso (con fecha/hora de expiración) y sus respectivos códigos QR.
+- Puede ver sus propias estádisticas sobre las encuestas respondidas.
 - Revisa las respuestas recibidas: *aprueba o rechaza* cada una.
-- Recibe notificaciones cuando una encuesta ha sido respondida.
 
 ## 5. Modelo de Entidades (propuesta – 8 entidades)
 
@@ -43,7 +43,7 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 | 1 | *Usuario* | Administradores y encuestadores. Contiene credenciales, rol, datos de contacto. |
 | 2 | *Encuestador* | Genera QR de las encuestas, filtra respuestas y las valida. |
 | 3 | *Cliente* | Empresa o persona para la cual se crea una encuesta. |
-| 4 | *Encuesta* | Contenedor de preguntas, asociada a un cliente y a un encuestador (usuario creador). Tiene estado (borrador, activa, cerrada). |
+| 4 | *Encuesta* | Contenedor de preguntas, asociada a un cliente y a un encuestador (usuario, creador). Tiene estado (activa, cerrada). |
 | 5 | *RespuestaEncuesta* | Respuesta completa enviada por un encuestado anónimo a través de un enlace. Tiene estado de validación (pendiente, aprobada, rechazada). |
 
 ### Relaciones principales
@@ -70,12 +70,12 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 ### Gestión de encuestas
 - RF05: El administrador debe poder crear una encuesta asociada a un cliente, definiendo preguntas y tipo de cada una.
 - RF06: El administrador debe poder editar/eliminar preguntas.
-- RF07: El encuestador debe poder cambiar el estado de la encuesta (activa → cerrada).
+- RF07: El administrador debe poder cambiar el estado de la encuesta (activa → cerrada).
 
 ### Enlaces y acceso anónimo
-- RF08: El sistema (encuestador) debe generar un enlace único (token) por cada encuestado, con fecha/hora de expiración configurable.
+- RF08: El sistema (encuestador) debe generar un enlace único (token) por cada encuestado.
 - RF09: El sistema debe generar un código QR asociado a cada enlace.
-- RF10: Al acceder al enlace, el sistema debe validar que no haya expirado y que no haya sido utilizado.
+- RF10: Al acceder al enlace, el sistema debe validar que no haya sido utilizado.
 - RF11: Un enlace ya utilizado no debe permitir volver a responder la encuesta (garantiza respuesta única).
 
 ### Respuestas
@@ -84,12 +84,9 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 - RF14: El encuestador debe poder visualizar las respuestas pendientes de validación.
 - RF15: El encuestador debe poder aprobar o rechazar cada respuesta.
 
-### Notificaciones
-- RF16: El sistema avisa al encuestador cuando una encuesta esta proxima a vencerse.
-
 ### Reportes
-- RF17: El administrador debe poder exportar los resultados (respuestas aprobadas) de una encuesta a un archivo CSV.
-- RF18: El sistema debe mostrar estadísticas básicas por encuesta (cantidad de enlaces generados, respondidos, aprobados, rechazados, vencidos).
+- RF16: El administrador debe poder exportar los resultados (respuestas aprobadas) de una encuesta a un archivo CSV.
+- RF17: El sistema debe mostrar estadísticas básicas por encuesta (cantidad de enlaces generados, respondidos, aprobados, rechazados).
 
 ## 7. Requerimientos No Funcionales
 
@@ -104,9 +101,9 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 ## 8. Reglas de Negocio
 
 - RN01: No se pueden generar enlaces para una encuesta que no esté "activa".
-- RN02: Un enlace a una encuesta expirada no puede ser respondido, aunque el encuestado tenga la URL.
+- RN02: Un enlace a una encuesta expirada (activa → cerrada) no puede ser respondido, aunque el encuestado tenga la URL.
 - RN03: Solo el encuestador dueño de la encuesta puede aprobar/rechazar sus respuestas.
-- RN04: Una respuesta rechazada si se contabiliza en las estadísticas ni se incluye en la exportación a Excel.
+- RN04: Una respuesta rechazada si se contabiliza en las estadísticas pero no se incluye en la exportación a Excel.
 
 ## 9. Ciclo de Vida de una Encuesta (flujo resumido)
 
@@ -142,8 +139,8 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 
 - [ ] El sistema permite login y devuelve un JWT válido.
 - [ ] Un administrador puede gestionar usuarios encuestadores.
-- [ ] Un encuestador puede crear una encuesta completa con preguntas de al menos 2 tipos distintos.
-- [ ] Se puede generar un enlace con expiración y su QR correspondiente.
+- [ ] Un administrador puede crear una encuesta completa con preguntas de al menos 2 tipos distintos.
+- [ ] Se puede generar un enlace de encuesta y su QR correspondiente.
 - [ ] Un usuario anónimo puede responder la encuesta a través del enlace, sin loguearse.
 - [ ] El enlace no puede reutilizarse una vez respondido ni una vez expirado.
 - [ ] El encuestador puede aprobar/rechazar respuestas.
