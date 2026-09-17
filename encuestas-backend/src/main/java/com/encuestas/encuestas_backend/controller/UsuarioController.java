@@ -1,6 +1,7 @@
 package com.encuestas.encuestas_backend.controller;
 
-import com.encuestas.encuestas_backend.model.Usuario;
+import com.encuestas.encuestas_backend.dto.usuario.UsuarioRequestDTO;
+import com.encuestas.encuestas_backend.dto.usuario.UsuarioResponseDTO;
 import com.encuestas.encuestas_backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +15,12 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping                // GET /api/usuarios
-    public List<Usuario> listar() {
+    public List<UsuarioResponseDTO> listar() {
         return usuarioService.listarTodos();
     }
 
-    @PostMapping                // POST /api/usuarios
-    public Usuario crear(@RequestBody Usuario usuario) {
-        return usuarioService.guardar(usuario);
+    @PostMapping
+    public UsuarioResponseDTO crear(@RequestBody UsuarioRequestDTO dto) {
+        return usuarioService.guardar(dto);
     }
 }
