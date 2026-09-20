@@ -1,0 +1,10 @@
+# Configuraciones de Editores (Eclipse, VS Code, IntelliJ)
+.project
+.classpath
+.settings/
+.vscode/
+.idea/
+
+# Archivos basura del Sistema Operativo
+Thumbs.db
+.DS_Store
