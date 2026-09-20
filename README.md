@@ -28,13 +28,17 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 - Gestiona clientes (empresas/personas para quienes se crean las encuestas).
 - Tiene visibilidad total sobre todas las encuestas del sistema.
 - Puede ver reportes/estadísticas globales.
-- Crea, puede cambiar de estado (activa → cerrada y viceversa) gestiona sus propias encuestas (preguntas, opciones, configuración).
-- Asocia encuestas a un cliente.
+- Puede revisas las respuestas recibidas a cualquier enlace generado por cualquier encuestador: *aprueba o rechaza* cada una.
+- Puede cambiar de estado (activa → cerrada y viceversa) cualquier encuesta (preguntas, opciones, configuración).
+(estas dos ultimas capacidades son por si algun encuestador se desvincula sin antes haber aprobado/rechazado respuestas o habiendo dejado encuestas sin terminar de completar o sin deshabilitar)
+
 
 ### 4.2 Encuestador
-- Genera enlaces de un solo uso (con fecha/hora de expiración) y sus respectivos códigos QR.
+- Crea, puede cambiar de estado (activa → cerrada y viceversa) gestiona sus propias encuestas (preguntas, opciones, configuración).
+- Asocia sus propias encuestas a un cliente.
+- Genera enlaces de un solo uso (con fecha/hora de expiración) y sus respectivos códigos QR de cualquier encuesta.
 - Puede ver sus propias estádisticas sobre las encuestas respondidas.
-- Revisa las respuestas recibidas: *aprueba o rechaza* cada una.
+- Revisa las respuestas recibidas a los enlaces generados por si mismo: *aprueba o rechaza* cada una.
 
 ## 5. Modelo de Entidades (propuesta – 8 entidades)
 
