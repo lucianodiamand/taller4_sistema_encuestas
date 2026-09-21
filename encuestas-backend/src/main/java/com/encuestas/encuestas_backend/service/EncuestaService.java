@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import com.encuestas.encuestas_backend.model.Rol;
 
 import java.util.List;
 
@@ -56,6 +57,10 @@ public class EncuestaService {
     @Transactional
     public EncuestaResponseDTO crear(EncuestaRequestDTO dto, Long usuarioId) {
         Usuario creador = buscarUsuarioHabilitado(usuarioId);
+        if (creador.getRol() != Rol.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Solo un administrador puede crear encuestas");
+        }
         Cliente cliente = buscarClienteActivo(dto.getClienteId());
 
         Encuesta encuesta = new Encuesta();
