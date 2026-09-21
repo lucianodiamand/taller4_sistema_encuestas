@@ -2,103 +2,74 @@ package com.encuestas.encuestas_backend.service;
 
 import com.encuestas.encuestas_backend.dto.encuesta.EncuestaRequestDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EncuestaResponseDTO;
-import com.encuestas.encuestas_backend.model.Cliente;
-import com.encuestas.encuestas_backend.model.Encuesta;
-import com.encuestas.encuestas_backend.model.Usuario;
+import com.encuestas.encuestas_backend.dto.encuesta.PreguntaDTO;
+import com.encuestas.encuestas_backend.model.*;
 import com.encuestas.encuestas_backend.repository.ClienteRepository;
 import com.encuestas.encuestas_backend.repository.EncuestaRepository;
 import com.encuestas.encuestas_backend.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-import com.encuestas.encuestas_backend.model.Rol;
-
 import java.util.List;
-
-/**
- * X ahora: solo consultar y crear encuestas. 
- * 
- * TODO: ir sumando metodos y coso.
- *
- * TEMPORAL: "usuarioId" es quién ejecuta la acción y llega como parámetro.
- * Cuando armemos JWT va a salir del token del usuario logueado.
- *
- */
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class EncuestaService {
 
-    private final EncuestaRepository encuestaRepository;
-    private final ClienteRepository clienteRepository;
-    private final UsuarioRepository usuarioRepository;
+    @Autowired
+    private EncuestaRepository encuestaRepository;
 
-    // ------------------------------------------------------------------
-    // Consultas
-    // ------------------------------------------------------------------
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public List<EncuestaResponseDTO> listarTodas() {
-        return encuestaRepository.findByActivoTrue()
+        return encuestaRepository.findAll()
                 .stream()
                 .map(EncuestaResponseDTO::new)
-                .toList();
+                .collect(Collectors.toList());
     }
 
-    public EncuestaResponseDTO obtenerPorId(Long id) {
-        return new EncuestaResponseDTO(buscarEncuestaActiva(id));
-    }
+    public EncuestaResponseDTO guardar(EncuestaRequestDTO dto) {
+        Cliente cliente = clienteRepository.findById(dto.getClienteId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + dto.getClienteId()));
 
-    // ------------------------------------------------------------------
-    // Crear
-    // ------------------------------------------------------------------
-
-    @Transactional
-    public EncuestaResponseDTO crear(EncuestaRequestDTO dto, Long usuarioId) {
-        Usuario creador = buscarUsuarioHabilitado(usuarioId);
-        if (creador.getRol() != Rol.ADMIN) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "Solo un administrador puede crear encuestas");
-        }
-        Cliente cliente = buscarClienteActivo(dto.getClienteId());
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + dto.getUsuarioId()));
 
         Encuesta encuesta = new Encuesta();
-        encuesta.setNombre(dto.getNombre());
+        encuesta.setTitulo(dto.getTitulo());
         encuesta.setDescripcion(dto.getDescripcion());
-        encuesta.setRestricciones(dto.getRestricciones());
         encuesta.setCliente(cliente);
-        encuesta.setUsuario(creador);
-        // "disponible" queda en false (valor por defecto de la entidad): nace como borrador
+        encuesta.setUsuario(usuario);
+        encuesta.setPreguntas(convertirPreguntas(dto.getPreguntas()));
+        // el "estado" arranca en ACTIVA por defecto (definido en la entidad), no hace falta setearlo acá
 
-        return new EncuestaResponseDTO(encuestaRepository.save(encuesta));
+        Encuesta guardada = encuestaRepository.save(encuesta);
+        return new EncuestaResponseDTO(guardada);
     }
 
-    // ------------------------------------------------------------------
-    // Métodos auxiliares (privados)
-    // ------------------------------------------------------------------
+    public EncuestaResponseDTO cambiarEstado(Long id, EstadoEncuesta nuevoEstado) {
+        Encuesta encuesta = encuestaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + id));
 
-    private Encuesta buscarEncuestaActiva(Long id) {
-        return encuestaRepository.findById(id)
-                .filter(Encuesta::getActivo)   // una encuesta dada de baja se trata como inexistente
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Encuesta no encontrada con id: " + id));
+        encuesta.setEstado(nuevoEstado);
+        Encuesta actualizada = encuestaRepository.save(encuesta);
+        return new EncuestaResponseDTO(actualizada);
     }
 
-    private Cliente buscarClienteActivo(Long id) {
-        return clienteRepository.findById(id)
-                .filter(Cliente::getActivo)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Cliente no encontrado con id: " + id));
-    }
-
-    private Usuario buscarUsuarioHabilitado(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Usuario no encontrado con id: " + id));
-        if (!usuario.getActivo()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "El usuario está dado de baja");
-        }
-        return usuario;
+    // Convierte la lista de PreguntaDTO (lo que llega del front) en List<Pregunta> (lo que se guarda)
+    private List<Pregunta> convertirPreguntas(List<PreguntaDTO> preguntasDTO) {
+        return preguntasDTO.stream()
+                .map(dto -> {
+                    Pregunta pregunta = new Pregunta();
+                    pregunta.setOrden(dto.getOrden());
+                    pregunta.setTexto(dto.getTexto());
+                    pregunta.setTipo(dto.getTipo());
+                    pregunta.setOpciones(dto.getOpciones());
+                    return pregunta;
+                })
+                .collect(Collectors.toList());
     }
 }
