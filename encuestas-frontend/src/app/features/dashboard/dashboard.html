@@ -1,0 +1,33 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Panel de Control</mat-card-title>
+    <mat-card-subtitle>Sesión iniciada como: {{ role }}</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <!-- Vista exclusiva para Administradores -->
+    @if (role === 'ADMIN') {
+      <div class="admin-actions">
+        <h3>Gestión Administrativa</h3>
+        <button mat-raised-button color="primary">Gestionar Usuarios</button>
+        <button mat-raised-button color="primary">Gestionar Clientes</button>
+        <button mat-raised-button color="accent">Crear Encuesta</button>
+        <button mat-raised-button color="warn">Exportar a CSV</button>
+      </div>
+    }
+
+    <!-- Vista exclusiva para Encuestadores -->
+    @if (role === 'ENCUESTADOR') {
+      <div class="encuestador-actions">
+        <h3>Gestión de Encuestas</h3>
+        <button mat-raised-button color="primary">Generar Enlace / QR</button>
+        <button mat-raised-button color="accent">Validar Respuestas</button>
+        <button mat-raised-button>Ver Mis Estadísticas</button>
+      </div>
+    }
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button color="warn" (click)="logout()">Cerrar Sesión</button>
+  </mat-card-actions>
+</mat-card>
