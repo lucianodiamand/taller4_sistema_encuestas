@@ -2,12 +2,9 @@ package com.encuestas.encuestas_backend.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import java.time.LocalDate;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,32 +20,27 @@ public class Encuesta {
     private Long id;
 
     @Column(nullable = false)
-    private String nombre;
+    private String titulo;
 
     private String descripcion;
 
-    private String restricciones;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoEncuesta estado = EstadoEncuesta.ACTIVA;
 
     @Column(nullable = false)
-    private Boolean disponible = false;    // true = disponible, false = cerrada. Es false por defecto para que solo se active cuando está completa con todas sus preguntas definitivas creadas. Una vez que esta activa ya no deberiamos poder cambiar las preguntas (porque "romperia" las respuestaEncuesta ya generadas)
-    //TODO: que el service no permita editar preguntas de una encuesta que ya recibió respuestas
-
-    @Column(nullable = false)
-    private Boolean activo = true;        // baja lógica
-
-    @Column(nullable = false)
-    private LocalDate fechaCreacion = LocalDate.now();
-
-    // Hibernate guarda la lista de Pregunta como JSON.
-    // En PostgreSQL elige jsonb solo; en H2 usa su tipo JSON. No hace falta especificar nada con columnDefinition.
-    @JdbcTypeCode(SqlTypes.JSON)
-    private List<Pregunta> preguntas = new ArrayList<>();
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)   // el usuario (admin) que la creó
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    // Las preguntas se guardan como JSON en una sola columna de tipo TEXT
+    @Convert(converter = PreguntaListConverter.class)
+    @Column(columnDefinition = "TEXT")
+    private List<Pregunta> preguntas = new ArrayList<>();
 }

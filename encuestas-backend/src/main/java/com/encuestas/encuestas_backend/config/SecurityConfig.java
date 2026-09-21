@@ -22,7 +22,8 @@ public class SecurityConfig {
                 // Le decimos qué endpoints son públicos y cuáles no
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
-                        .anyRequest().permitAll() // TEMPORAL: todo público hasta que armemos JWT
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .anyRequest().permitAll() // TEMPORAL
                 )
 
                 // La consola de H2 usa <iframe>, y Spring por defecto los bloquea. Se lo permitimos.
