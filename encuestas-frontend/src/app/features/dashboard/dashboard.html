@@ -1,33 +1,116 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Panel de Control</mat-card-title>
-    <mat-card-subtitle>Sesión iniciada como: {{ role }}</mat-card-subtitle>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <!-- Vista exclusiva para Administradores -->
-    @if (role === 'ADMIN') {
-      <div class="admin-actions">
-        <h3>Gestión Administrativa</h3>
-        <button mat-raised-button color="primary">Gestionar Usuarios</button>
-        <button mat-raised-button color="primary">Gestionar Clientes</button>
-        <button mat-raised-button color="accent">Crear Encuesta</button>
-        <button mat-raised-button color="warn">Exportar a CSV</button>
-      </div>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h2>Panel de Control ({{ rolActual }})</h2>
+    <button matButton="elevated" (click)="logout()">Logout</button>
+  </header>
+
+  <mat-tab-group animationDuration="0ms" class="responsive-tabs">
+    
+    <!-- TABS PARA ADMINISTRADOR -->
+    @if (rolActual === 'ADMIN') {
+      <mat-tab label="Encuestas">
+        <div class="tab-content">
+          <div class="list-grid">
+            @for (enc of encuestas; track enc.id) {
+              <div class="card-item">
+                <div class="card-info">
+                  <h3>{{ enc.descripcion }}</h3>
+                  <p>Estado: {{ enc.estado }} | Preguntas: {{ enc.cant_preguntas }}</p>
+                </div>
+                <div class="card-actions">
+                  <button mat-button color="primary" (click)="navegarA('/encuesta/ver', enc.id)">Ver</button>
+                  <button mat-button color="accent" (click)="navegarA('/encuesta/modificar', enc.id)">Modificar</button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Encuestadores">
+        <div class="tab-content">
+          <div class="list-grid">
+            @for (encuestador of encuestadores; track encuestador.id) {
+              <div class="card-item">
+                <div class="card-info">
+                  <h3>{{ encuestador.nombre }} {{ encuestador.apellido }}</h3>
+                  <p>CUIT: {{ encuestador.cuit }}</p>
+                </div>
+                <div class="card-actions">
+                  <button mat-icon-button color="primary" (click)="abrirModal(encuestador, 'Encuestador', 'ver')"><mat-icon>visibility</mat-icon></button>
+                  <button mat-icon-button color="accent" (click)="abrirModal(encuestador, 'Encuestador', 'modificar')"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button color="warn" (click)="abrirModal(encuestador, 'Encuestador', 'eliminar')"><mat-icon>delete</mat-icon></button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Clientes">
+        <div class="tab-content">
+          <button mat-raised-button color="primary" class="btn-add">Nuevo Cliente</button>
+          <div class="list-grid">
+            @for (cliente of clientes(); track cliente.id) {
+              <div class="card-item">
+                <div class="card-info">
+                  <h3>{{ cliente.nombre }}</h3>
+                  <p>CUIT: {{ cliente.cuit }} | Visible: {{ cliente.es_visible ? 'Sí' : 'No' }}</p>
+                </div>
+                <div class="card-actions">
+                  <button mat-icon-button color="primary" (click)="abrirModal(cliente, 'Cliente', 'ver')"><mat-icon>visibility</mat-icon></button>
+                  <button mat-icon-button color="accent" (click)="abrirModal(cliente, 'Cliente', 'modificar')"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button color="warn" (click)="abrirModal(cliente, 'Cliente', 'eliminar')"><mat-icon>delete</mat-icon></button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </mat-tab>
     }
 
-    <!-- Vista exclusiva para Encuestadores -->
-    @if (role === 'ENCUESTADOR') {
-      <div class="encuestador-actions">
-        <h3>Gestión de Encuestas</h3>
-        <button mat-raised-button color="primary">Generar Enlace / QR</button>
-        <button mat-raised-button color="accent">Validar Respuestas</button>
-        <button mat-raised-button>Ver Mis Estadísticas</button>
-      </div>
-    }
-  </mat-card-content>
+    <!-- TABS PARA ENCUESTADOR -->
+    @if (rolActual === 'ENCUESTADOR') {
+      <mat-tab label="Encuestas">
+        <div class="tab-content">
+          <div class="list-grid">
+            @for (enc of encuestas; track enc.id) {
+              <div class="card-item">
+                <div class="card-info">
+                  <h3>{{ enc.descripcion }}</h3>
+                  <p>Estado: {{ enc.estado }}</p>
+                </div>
+                <div class="card-actions">
+                  <button mat-button color="primary" (click)="navegarA('/encuesta/ver', enc.id)">Ver</button>
+                  <button mat-raised-button color="accent" (click)="generarQR(enc.id)">
+                    <mat-icon>qr_code</mat-icon> Generar QR
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </mat-tab>
 
-  <mat-card-actions>
-    <button mat-button color="warn" (click)="logout()">Cerrar Sesión</button>
-  </mat-card-actions>
-</mat-card>
+      <mat-tab label="Respuestas Pendientes">
+        <div class="tab-content">
+          <div class="list-grid">
+            @for (res of respuestasPendientes; track res.id) {
+              <div class="card-item">
+                <div class="card-info">
+                  <h3>Código: {{ res.codigo }}</h3>
+                  <p>Encuesta: #{{ res.encuesta_id }} | Fecha: {{ res.fecha }}</p>
+                </div>
+                <div class="card-actions">
+                  <button mat-icon-button color="primary" (click)="abrirModal(res, 'Respuesta', 'ver')"><mat-icon>visibility</mat-icon></button>
+                  <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, 'aprobada')"><mat-icon>check_circle</mat-icon></button>
+                  <button mat-icon-button color="warn" (click)="validarRespuesta(res.id, 'rechazada')"><mat-icon>cancel</mat-icon></button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </mat-tab>
+    }
+  </mat-tab-group>
+</div>

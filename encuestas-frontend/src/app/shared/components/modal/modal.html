@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>{{ data.titulo }}</h2>
+<mat-dialog-content class="modal-contenido">
+  
+  @if (data.tipoAccion === 'ver') {
+    <div class="info-grid">
+      @for (prop of data.entidad | keyvalue; track prop.key) {
+        <div class="info-item">
+          <strong>{{ prop.key }}:</strong> <span>{{ prop.value }}</span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (data.tipoAccion === 'modificar') {
+    <p>Aquí irá el formulario reactivo para modificar la entidad ID: {{ data.entidad.id }}</p>
+  }
+
+  @if (data.tipoAccion === 'eliminar') {
+    <p class="advertencia">¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
+  }
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cerrar(false)">Cancelar</button>
+  @if (data.tipoAccion !== 'ver') {
+    <button mat-raised-button [color]="data.tipoAccion === 'eliminar' ? 'warn' : 'primary'" (click)="cerrar(true)">
+      Confirmar
+    </button>
+  }
+</mat-dialog-actions>
