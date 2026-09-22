@@ -32,7 +32,7 @@ export class ClienteService {
 
   eliminar(id: number) {
     this.clientes.update((actuales) => actuales.filter((c) => c.id !== id));
-    this.http.get<any>('http://127.0.0.1/api/usuarios').subscribe((data) => {
+    this.http.get<any>('http://127.0.0.1:8080/api/usuarios').subscribe((data) => {
       console.log(data);
     });
   }
