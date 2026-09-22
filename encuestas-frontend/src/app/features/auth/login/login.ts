@@ -43,7 +43,7 @@ export class Login {
 
     const { username, password } = this.loginForm.getRawValue();
     
-    // El servicio devuelve true y redirige a /panel, o devuelve false si falla
+    // El servicio devuelve true y redirige a /dashboard, o devuelve false si falla
     const success = this.authService.login(username, password);
     
     if (!success) {
