@@ -21,6 +21,9 @@ public class EnlaceService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private QrCodeService qrCodeService;
+
     public EnlaceResponseDTO generar(EnlaceRequestDTO dto) {
         Encuesta encuesta = encuestaRepository.findById(dto.getEncuestaId())
                 .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + dto.getEncuestaId()));
@@ -39,7 +42,11 @@ public class EnlaceService {
         enlace.setEncuestador(encuestador);
 
         Enlace guardado = enlaceRepository.save(enlace);
-        return new EnlaceResponseDTO(guardado);
+
+        EnlaceResponseDTO responseDTO = new EnlaceResponseDTO(guardado);
+        responseDTO.setQrCodeBase64(qrCodeService.generarQrBase64(responseDTO.getUrlCompleta()));
+
+        return responseDTO;
     }
 
     // Se usa cuando el encuestado accede a la URL pública (próximo paso, junto con RespuestaEncuesta)

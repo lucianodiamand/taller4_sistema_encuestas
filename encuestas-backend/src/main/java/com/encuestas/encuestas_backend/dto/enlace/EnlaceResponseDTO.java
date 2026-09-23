@@ -16,6 +16,7 @@ public class EnlaceResponseDTO {
     private Long encuestaId;
     private String encuestaTitulo;
     private String urlCompleta;
+    private String qrCodeBase64;
 
     public EnlaceResponseDTO(Enlace enlace) {
         this.id = enlace.getId();
