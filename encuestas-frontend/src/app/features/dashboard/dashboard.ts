@@ -1,69 +1,124 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AuthService } from '../../core/services/auth'; 
+import { AuthService } from '../../core/services/auth';
 import { ClienteService } from '../../core/services/cliente';
+import { EncuestaService } from '../../core/services/encuesta';
+import { UsuarioService } from '../../core/services/usuario';
 import { Modal } from '../../shared/components/modal/modal';
+import { Cliente } from '../../shared/models/cliente-interface';
+import { Encuesta } from '../../shared/models/encuesta-interface';
+import { EstadoEncuesta } from '../../shared/models/estado-encuesta';
+import { EstadoRespuesta } from '../../shared/models/estado-respuesta';
+import { RespuestaEncuesta } from '../../shared/models/respuesta-encuesta-interface';
+import { Rol } from '../../shared/models/rol';
+import { Usuario } from '../../shared/models/usuario-interface';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatTabsModule, MatButtonModule, MatIconModule, MatDialogModule],
+  imports: [CommonModule, MatTabsModule, MatButtonModule, MatIconModule, MatDialogModule],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrl: './dashboard.css',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   private authService = inject(AuthService);
   private clienteService = inject(ClienteService);
+  private encuestaService = inject(EncuestaService);
+  private usuarioService = inject(UsuarioService);
   private dialog = inject(MatDialog);
-  private router = inject(Router);
 
-  rolActual = this.authService.currentUserRole();
-  clientes = this.clienteService.clientes;
+  // Exponemos el enum para poder compararlo en el template
+  protected readonly estados = EstadoEncuesta;
 
-  // Datos Dummy
-  encuestas = [
-    { id: 101, descripcion: 'Satisfacción Q1', estado: 'Activa', cant_preguntas: 10 },
-    { id: 102, descripcion: 'Clima Laboral', estado: 'Cerrada', cant_preguntas: 5 }
-  ];
+  rolActual: Rol | null = this.authService.currentUserRole();
 
-  encuestadores = [
-    { id: 1, nombre: 'Juan', apellido: 'Pérez', cuit: 20333333339 },
-    { id: 2, nombre: 'María', apellido: 'Gómez', cuit: 27444444441 }
-  ];
+  // Listas que se llenan al cargar los servicios (cargarDatos).
+  // Se usan signals para que la vista se actualice sola al cambiar su valor.
+  clientes = signal<Cliente[]>([]);
+  encuestas = signal<Encuesta[]>([]);
+  encuestadores = signal<Usuario[]>([]);
 
-  respuestasPendientes = [
-    { id: 501, encuesta_id: 101, fecha: '2024-05-10', codigo: 'ABC-123' },
-    { id: 502, encuesta_id: 101, fecha: '2024-05-11', codigo: 'XYZ-987' }
-  ];
+  // Mientras no exista servicio de respuestas en el backend, se muestran datos de ejemplo
+  respuestasPendientes = signal<RespuestaEncuesta[]>([
+    {
+      id: 501,
+      encuesta_id: 1,
+      codigo: 'ABC-123',
+      fecha: '2026-09-20',
+      estado: EstadoRespuesta.PENDIENTE,
+    },
+    {
+      id: 502,
+      encuesta_id: 1,
+      codigo: 'XYZ-987',
+      fecha: '2026-09-21',
+      estado: EstadoRespuesta.PENDIENTE,
+    },
+  ]);
 
-  // Acciones de navegación
-  navegarA(ruta: string, id: number) {
-    this.router.navigate([ruta, id]);
+  ngOnInit() {
+    this.cargarDatos();
+  }
+
+  // Simula la carga que haría la app contra la API
+  cargarDatos() {
+    this.clienteService.obtenerTodos().subscribe((data) => this.clientes.set(data));
+    this.encuestaService.obtenerTodas().subscribe((data) => this.encuestas.set(data));
+    this.usuarioService.obtenerEncuestadores().subscribe((data) => this.encuestadores.set(data));
+    console.log('Datos cargados: ', {
+      clientes: this.clientes(),
+      encuestas: this.encuestas(),
+      encuestadores: this.encuestadores(),
+    });
+  }
+
+  // Cambia el estado de la encuesta (activa <-> cerrada) usando el servicio
+  cambiarEstado(encuesta: Encuesta) {
+    const nuevoEstado =
+      encuesta.estado === EstadoEncuesta.ACTIVA ? EstadoEncuesta.CERRADA : EstadoEncuesta.ACTIVA;
+    this.encuestaService.cambiarEstado(encuesta.id, nuevoEstado).subscribe((actualizada) => {
+      this.encuestas.set(this.encuestas().map((e) => (e.id === actualizada.id ? actualizada : e)));
+    });
   }
 
   // Apertura de Modales
-  abrirModal(entidad: any, tipoEntidad: string, accion: 'ver' | 'modificar' | 'eliminar') {
+  abrirModal(
+    entidad: any,
+    tipoEntidad: string,
+    accion: 'ver' | 'modificar' | 'eliminar' | 'crear',
+  ) {
     const dialogRef = this.dialog.open(Modal, {
       data: {
         titulo: `${accion.toUpperCase()} ${tipoEntidad}`,
         tipoAccion: accion,
-        entidad: entidad
-      }
+        entidad: entidad,
+        tipoEntidad: tipoEntidad,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(confirmado => {
-      if (confirmado && accion === 'eliminar') {
-        if (tipoEntidad === 'Cliente') {
-          this.clienteService.eliminar(entidad.id);
-        }
-        // Aquí iría la lógica para eliminar encuestadores si existiera el servicio
+    dialogRef.afterClosed().subscribe((resultado) => {
+      // Si el modal se cierra con cancelar o en la cruz, el resultado es undefined/false
+      if (!resultado) {
+        return;
       }
+
+      // Eliminar: el modal solo confirma (true); acá se ejecuta la baja
+      if (accion === 'eliminar') {
+        if (tipoEntidad === 'Cliente')
+          this.clienteService.eliminar(entidad.id).subscribe(() => this.cargarDatos());
+        if (tipoEntidad === 'Encuestador')
+          this.usuarioService.eliminar(entidad.id).subscribe(() => this.cargarDatos());
+        if (tipoEntidad === 'Encuesta')
+          this.encuestaService.eliminar(entidad.id).subscribe(() => this.cargarDatos());
+        return;
+      }
+
+      // Crear y modificar: el modal ya guardó y devuelve la entidad. Recargamos los datos.
+      this.cargarDatos();
     });
   }
 
@@ -74,7 +129,7 @@ export class Dashboard {
 
   validarRespuesta(idRespuesta: number, estado: 'aprobada' | 'rechazada') {
     console.log(`Respuesta ${idRespuesta} marcada como ${estado}`);
-    this.respuestasPendientes = this.respuestasPendientes.filter(r => r.id !== idRespuesta);
+    this.respuestasPendientes.set(this.respuestasPendientes().filter((r) => r.id !== idRespuesta));
   }
 
   logout() {

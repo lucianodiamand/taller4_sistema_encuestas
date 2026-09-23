@@ -5,23 +5,46 @@
   </header>
 
   <mat-tab-group animationDuration="0ms" class="responsive-tabs">
-    
     <!-- TABS PARA ADMINISTRADOR -->
     @if (rolActual === 'ADMIN') {
       <mat-tab label="Encuestas">
         <div class="tab-content">
           <div class="list-grid">
-            @for (enc of encuestas; track enc.id) {
+            @for (enc of encuestas(); track enc.id) {
               <div class="card-item">
                 <div class="card-info">
-                  <h3>{{ enc.descripcion }}</h3>
-                  <p>Estado: {{ enc.estado }} | Preguntas: {{ enc.cant_preguntas }}</p>
+                  <h3>{{ enc.titulo }}</h3>
+                  <p>Cliente: {{ enc.clienteNombre }} | Estado: {{ enc.estado }}</p>
+                  <p>Preguntas: {{ enc.preguntas.length }}</p>
                 </div>
                 <div class="card-actions">
-                  <button mat-button color="primary" (click)="navegarA('/encuesta/ver', enc.id)">Ver</button>
-                  <button mat-button color="accent" (click)="navegarA('/encuesta/modificar', enc.id)">Modificar</button>
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="abrirModal(enc, 'Encuesta', 'ver')"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="abrirModal(enc, 'Encuesta', 'modificar')"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  @if (enc.estado === estados.ACTIVA) {
+                    <button mat-raised-button color="warn" (click)="cambiarEstado(enc)">
+                      Cerrar
+                    </button>
+                  } @else {
+                    <button mat-raised-button color="primary" (click)="cambiarEstado(enc)">
+                      Activar
+                    </button>
+                  }
                 </div>
               </div>
+            } @empty {
+              <p>No hay encuestas cargadas.</p>
             }
           </div>
         </div>
@@ -29,19 +52,50 @@
 
       <mat-tab label="Encuestadores">
         <div class="tab-content">
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn-add"
+            (click)="abrirModal(null, 'Encuestador', 'crear')"
+          >
+            Nuevo Encuestador
+          </button>
+
           <div class="list-grid">
-            @for (encuestador of encuestadores; track encuestador.id) {
+            @for (encuestador of encuestadores(); track encuestador.id) {
               <div class="card-item">
                 <div class="card-info">
                   <h3>{{ encuestador.nombre }} {{ encuestador.apellido }}</h3>
-                  <p>CUIT: {{ encuestador.cuit }}</p>
+                  <p>
+                    Email: {{ encuestador.email }} | Activo: {{ encuestador.activo ? 'Sí' : 'No' }}
+                  </p>
                 </div>
                 <div class="card-actions">
-                  <button mat-icon-button color="primary" (click)="abrirModal(encuestador, 'Encuestador', 'ver')"><mat-icon>visibility</mat-icon></button>
-                  <button mat-icon-button color="accent" (click)="abrirModal(encuestador, 'Encuestador', 'modificar')"><mat-icon>edit</mat-icon></button>
-                  <button mat-icon-button color="warn" (click)="abrirModal(encuestador, 'Encuestador', 'eliminar')"><mat-icon>delete</mat-icon></button>
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="abrirModal(encuestador, 'Encuestador', 'ver')"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="abrirModal(encuestador, 'Encuestador', 'modificar')"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="abrirModal(encuestador, 'Encuestador', 'eliminar')"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
               </div>
+            } @empty {
+              <p>No hay encuestadores cargados.</p>
             }
           </div>
         </div>
@@ -49,20 +103,51 @@
 
       <mat-tab label="Clientes">
         <div class="tab-content">
-          <button mat-raised-button color="primary" class="btn-add">Nuevo Cliente</button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn-add"
+            (click)="abrirModal(null, 'Cliente', 'crear')"
+          >
+            Nuevo Cliente
+          </button>
           <div class="list-grid">
             @for (cliente of clientes(); track cliente.id) {
               <div class="card-item">
                 <div class="card-info">
                   <h3>{{ cliente.nombre }}</h3>
-                  <p>CUIT: {{ cliente.cuit }} | Visible: {{ cliente.es_visible ? 'Sí' : 'No' }}</p>
+                  <p>Email: {{ cliente.email }} | CUIT: {{ cliente.cuit }}</p>
+                  <p>
+                    Teléfono: {{ cliente.telefono || '-' }} | Activo:
+                    {{ cliente.activo ? 'Sí' : 'No' }}
+                  </p>
                 </div>
                 <div class="card-actions">
-                  <button mat-icon-button color="primary" (click)="abrirModal(cliente, 'Cliente', 'ver')"><mat-icon>visibility</mat-icon></button>
-                  <button mat-icon-button color="accent" (click)="abrirModal(cliente, 'Cliente', 'modificar')"><mat-icon>edit</mat-icon></button>
-                  <button mat-icon-button color="warn" (click)="abrirModal(cliente, 'Cliente', 'eliminar')"><mat-icon>delete</mat-icon></button>
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="abrirModal(cliente, 'Cliente', 'ver')"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="abrirModal(cliente, 'Cliente', 'modificar')"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="abrirModal(cliente, 'Cliente', 'eliminar')"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
               </div>
+            } @empty {
+              <p>No hay clientes cargados.</p>
             }
           </div>
         </div>
@@ -74,19 +159,27 @@
       <mat-tab label="Encuestas">
         <div class="tab-content">
           <div class="list-grid">
-            @for (enc of encuestas; track enc.id) {
+            @for (enc of encuestas(); track enc.id) {
               <div class="card-item">
                 <div class="card-info">
-                  <h3>{{ enc.descripcion }}</h3>
-                  <p>Estado: {{ enc.estado }}</p>
+                  <h3>{{ enc.titulo }}</h3>
+                  <p>Cliente: {{ enc.clienteNombre }} | Estado: {{ enc.estado }}</p>
                 </div>
                 <div class="card-actions">
-                  <button mat-button color="primary" (click)="navegarA('/encuesta/ver', enc.id)">Ver</button>
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="abrirModal(enc, 'Encuesta', 'ver')"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
                   <button mat-raised-button color="accent" (click)="generarQR(enc.id)">
                     <mat-icon>qr_code</mat-icon> Generar QR
                   </button>
                 </div>
               </div>
+            } @empty {
+              <p>No hay encuestas cargadas.</p>
             }
           </div>
         </div>
@@ -95,18 +188,38 @@
       <mat-tab label="Respuestas Pendientes">
         <div class="tab-content">
           <div class="list-grid">
-            @for (res of respuestasPendientes; track res.id) {
+            @for (res of respuestasPendientes(); track res.id) {
               <div class="card-item">
                 <div class="card-info">
                   <h3>Código: {{ res.codigo }}</h3>
                   <p>Encuesta: #{{ res.encuesta_id }} | Fecha: {{ res.fecha }}</p>
                 </div>
                 <div class="card-actions">
-                  <button mat-icon-button color="primary" (click)="abrirModal(res, 'Respuesta', 'ver')"><mat-icon>visibility</mat-icon></button>
-                  <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, 'aprobada')"><mat-icon>check_circle</mat-icon></button>
-                  <button mat-icon-button color="warn" (click)="validarRespuesta(res.id, 'rechazada')"><mat-icon>cancel</mat-icon></button>
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="abrirModal(res, 'Respuesta', 'ver')"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="validarRespuesta(res.id, 'aprobada')"
+                  >
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="validarRespuesta(res.id, 'rechazada')"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                  </button>
                 </div>
               </div>
+            } @empty {
+              <p>No hay respuestas pendientes.</p>
             }
           </div>
         </div>

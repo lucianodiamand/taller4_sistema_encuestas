@@ -1,29 +1,30 @@
 /* SIMULACION DE AUTH EN BACKEND */
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { Rol } from '../../shared/models/rol';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   // Usamos signals (Angular 16+) para hacer la UI reactiva a los cambios de sesión
-  currentUserRole = signal<string | null>(this.getRoleFromToken());
+  currentUserRole = signal<Rol | null>(this.getRoleFromToken());
 
   constructor(private router: Router) {}
 
   login(username: string, clave: string): boolean {
     // Simulación del endpoint de login basado en tu esquema de base de datos
     if (username === 'admin' && clave === '1234') {
-      this.setSession('fake-jwt-token-admin', 'ADMIN');
+      this.setSession('fake-jwt-token-admin', Rol.ADMIN);
       return true;
     } else if (username === 'encuestador' && clave === '1234') {
-      this.setSession('fake-jwt-token-encuestador', 'ENCUESTADOR');
+      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR);
       return true;
     }
     return false;
   }
 
-  private setSession(token: string, role: string) {
+  private setSession(token: string, role: Rol) {
     localStorage.setItem('jwt', token);
     localStorage.setItem('role', role);
     this.currentUserRole.set(role);
@@ -41,8 +42,9 @@ export class AuthService {
     return localStorage.getItem('jwt');
   }
 
-  getRoleFromToken(): string | null {
-    return localStorage.getItem('role');
+  getRoleFromToken(): Rol | null {
+    const role = localStorage.getItem('role');
+    return role === Rol.ADMIN || role === Rol.ENCUESTADOR ? role : null;
   }
 
   isAuthenticated(): boolean {
