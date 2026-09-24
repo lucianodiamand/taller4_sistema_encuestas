@@ -62,6 +62,14 @@ export class EncuestaService {
     return of(this.mockEncuestas);
   }
 
+  // GET /api/encuestas/{id}  (endpoint a confirmar en backend)
+  obtenerPorId(id: number): Observable<Encuesta | undefined> {
+    if (USAR_BACKEND_REAL) {
+      return this.http.get<Encuesta>(`${API_URL}/encuestas/${id}`);
+    }
+    return of(this.mockEncuestas.find((e) => e.id === id));
+  }
+
   // POST /api/encuestas
   crear(datos: EncuestaCrear): Observable<Encuesta> {
     if (USAR_BACKEND_REAL) {

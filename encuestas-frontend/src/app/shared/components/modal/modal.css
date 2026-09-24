@@ -6,8 +6,6 @@
 }
 
 .modal-contenido {
-  min-width: 340px;
-  max-width: 520px;
   padding: 16px;
   display: flex;
   flex-direction: column;

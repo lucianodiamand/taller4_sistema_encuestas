@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,12 +8,12 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../core/services/auth';
 import { ClienteService } from '../../core/services/cliente';
 import { EncuestaService } from '../../core/services/encuesta';
+import { RespuestaService } from '../../core/services/respuesta';
 import { UsuarioService } from '../../core/services/usuario';
 import { Modal } from '../../shared/components/modal/modal';
 import { Cliente } from '../../shared/models/cliente-interface';
 import { Encuesta } from '../../shared/models/encuesta-interface';
 import { EstadoEncuesta } from '../../shared/models/estado-encuesta';
-import { EstadoRespuesta } from '../../shared/models/estado-respuesta';
 import { RespuestaEncuesta } from '../../shared/models/respuesta-encuesta-interface';
 import { Rol } from '../../shared/models/rol';
 import { Usuario } from '../../shared/models/usuario-interface';
@@ -28,8 +29,10 @@ export class Dashboard implements OnInit {
   private authService = inject(AuthService);
   private clienteService = inject(ClienteService);
   private encuestaService = inject(EncuestaService);
+  private respuestaService = inject(RespuestaService);
   private usuarioService = inject(UsuarioService);
   private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   // Exponemos el enum para poder compararlo en el template
   protected readonly estados = EstadoEncuesta;
@@ -41,24 +44,7 @@ export class Dashboard implements OnInit {
   clientes = signal<Cliente[]>([]);
   encuestas = signal<Encuesta[]>([]);
   encuestadores = signal<Usuario[]>([]);
-
-  // Mientras no exista servicio de respuestas en el backend, se muestran datos de ejemplo
-  respuestasPendientes = signal<RespuestaEncuesta[]>([
-    {
-      id: 501,
-      encuesta_id: 1,
-      codigo: 'ABC-123',
-      fecha: '2026-09-20',
-      estado: EstadoRespuesta.PENDIENTE,
-    },
-    {
-      id: 502,
-      encuesta_id: 1,
-      codigo: 'XYZ-987',
-      fecha: '2026-09-21',
-      estado: EstadoRespuesta.PENDIENTE,
-    },
-  ]);
+  respuestasPendientes = signal<RespuestaEncuesta[]>([]);
 
   ngOnInit() {
     this.cargarDatos();
@@ -69,11 +55,19 @@ export class Dashboard implements OnInit {
     this.clienteService.obtenerTodos().subscribe((data) => this.clientes.set(data));
     this.encuestaService.obtenerTodas().subscribe((data) => this.encuestas.set(data));
     this.usuarioService.obtenerEncuestadores().subscribe((data) => this.encuestadores.set(data));
+    this.respuestaService
+      .obtenerPendientes()
+      .subscribe((data) => this.respuestasPendientes.set(data));
     console.log('Datos cargados: ', {
       clientes: this.clientes(),
       encuestas: this.encuestas(),
       encuestadores: this.encuestadores(),
     });
+  }
+
+  // Redirige al detalle de la encuesta (reemplaza al modal "ver")
+  verEncuesta(encuesta: Encuesta) {
+    this.router.navigate(['/encuestas', encuesta.id]);
   }
 
   // Cambia el estado de la encuesta (activa <-> cerrada) usando el servicio
@@ -92,6 +86,8 @@ export class Dashboard implements OnInit {
     accion: 'ver' | 'modificar' | 'eliminar' | 'crear',
   ) {
     const dialogRef = this.dialog.open(Modal, {
+      width: '650px', 
+      maxWidth: '90vw',
       data: {
         titulo: `${accion.toUpperCase()} ${tipoEntidad}`,
         tipoAccion: accion,
@@ -122,14 +118,12 @@ export class Dashboard implements OnInit {
     });
   }
 
-  generarQR(idEncuesta: number) {
-    console.log('Generando QR para encuesta:', idEncuesta);
-    // Lógica futura para QR
-  }
-
   validarRespuesta(idRespuesta: number, estado: 'aprobada' | 'rechazada') {
-    console.log(`Respuesta ${idRespuesta} marcada como ${estado}`);
-    this.respuestasPendientes.set(this.respuestasPendientes().filter((r) => r.id !== idRespuesta));
+    this.respuestaService.validar(idRespuesta, estado).subscribe(() => {
+      this.respuestaService
+        .obtenerPendientes()
+        .subscribe((data) => this.respuestasPendientes.set(data));
+    });
   }
 
   logout() {

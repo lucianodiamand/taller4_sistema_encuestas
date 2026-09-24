@@ -1,0 +1,23 @@
+<ol class="preguntas-lista">
+  @for (pregunta of preguntas; track pregunta.orden) {
+    <li class="pregunta-item">
+      <div class="pregunta-encabezado">
+        <span class="pregunta-orden">Pregunta {{ pregunta.orden }}</span>
+        <span class="pregunta-tipo">{{ etiquetaTipo(pregunta.tipo) }}</span>
+      </div>
+      <p class="pregunta-texto">{{ pregunta.texto }}</p>
+      @if (pregunta.opciones.length > 0) {
+        <ul class="pregunta-opciones">
+          @for (opcion of pregunta.opciones; track $index) {
+            <li>{{ opcion }}</li>
+          }
+        </ul>
+      }
+      @if (pregunta.tipo === tipos.ESCALA) {
+        <p class="pregunta-escala">Escala del 1 al 5</p>
+      }
+    </li>
+  } @empty {
+    <p class="preguntas-vacia">Esta encuesta no tiene preguntas cargadas.</p>
+  }
+</ol>

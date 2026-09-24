@@ -21,7 +21,7 @@
                   <button
                     mat-icon-button
                     color="primary"
-                    (click)="abrirModal(enc, 'Encuesta', 'ver')"
+                    (click)="verEncuesta(enc)"
                   >
                     <mat-icon>visibility</mat-icon>
                   </button>
@@ -169,12 +169,9 @@
                   <button
                     mat-icon-button
                     color="primary"
-                    (click)="abrirModal(enc, 'Encuesta', 'ver')"
+                    (click)="verEncuesta(enc)"
                   >
                     <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button mat-raised-button color="accent" (click)="generarQR(enc.id)">
-                    <mat-icon>qr_code</mat-icon> Generar QR
                   </button>
                 </div>
               </div>

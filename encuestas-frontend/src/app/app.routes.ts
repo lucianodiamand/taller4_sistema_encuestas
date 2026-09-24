@@ -14,6 +14,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard) 
   },
+  {
+    path: 'encuestas/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/encuesta/detalle-encuesta/detalle-encuesta').then(m => m.DetalleEncuesta),
+  },
   // Ruta pública a la que accederán los encuestados anónimos
 /*   { 
     path: 'encuesta/:codigo', 
