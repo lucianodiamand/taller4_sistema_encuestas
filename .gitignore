@@ -4,6 +4,7 @@
 .settings/
 .vscode/
 .idea/
+.kilo/
 
 # Archivos basura del Sistema Operativo
 Thumbs.db
