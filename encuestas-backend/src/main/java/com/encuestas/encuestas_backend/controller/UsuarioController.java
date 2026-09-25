@@ -10,7 +10,7 @@ import java.util.List;
 @RestController            // combina @Controller + @ResponseBody: devuelve JSON directamente
 @CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
 @RequestMapping("/api/usuarios")   // prefijo común para todos los endpoints de esta clase
-public class UsuarioController {
+public class UsuarioController { //TODO: /api/usuarios recuperar propio usuario y cambiar contrasenia
 
     @Autowired
     private UsuarioService usuarioService;
