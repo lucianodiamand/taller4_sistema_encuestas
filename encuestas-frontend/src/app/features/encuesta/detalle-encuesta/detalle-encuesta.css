@@ -1,11 +1,27 @@
+/* ==========================================================================
+   SECCIÓN: DETALLE DE ENCUESTA
+   ========================================================================== */
+
 .detalle-container {
   padding: 20px;
   max-width: 1000px;
   margin: 0 auto;
+  font-family: 'Roboto'
+    background-color #f3f3e3ea
+    /* IDEAS ACÁ: 
+     - font-family: 'Roboto', sans-serif; -> Para cambiar la letra de toda la página.
+     - background-color: #f5f5f5; -> Si querés que el fondo general no sea tan blanco. */
 }
 
 .detalle-header {
   margin-bottom: 20px;
+  background: linear-gradient(to right, #eee0ecea, #e0e0e0);
+  border-radius: 10px;
+  padding: 20px;
+  /* IDEAS ACÁ:
+     - background: linear-gradient(to right, #tuColor1, #tuColor2); -> Para un fondo en degradado.
+     - ; -> Si le ponés fondo, esto redondea las puntas.
+     - padding: 20px; -> Para darle aire si le ponés un color de fondo. */
 }
 
 .detalle-error {
@@ -15,6 +31,7 @@
   gap: 12px;
   padding: 40px 0;
   color: #c62828;
+  /* Este es el rojo del texto de error. Podés cambiarlo por otro tono. */
 }
 
 .detalle-error p {
@@ -26,6 +43,7 @@
   align-items: center;
   gap: 12px;
   border-bottom: 2px solid #eee;
+  /* ACÁ: Podés cambiar el #eee por un color de tu paleta para la línea divisoria. */
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
@@ -33,13 +51,19 @@
 .detalle-titulo-row h2 {
   margin: 0;
   color: #333;
+  /* ACÁ: Color del título principal. */
 }
 
+/* --- BADGES (Etiquetas de estado) --- */
 .estado-badge {
   background: #fdecea;
+  /* Fondo rojito/rosado por defecto (inactivo/cerrado) */
   color: #b3261e;
+  /* Texto rojo oscuro */
   border: 1px solid #f5c6c3;
+  /* Borde rojo claro */
   border-radius: 12px;
+  /* ACÁ: Si querés que sean más cuadradas, bajá este número (ej: 4px) */
   padding: 2px 12px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -47,10 +71,14 @@
 
 .estado-badge.badge-activa {
   background: #e6f4ea;
+  /* Fondo verde clarito (activo) */
   color: #1e7d32;
+  /* Texto verde oscuro */
   border: 1px solid #b7e0c4;
+  /* Podés sumar un 'box-shadow' chiquito acá si querés que la etiqueta resalte más */
 }
 
+/* --- SECCIONES DE CONTENIDO --- */
 .detalle-seccion {
   background: white;
   border: 1px solid #e0e0e0;
@@ -58,12 +86,14 @@
   padding: 16px;
   margin-bottom: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* IDEAS ACÁ:
+     - border-left: 5px solid #tuColor; -> Queda re bien para marcar un borde lateral grueso de color.
+     - transition: transform 0.2s; -> Si querés que al pasar el mouse haga algo. */
 }
 
 .detalle-seccion h3 {
   margin: 0 0 12px 0;
   color: #333;
-  font-size: 1rem;
 }
 
 .detalle-descripcion {
@@ -77,7 +107,6 @@
   font-style: italic;
 }
 
-/* Info: etiqueta a la izquierda, valor a la derecha (mismo estilo que el modal) */
 .detail-list {
   display: grid;
   grid-template-columns: 160px 1fr;
@@ -87,16 +116,18 @@
 
 .detail-label {
   color: #666;
+  /* Color de los títulos de la lista (ej: "Cliente:") */
   font-weight: 500;
 }
 
 .detail-value {
   color: #222;
+  /* Color de las respuestas de la lista (ej: "Juan Perez") */
   font-weight: 500;
   overflow-wrap: anywhere;
 }
 
-/* Estadísticas */
+/* --- ESTADÍSTICAS (Las cajitas numéricas) --- */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -111,20 +142,25 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  /* ACÁ: Podés agregar 'box-shadow' o cambiar el 'border-radius' para hacerlas más redondas */
 }
 
+/* Variaciones de color para las estadísticas según el estado */
 .stat-tile.stat-aprobadas {
   background: #e6f4ea;
+  /* Verde agua */
   border-color: #b7e0c4;
 }
 
 .stat-tile.stat-pendientes {
   background: #fff8e1;
+  /* Amarillito */
   border-color: #e8d9a0;
 }
 
 .stat-tile.stat-rechazadas {
   background: #fdecea;
+  /* Rojito */
   border-color: #f5c6c3;
 }
 
@@ -132,14 +168,16 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: #222;
+  /* Color del número gigante */
 }
 
 .stat-etiqueta {
   font-size: 0.8rem;
   color: #666;
+  /* Color del textito abajo del número */
 }
 
-/* QR */
+/* --- CÓDIGO QR --- */
 .qr-aviso {
   color: #b3261e;
   font-size: 0.85rem;
@@ -149,12 +187,14 @@
 .qr-resultado {
   margin-top: 16px;
   border: 1px dashed #1976d2;
+  /* ACÁ: El borde es punteado (dashed) y azul. Podés pasarlo a 'solid' o cambiar el color */
   border-radius: 8px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  /* IDEAS: background-color: #f0f8ff; -> Darle un fondo celestito re suave al cuadro del QR */
 }
 
 .qr-imagen {
@@ -178,6 +218,7 @@
   width: 64px;
   height: 64px;
   color: #1976d2;
+  /* Color del ícono cuando no hay QR */
 }
 
 .qr-url {
@@ -190,43 +231,96 @@
 
 .qr-url span {
   font-family: monospace;
+  /* Letra estilo código de programación */
   font-size: 0.85rem;
   color: #1976d2;
+  /* Color del link */
 }
 
-/* Lista de respuestas pendientes (mismo estilo que el dashboard) */
+
+/* ==========================================================================
+   SECCIÓN: DASHBOARD (Y LISTAS DE TARJETAS GLOBALES)
+   ========================================================================== */
+
+.dashboard-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* IDEAS ACÁ:
+     - Igual que en el detalle, podés setear tipografías o fondos para toda la pantalla. */
+}
+
+.dashboard-header {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  /* Podés cambiar el grosor (ej: 4px) y el color de esta línea divisoria */
+  padding-bottom: 10px;
+  /* IDEAS ACÁ:
+     - Podrías meterle un color de fondo y un padding para que sea un banner en vez de solo texto.
+     - color: #tuColor; -> Para teñir el texto del header. */
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+.btn-add {
+  margin-bottom: 20px;
+  /* IDEAS ACÁ: 
+     Como es un botón de Material (mat-raised-button), algunos estilos se pisan, pero desde acá podés forzar:
+     - border-radius: 20px; -> Hacerlo bien redondito (estilo píldora).
+     - font-size: 1.1rem; -> Agrandar la letra.
+     - box-shadow: 0 4px 6px rgba(0,0,0,0.2); -> Darle sombra extra al botón. */
+}
+
+/* --- TARJETAS (CARDS) COMPARTIDAS ENTRE VISTAS --- */
 .list-grid {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  /* ACÁ: Es el espacio entre tarjeta y tarjeta. Aumentalo si querés que respiren más. */
 }
 
 .card-item {
   background: white;
+  /* Color del fondo de la tarjeta */
   border: 1px solid #e0e0e0;
+  /* Color del borde. Podés hacerlo más oscuro si querés. */
   border-radius: 8px;
+  /* Qué tan redondeadas son las esquinas de la tarjeta */
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Sombrita base. Los números son: movX, movY, difuminado, color(negro al 5% de opacidad) */
   transition: box-shadow 0.2s ease;
+  /* Esto hace que el cambio al pasar el mouse no sea brusco */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  /* IDEAS ACÁ:
+     - border-left: 6px solid #tuColor; -> Queda muy moderno ponerle un borde gordo de un solo lado a la tarjeta. */
 }
 
 .card-item:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra más fuerte al pasar el mouse por arriba */
+  /* IDEAS ACÁ:
+     - transform: translateY(-3px); -> Hace que la tarjeta "suba" un poquito cuando la tocás. Queda genial.
+     - border-color: #tuColor; -> Que el borde cambie de color al hacer hover. */
 }
 
+.card-info h3,
 .card-info h4 {
   margin: 0 0 8px 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #333;
+  /* Color del título de la tarjeta (Ej: nombre de la encuesta) */
 }
 
 .card-info p {
   margin: 0;
   color: #666;
+  /* Color del texto secundario de la tarjeta */
   font-size: 0.9rem;
 }
 
@@ -234,5 +328,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  /* Distancia entre los botoncitos de acción (el ojito, el tachito) */
   flex-shrink: 0;
 }

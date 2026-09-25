@@ -12,23 +12,35 @@
   gap: 16px;
 }
 
-/* ===== Vista "ver": etiqueta a la izquierda, valor a la derecha ===== */
-.detail-list {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  column-gap: 14px;
-  row-gap: 10px;
+/* ===== Vista "ver": Lista de Angular Material ===== */
+.material-detail-list {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  /* Reseteamos el padding para que el fondo abarque todo y los bordes queden limpios */
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.detail-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
 }
 
 .detail-label {
-  color: #666;
-  font-weight: 500;
+  font-weight: 600;
+  color: #64748b;
+  width: 120px;
+  /* Ancho fijo para que todos los dos puntos queden alineados */
+  flex-shrink: 0;
 }
 
 .detail-value {
-  color: #222;
+  color: #1e293b;
   font-weight: 500;
-  overflow-wrap: anywhere;
+  word-wrap: break-word;
+  flex-grow: 1;
 }
 
 /* ===== Vista "crear / modificar": formulario ===== */
@@ -48,8 +60,10 @@
   width: 100%;
 }
 
-.checkbox-item {
+.toggle-item {
   align-self: flex-start;
+  margin-top: 8px;
+  /* Le da un poco de aire respecto al input de arriba */
 }
 
 /* ===== Vista "eliminar": aviso ===== */

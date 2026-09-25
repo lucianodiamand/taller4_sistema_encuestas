@@ -1,160 +1,165 @@
 <h2 mat-dialog-title class="modal-title">{{ data.titulo }}</h2>
 <mat-dialog-content class="modal-contenido">
   @if (data.tipoAccion === 'ver') {
-    <div class="detail-list">
-      @for (campo of camposVer; track campo.etiqueta) {
-        <div class="detail-item">
-          <span class="detail-label">{{ campo.etiqueta }}</span>
-          <span class="detail-value">{{ campo.valor }}</span>
-        </div>
-      }
-    </div>
+  <mat-list class="material-detail-list">
+    @for (campo of camposVer; track campo.etiqueta; let last = $last) {
+    <mat-list-item>
+      <div class="detail-row">
+        <span class="detail-label">{{ campo.etiqueta }}:</span>
+        <span class="detail-value">{{ campo.valor }}</span>
+      </div>
+    </mat-list-item>
+
+    @if (!last) {
+    <mat-divider></mat-divider>
+    }
+    }
+  </mat-list>
   }
 
   @if (data.tipoAccion === 'modificar' || data.tipoAccion === 'crear') {
-    <p class="modal-subtitle">
-      {{
-        data.entidad
-          ? 'Editando registro ID: ' + data.entidad.id
-          : 'Completá los datos para el nuevo registro'
-      }}
-    </p>
+  <p class="modal-subtitle">
+    {{
+    data.entidad
+    ? 'Editando registro ID: ' + data.entidad.id
+    : 'Completá los datos para el nuevo registro'
+    }}
+  </p>
 
-    <form [formGroup]="form" class="dynamic-form">
-      <!-- ===== CLIENTE ===== -->
-      @if (data.tipoEntidad === 'Cliente') {
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" placeholder="Ej: Empresa Alpha">
-          @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
-            <mat-error>El nombre es obligatorio</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="contacto@empresa.com">
-          @if (form.get('email')?.invalid && form.get('email')?.touched) {
-            <mat-error>Ingresa un email válido</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>CUIT</mat-label>
-          <input matInput formControlName="cuit" placeholder="30111111118">
-          @if (form.get('cuit')?.hasError('required') && form.get('cuit')?.touched) {
-            <mat-error>El CUIT es obligatorio</mat-error>
-          } @else if (form.get('cuit')?.hasError('pattern') && form.get('cuit')?.touched) {
-            <mat-error>El CUIT solo puede contener números</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Teléfono (opcional)</mat-label>
-          <input matInput formControlName="telefono" placeholder="351 555-0100">
-        </mat-form-field>
-
-        <mat-checkbox formControlName="activo" class="checkbox-item">Activo</mat-checkbox>
+  <form [formGroup]="form" class="dynamic-form">
+    <!-- ===== CLIENTE ===== -->
+    @if (data.tipoEntidad === 'Cliente') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" placeholder="Ej: Empresa Alpha">
+      @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+      <mat-error>El nombre es obligatorio</mat-error>
       }
+    </mat-form-field>
 
-      <!-- ===== ENCUESTADOR ===== -->
-      @if (data.tipoEntidad === 'Encuestador') {
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" placeholder="Ej: Juan">
-          @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
-            <mat-error>El nombre es obligatorio</mat-error>
-          }
-        </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="contacto@empresa.com">
+      @if (form.get('email')?.invalid && form.get('email')?.touched) {
+      <mat-error>Ingresa un email válido</mat-error>
+      }
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Apellido</mat-label>
-          <input matInput formControlName="apellido" placeholder="Ej: Pérez">
-          @if (form.get('apellido')?.hasError('required') && form.get('apellido')?.touched) {
-            <mat-error>El apellido es obligatorio</mat-error>
-          }
-        </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>CUIT</mat-label>
+      <input matInput formControlName="cuit" placeholder="30111111118">
+      @if (form.get('cuit')?.hasError('required') && form.get('cuit')?.touched) {
+      <mat-error>El CUIT es obligatorio</mat-error>
+      } @else if (form.get('cuit')?.hasError('pattern') && form.get('cuit')?.touched) {
+      <mat-error>El CUIT solo puede contener números</mat-error>
+      }
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="juan@encuestas.com">
-          @if (form.get('email')?.invalid && form.get('email')?.touched) {
-            <mat-error>Ingresa un email válido</mat-error>
-          }
-        </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Teléfono (opcional)</mat-label>
+      <input matInput formControlName="telefono" placeholder="351 555-0100">
+    </mat-form-field>
 
-        @if (!data.entidad) {
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Contraseña</mat-label>
-            <input matInput formControlName="password" type="password">
-            @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
-              <mat-error>La contraseña es obligatoria al crear el usuario</mat-error>
-            }
-          </mat-form-field>
+    <mat-slide-toggle formControlName="activo" color="primary" class="toggle-item">
+      Activo
+    </mat-slide-toggle>
+    }
+
+    <!-- ===== ENCUESTADOR ===== -->
+    @if (data.tipoEntidad === 'Encuestador') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" placeholder="Ej: Juan">
+      @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+      <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="apellido" placeholder="Ej: Pérez">
+      @if (form.get('apellido')?.hasError('required') && form.get('apellido')?.touched) {
+      <mat-error>El apellido es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="juan@encuestas.com">
+      @if (form.get('email')?.invalid && form.get('email')?.touched) {
+      <mat-error>Ingresa un email válido</mat-error>
+      }
+    </mat-form-field>
+
+    @if (!data.entidad) {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" type="password">
+      @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+      <mat-error>La contraseña es obligatoria al crear el usuario</mat-error>
+      }
+    </mat-form-field>
+    }
+    }
+
+    <!-- ===== ENCUESTA ===== -->
+    @if (data.tipoEntidad === 'Encuesta') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="titulo" placeholder="Ej: Satisfacción Q1">
+      @if (form.get('titulo')?.hasError('required') && form.get('titulo')?.touched) {
+      <mat-error>El título es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="descripcion" rows="2"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Cliente</mat-label>
+      <mat-select formControlName="clienteId">
+        @for (cliente of clientes(); track cliente.id) {
+        <mat-option [value]="cliente.id">{{ cliente.nombre }}</mat-option>
         }
+      </mat-select>
+      @if (form.get('clienteId')?.hasError('required') && form.get('clienteId')?.touched) {
+      <mat-error>Selecciona un cliente</mat-error>
       }
+    </mat-form-field>
 
-      <!-- ===== ENCUESTA ===== -->
-      @if (data.tipoEntidad === 'Encuesta') {
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Título</mat-label>
-          <input matInput formControlName="titulo" placeholder="Ej: Satisfacción Q1">
-          @if (form.get('titulo')?.hasError('required') && form.get('titulo')?.touched) {
-            <mat-error>El título es obligatorio</mat-error>
-          }
-        </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="estado">
+        <mat-option [value]="estados.ACTIVA">Activa</mat-option>
+        <mat-option [value]="estados.CERRADA">Cerrada</mat-option>
+      </mat-select>
+    </mat-form-field>
+    }
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Descripción</mat-label>
-          <textarea matInput formControlName="descripcion" rows="2"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Cliente</mat-label>
-          <mat-select formControlName="clienteId">
-            @for (cliente of clientes(); track cliente.id) {
-              <mat-option [value]="cliente.id">{{ cliente.nombre }}</mat-option>
-            }
-          </mat-select>
-          @if (form.get('clienteId')?.hasError('required') && form.get('clienteId')?.touched) {
-            <mat-error>Selecciona un cliente</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Estado</mat-label>
-          <mat-select formControlName="estado">
-            <mat-option [value]="estados.ACTIVA">Activa</mat-option>
-            <mat-option [value]="estados.CERRADA">Cerrada</mat-option>
-          </mat-select>
-        </mat-form-field>
-      }
-
-      @if (errorMessage) {
-        <div class="error-message">
-          <mat-icon color="warn">error</mat-icon>
-          <span>{{ errorMessage }}</span>
-        </div>
-      }
-    </form>
+    @if (errorMessage) {
+    <div class="error-message">
+      <mat-icon color="warn">error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    }
+  </form>
   }
 
   @if (data.tipoAccion === 'eliminar') {
-    <div class="advertencia">
-      <mat-icon color="warn">warning</mat-icon>
-      <span>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</span>
-    </div>
+  <div class="advertencia">
+    <mat-icon color="warn">warning</mat-icon>
+    <span>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</span>
+  </div>
   }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="cerrar(false)">Cancelar</button>
   @if (data.tipoAccion !== 'ver') {
-    <button
-      mat-raised-button
-      [color]="data.tipoAccion === 'eliminar' ? 'warn' : 'primary'"
-      (click)="esFormulario ? confirmar() : cerrar(true)"
-    >
-      {{ esFormulario ? 'Guardar' : 'Confirmar' }}
-    </button>
+  <button mat-raised-button [color]="data.tipoAccion === 'eliminar' ? 'warn' : 'primary'"
+    (click)="esFormulario ? confirmar() : cerrar(true)">
+    {{ esFormulario ? 'Guardar' : 'Confirmar' }}
+  </button>
   }
 </mat-dialog-actions>

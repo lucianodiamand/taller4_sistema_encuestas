@@ -7,146 +7,129 @@
   </header>
 
   @if (errorCarga()) {
-    <div class="detalle-error">
-      <mat-icon color="warn">error</mat-icon>
-      <p>Encuesta no encontrada.</p>
-      <button mat-raised-button (click)="volver()">Volver al panel</button>
-    </div>
+  <div class="detalle-error">
+    <mat-icon color="warn">error</mat-icon>
+    <p>Encuesta no encontrada.</p>
+    <button mat-raised-button (click)="volver()">Volver al panel</button>
+  </div>
   } @else if (encuesta(); as enc) {
-    <div class="detalle-titulo-row">
-      <h2>{{ enc.titulo }}</h2>
-      <span class="estado-badge" [class.badge-activa]="enc.estado === estados.ACTIVA">
-        {{ enc.estado === estados.ACTIVA ? 'Activa' : 'Cerrada' }}
-      </span>
-    </div>
+  <div class="detalle-titulo-row">
+    <h2>{{ enc.titulo }}</h2>
+    <span class="estado-badge" [class.badge-activa]="enc.estado === estados.ACTIVA">
+      {{ enc.estado === estados.ACTIVA ? 'Activa' : 'Cerrada' }}
+    </span>
+  </div>
 
-    <section class="detalle-seccion">
-      <h3>Información de la encuesta</h3>
-      <div class="detail-list">
-        <div class="detail-item">
-          <span class="detail-label">Descripción</span>
-          <span class="detail-value">{{ enc.descripcion || '-' }}</span>
+  <section class="detalle-seccion">
+    <h3>Información de la encuesta</h3>
+    <div class="detail-list">
+      <div class="detail-item">
+        <span class="detail-label">Descripción:&nbsp;</span>
+        <span class="detail-value">{{ enc.descripcion || '-' }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Cliente:&nbsp;</span>
+        <span class="detail-value">{{ enc.clienteNombre }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Creador:&nbsp;</span>
+        <span class="detail-value">{{ enc.usuarioNombre }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Creada el:&nbsp;</span>
+        <span class="detail-value">{{ enc.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="detalle-seccion">
+    <h3>Estadísticas</h3>
+    @if (estadisticas(); as stats) {
+    <div class="stats-grid">
+      <div class="stat-tile">
+        <span class="stat-valor">{{ stats.totalRespuestas }}</span>
+        <span class="stat-etiqueta">Total de respuestas</span>
+      </div>
+      <div class="stat-tile stat-aprobadas">
+        <span class="stat-valor">{{ stats.aprobadas }}</span>
+        <span class="stat-etiqueta">Válidas (aprobadas)</span>
+      </div>
+      <div class="stat-tile stat-pendientes">
+        <span class="stat-valor">{{ stats.pendientes }}</span>
+        <span class="stat-etiqueta">Pendientes</span>
+      </div>
+      <div class="stat-tile stat-rechazadas">
+        <span class="stat-valor">{{ stats.rechazadas }}</span>
+        <span class="stat-etiqueta">Rechazadas</span>
+      </div>
+    </div>
+    } @else {
+    <p class="detalle-vacio">Cargando estadísticas...</p>
+    }
+  </section>
+
+  <section class="detalle-seccion">
+    <h3>Preguntas</h3>
+    <app-lista-preguntas [preguntas]="enc.preguntas"></app-lista-preguntas>
+  </section>
+
+  @if (esEncuestador) {
+  <section class="detalle-seccion">
+    <h3>Generar enlace y QR</h3>
+    <p class="detalle-descripcion">
+      Generá un enlace de un solo uso para que un encuestado responda esta encuesta.
+    </p>
+    <button mat-raised-button color="primary" [disabled]="enc.estado !== estados.ACTIVA" (click)="generarQR()">
+      <mat-icon>qr_code</mat-icon>
+      Generar QR
+    </button>
+    @if (enc.estado !== estados.ACTIVA) {
+    <p class="qr-aviso">Solo se pueden generar enlaces para encuestas activas.</p>
+    }
+
+    @if (enlaceGenerado(); as enlace) {
+    <div class="qr-resultado">
+      @if (enlace.qrCodeBase64) {
+      <img [src]="'data:image/png;base64,' + enlace.qrCodeBase64" alt="Código QR del enlace" class="qr-imagen">
+      } @else {
+      <div class="qr-placeholder">
+        <mat-icon>qr_code</mat-icon>
+      </div>
+      }
+      <div class="qr-url">
+        <span>{{ enlace.urlCompleta }}</span>
+        <button mat-button (click)="copiarEnlace()">
+          <mat-icon>content_copy</mat-icon>
+          {{ copiado() ? '¡Copiado!' : 'Copiar' }}
+        </button>
+      </div>
+    </div>
+    }
+  </section>
+
+  <section class="detalle-seccion">
+    <h3>Respuestas pendientes de esta encuesta</h3>
+    <div class="list-grid">
+      @for (res of pendientes(); track res.id) {
+      <div class="card-item">
+        <div class="card-info">
+          <h4>Código: {{ res.codigo }}</h4>
+          <p>Fecha: {{ res.fecha | date: 'dd/MM/yyyy' }}</p>
         </div>
-        <div class="detail-item">
-          <span class="detail-label">Cliente</span>
-          <span class="detail-value">{{ enc.clienteNombre }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Creador</span>
-          <span class="detail-value">{{ enc.usuarioNombre }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Creada el</span>
-          <span class="detail-value">{{ enc.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
+        <div class="card-actions">
+          <button mat-icon-button color="primary" (click)="validarRespuesta(res, 'aprobada')">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="validarRespuesta(res, 'rechazada')">
+            <mat-icon>cancel</mat-icon>
+          </button>
         </div>
       </div>
-    </section>
-
-    <section class="detalle-seccion">
-      <h3>Estadísticas</h3>
-      @if (estadisticas(); as stats) {
-        <div class="stats-grid">
-          <div class="stat-tile">
-            <span class="stat-valor">{{ stats.totalRespuestas }}</span>
-            <span class="stat-etiqueta">Total de respuestas</span>
-          </div>
-          <div class="stat-tile stat-aprobadas">
-            <span class="stat-valor">{{ stats.aprobadas }}</span>
-            <span class="stat-etiqueta">Válidas (aprobadas)</span>
-          </div>
-          <div class="stat-tile stat-pendientes">
-            <span class="stat-valor">{{ stats.pendientes }}</span>
-            <span class="stat-etiqueta">Pendientes</span>
-          </div>
-          <div class="stat-tile stat-rechazadas">
-            <span class="stat-valor">{{ stats.rechazadas }}</span>
-            <span class="stat-etiqueta">Rechazadas</span>
-          </div>
-        </div>
-      } @else {
-        <p class="detalle-vacio">Cargando estadísticas...</p>
+      } @empty {
+      <p class="detalle-vacio">No hay respuestas pendientes para esta encuesta.</p>
       }
-    </section>
-
-    <section class="detalle-seccion">
-      <h3>Preguntas</h3>
-      <app-lista-preguntas [preguntas]="enc.preguntas"></app-lista-preguntas>
-    </section>
-
-    @if (esEncuestador) {
-      <section class="detalle-seccion">
-        <h3>Generar enlace y QR</h3>
-        <p class="detalle-descripcion">
-          Generá un enlace de un solo uso para que un encuestado responda esta encuesta.
-        </p>
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="enc.estado !== estados.ACTIVA"
-          (click)="generarQR()"
-        >
-          <mat-icon>qr_code</mat-icon>
-          Generar QR
-        </button>
-        @if (enc.estado !== estados.ACTIVA) {
-          <p class="qr-aviso">Solo se pueden generar enlaces para encuestas activas.</p>
-        }
-
-        @if (enlaceGenerado(); as enlace) {
-          <div class="qr-resultado">
-            @if (enlace.qrCodeBase64) {
-              <img
-                [src]="'data:image/png;base64,' + enlace.qrCodeBase64"
-                alt="Código QR del enlace"
-                class="qr-imagen"
-              >
-            } @else {
-              <div class="qr-placeholder">
-                <mat-icon>qr_code</mat-icon>
-              </div>
-            }
-            <div class="qr-url">
-              <span>{{ enlace.urlCompleta }}</span>
-              <button mat-button (click)="copiarEnlace()">
-                <mat-icon>content_copy</mat-icon>
-                {{ copiado() ? '¡Copiado!' : 'Copiar' }}
-              </button>
-            </div>
-          </div>
-        }
-      </section>
-
-      <section class="detalle-seccion">
-        <h3>Respuestas pendientes de esta encuesta</h3>
-        <div class="list-grid">
-          @for (res of pendientes(); track res.id) {
-            <div class="card-item">
-              <div class="card-info">
-                <h4>Código: {{ res.codigo }}</h4>
-                <p>Fecha: {{ res.fecha | date: 'dd/MM/yyyy' }}</p>
-              </div>
-              <div class="card-actions">
-                <button
-                  mat-icon-button
-                  color="primary"
-                  (click)="validarRespuesta(res, 'aprobada')"
-                >
-                  <mat-icon>check_circle</mat-icon>
-                </button>
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="validarRespuesta(res, 'rechazada')"
-                >
-                  <mat-icon>cancel</mat-icon>
-                </button>
-              </div>
-            </div>
-          } @empty {
-            <p class="detalle-vacio">No hay respuestas pendientes para esta encuesta.</p>
-          }
-        </div>
-      </section>
-    }
+    </div>
+  </section>
+  }
   }
 </div>

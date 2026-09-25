@@ -1,13 +1,24 @@
+/* ==========================================================================
+   SECCIÓN: DASHBOARD
+   ========================================================================== */
+
 .dashboard-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  /* IDEAS ACÁ:
+     - font-family: 'Segoe UI', sans-serif; -> Para darle una tipografía más limpia a todo el panel.
+     - background-color: #f8f9fa; -> Poner un fondo gris muy clarito en toda la pantalla ayuda a que las tarjetas blancas resalten mucho más por contraste. */
 }
 
 .dashboard-header {
   margin-bottom: 20px;
   border-bottom: 2px solid #eee;
+  /* ACÁ: Podés cambiar el grosor y el color. El #eee es un gris aburrido. */
   padding-bottom: 10px;
+  /* IDEAS ACÁ:
+     - border-bottom: 4px solid #ffcc00; -> Le da un subrayado amarillo intenso y grueso al título principal.
+     - background: linear-gradient(90deg, #002366 0%, #003366 100%); -> Si en lugar de solo subrayarlo preferís pintar toda la cabecera de un azul profundo (acordate de sumarle 'color: white' al texto y un 'padding' para que respire). */
 }
 
 .tab-content {
@@ -16,6 +27,9 @@
 
 .btn-add {
   margin-bottom: 20px;
+  /* IDEAS ACÁ:
+     - Si querés que el botón de "Nueva Encuesta" destaque de verdad, podés darle un color vibrante como 'background-color: #ffcc00;' con texto oscuro 'color: #002366;'.
+     - border-radius: 8px; -> Para que no sea tan cuadrado. */
 }
 
 /* Lista de tarjetas: una sola columna, cada card ocupa todo el ancho del padre */
@@ -23,6 +37,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  /* ACÁ: Controla el espacio vacío entre cada tarjeta. Si las ves muy amontonadas, subilo a 20px. */
 }
 
 /* Cada card: info a la izquierda y botones de acción a la derecha */
@@ -30,28 +45,42 @@
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
+  /* ACÁ: Si te gustan los diseños más modernos y redondeados, subí esto a 12px o 16px. */
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease;
+  /* Sombra inicial súper suave. */
+
+  /* Agregué 'transform' a la transición para que la animación que te propongo abajo se vea fluida */
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+
+  /* IDEAS ACÁ:
+     - border-left: 6px solid #002366; -> Un truco genial de diseño es sacarle los bordes grises y ponerle solo una franja gruesa de color a la izquierda. Le da un toque muy profesional. */
 }
 
 .card-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* ACÁ: Qué pasa cuando el usuario le pasa el mouse por arriba a una encuesta */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+  /* IDEA: Hacemos que la sombra sea más grande y oscura para que parezca que se despega del fondo. */
+  transform: translateY(-4px);
+  /* IDEA: Esto hace que la tarjeta "levite" o suba 4 píxeles hacia arriba. Queda muy interactivo. */
 }
 
 .card-info h3 {
   margin: 0 0 8px 0;
   font-size: 1.1rem;
   color: #333;
+  /* ACÁ: Color del título (Ej: "Encuesta de Satisfacción"). Podés usar un azul oscuro si querés que combine con el resto. */
 }
 
 .card-info p {
   margin: 0;
   color: #666;
+  /* ACÁ: Color de la información secundaria (cliente, estado). */
   font-size: 0.9rem;
 }
 
@@ -59,5 +88,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  /* ACÁ: Si los botones de editar/ver/borrar están muy pegados, subí este número. */
   flex-shrink: 0;
 }

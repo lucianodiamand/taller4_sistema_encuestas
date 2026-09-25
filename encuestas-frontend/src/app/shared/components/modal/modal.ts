@@ -18,6 +18,8 @@ import { DatosModal } from '../../models/modal-interface';
 import { Cliente } from '../../models/cliente-interface';
 import { Usuario } from '../../models/usuario-interface';
 import { Encuesta } from '../../models/encuesta-interface';
+import { MatListModule } from '@angular/material/list';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-modal',
@@ -29,8 +31,10 @@ import { Encuesta } from '../../models/encuesta-interface';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatCheckboxModule,
     MatIconModule,
+    MatListModule,
   ],
   templateUrl: './modal.html',
   styleUrl: './modal.css',
@@ -69,7 +73,7 @@ export class Modal {
         ['email', 'Email'],
         ['telefono', 'Teléfono'],
         ['cuit', 'CUIT'],
-        ['activo', 'Estado'],
+        ['activo', 'Activo'],
         ['usuarioNombre', 'Creado por'],
       ],
       Encuestador: [
@@ -77,7 +81,7 @@ export class Modal {
         ['apellido', 'Apellido'],
         ['email', 'Email'],
         ['rol', 'Rol'],
-        ['activo', 'Estado'],
+        ['activo', 'Activo'],
       ],
       Encuesta: [
         ['titulo', 'Título'],
