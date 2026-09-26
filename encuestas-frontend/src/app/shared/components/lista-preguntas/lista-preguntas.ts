@@ -29,6 +29,12 @@ export class ListaPreguntas {
         return 'Opción múltiple';
       case TipoPregunta.ESCALA:
         return 'Escala';
+      case TipoPregunta.EMAIL:
+        return 'Email';
+      case TipoPregunta.NUMERO:
+        return 'Número';
+      case TipoPregunta.TELEFONO:
+        return 'Teléfono';
       default:
         return String(tipo);
     }

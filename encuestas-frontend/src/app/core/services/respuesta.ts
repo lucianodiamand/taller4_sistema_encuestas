@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 import { EstadoRespuesta } from '../../shared/models/estado-respuesta';
 import { RespuestaEncuesta } from '../../shared/models/respuesta-encuesta-interface';
 import { EstadisticasEncuesta } from '../../shared/models/estadisticas-encuesta';
+import { RespuestaEnviada } from '../../shared/models/respuesta-enviada-interface';
 import { API_URL, USAR_BACKEND_REAL } from '../config';
 
 @Injectable({
@@ -69,5 +70,23 @@ export class RespuestaService {
     }
     this.mockRespuestas = this.mockRespuestas.filter((r) => r.id !== id);
     return of(undefined);
+  }
+
+  // POST /api/respuestas (endpoint a confirmar en backend)
+  enviar(datos: RespuestaEnviada): Observable<RespuestaEncuesta> {
+    if (USAR_BACKEND_REAL) {
+      return this.http.post<RespuestaEncuesta>(`${API_URL}/respuestas`, datos);
+    }
+    const siguienteId = this.mockRespuestas.length ? Math.max(...this.mockRespuestas.map((r) => r.id)) + 1 : 504;
+    const codigo = `${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}-${Math.floor(100 + Math.random() * 900)}`;
+    const nueva: RespuestaEncuesta = {
+      id: siguienteId,
+      encuesta_id: datos.encuestaId,
+      codigo,
+      fecha: new Date().toISOString().slice(0, 10),
+      estado: EstadoRespuesta.PENDIENTE,
+    };
+    this.mockRespuestas = [...this.mockRespuestas, nueva];
+    return of(nueva);
   }
 }

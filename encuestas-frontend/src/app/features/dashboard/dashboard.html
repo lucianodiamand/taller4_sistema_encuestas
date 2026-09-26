@@ -9,6 +9,10 @@
     @if (rolActual === 'ADMIN') {
     <mat-tab label="Encuestas">
       <div class="tab-content">
+        <button mat-raised-button color="primary" class="btn-add" (click)="nuevaEncuesta()">
+          Nueva Encuesta
+        </button>
+
         <div class="list-grid">
           @for (enc of encuestas(); track enc.id) {
           <div class="card-item">
@@ -21,7 +25,7 @@
               <button mat-icon-button color="primary" (click)="verEncuesta(enc)">
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button mat-icon-button color="accent" (click)="abrirModal(enc, 'Encuesta', 'modificar')">
+              <button mat-icon-button color="accent" (click)="editarEncuesta(enc)">
                 <mat-icon>edit</mat-icon>
               </button>
               @if (enc.estado === estados.ACTIVA) {

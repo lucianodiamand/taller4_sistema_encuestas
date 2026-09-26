@@ -1,0 +1,162 @@
+<div class="responder-container">
+  @if (errorTipo()) {
+  <div class="responder-screen">
+    <mat-icon class="icon-error" color="warn">
+      @switch (errorTipo()) {
+      @case ('INVALIDO') { error_outline }
+      @case ('USADO') { warning }
+      @case ('CERRADA') { lock }
+      }
+    </mat-icon>
+    <h2>
+      @switch (errorTipo()) {
+      @case ('INVALIDO') { Este enlace no es válido o no existe. }
+      @case ('USADO') { Este enlace ya fue utilizado. }
+      @case ('CERRADA') { La encuesta ya no está activa. }
+      }
+    </h2>
+    <p>No es posible responder esta encuesta.</p>
+  </div>
+  } @else if (finalizada()) {
+  <div class="responder-screen">
+    <mat-icon class="icon-success" color="primary">check_circle</mat-icon>
+    <h2>Encuesta finalizada</h2>
+    <p>¡Gracias por participar!</p>
+  </div>
+  } @else if (encuesta(); as enc) {
+  <mat-card class="responder-card">
+    <mat-card-header>
+      <mat-card-title>{{ enc.titulo }}</mat-card-title>
+      @if (enc.descripcion) {
+      <mat-card-subtitle>{{ enc.descripcion }}</mat-card-subtitle>
+      }
+    </mat-card-header>
+    <mat-card-content>
+      <div class="responder-form">
+        @for (pregunta of enc.preguntas; track pregunta.orden; let i = $index) {
+        <div class="pregunta-block">
+          <div class="pregunta-header">
+            <span class="pregunta-num">Pregunta {{ pregunta.orden }}</span>
+            <span class="pregunta-requerida" aria-hidden="true">*</span>
+          </div>
+          <p class="pregunta-texto">{{ pregunta.texto }}</p>
+
+          @switch (pregunta.tipo) {
+          @case (tipos.TEXTO_LIBRE) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tu respuesta</mat-label>
+            <input matInput [formControl]="getControl(i)" type="text" />
+            @if (getControl(i).invalid && getControl(i).touched) {
+            <mat-error>Completá esta pregunta</mat-error>
+            }
+          </mat-form-field>
+          }
+          @case (tipos.EMAIL) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput [formControl]="getControl(i)" type="email" />
+            @if (getControl(i).hasError('required') && getControl(i).touched) {
+            <mat-error>Completá esta pregunta</mat-error>
+            } @else if (getControl(i).hasError('email') && getControl(i).touched) {
+            <mat-error>Ingresá un email válido</mat-error>
+            }
+          </mat-form-field>
+          }
+          @case (tipos.NUMERO) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Número</mat-label>
+            <input matInput [formControl]="getControl(i)" type="number" />
+            @if (getControl(i).hasError('required') && getControl(i).touched) {
+            <mat-error>Completá esta pregunta</mat-error>
+            } @else if (getControl(i).hasError('pattern') && getControl(i).touched) {
+            <mat-error>Solo números enteros</mat-error>
+            }
+          </mat-form-field>
+          }
+          @case (tipos.TELEFONO) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input matInput [formControl]="getControl(i)" type="tel" />
+            @if (getControl(i).invalid && getControl(i).touched) {
+            <mat-error>Completá esta pregunta</mat-error>
+            }
+          </mat-form-field>
+          }
+          @case (tipos.ESCALA) {
+          <div class="escala-wrapper">
+            <mat-slider
+              [min]="1"
+              [max]="5"
+              [step]="1"
+              [discrete]="true"
+              [showTickMarks]="true"
+              class="full-width"
+            >
+              <input matSliderThumb [formControl]="getControl(i)" />
+            </mat-slider>
+            <div class="escala-labels">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+            </div>
+            <div class="escala-valor">Valor: {{ getControl(i).value }}</div>
+            @if (getControl(i).invalid && getControl(i).touched) {
+            <mat-error class="escala-error">Completá esta pregunta</mat-error>
+            }
+          </div>
+          }
+          @case (tipos.OPCION_UNICA) {
+          <mat-radio-group [formControl]="getControl(i)" class="opciones-radio">
+            @for (opcion of pregunta.opciones; track opcion) {
+            <mat-radio-button [value]="opcion">{{ opcion }}</mat-radio-button>
+            }
+          </mat-radio-group>
+          @if (getControl(i).invalid && getControl(i).touched) {
+          <mat-error class="opciones-error">Completá esta pregunta</mat-error>
+          }
+          }
+          @case (tipos.OPCION_MULTIPLE) {
+          <div class="opciones-checkbox">
+            @for (opcion of pregunta.opciones; track opcion; let oi = $index) {
+            <mat-checkbox [formControl]="getCheckbox(i, oi)">{{ opcion }}</mat-checkbox>
+            }
+          </div>
+          @if (getCheckboxes(i).hasError('alMenosUnaOpcion') && getCheckboxes(i).touched) {
+          <mat-error class="opciones-error">Elegí al menos una opción</mat-error>
+          }
+          }
+          @default {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tu respuesta</mat-label>
+            <input matInput [formControl]="getControl(i)" />
+            @if (getControl(i).invalid && getControl(i).touched) {
+            <mat-error>Completá esta pregunta</mat-error>
+            }
+          </mat-form-field>
+          }
+          }
+        </div>
+        }
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" class="btn-enviar" type="button" (click)="enviar()">
+        Enviar
+      </button>
+    </mat-card-actions>
+    @if (errorMessage) {
+    <div class="error-message">
+      <mat-icon color="warn">error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    }
+  </mat-card>
+  } @else {
+  <div class="responder-screen">
+    <mat-icon color="primary">hourglass_empty</mat-icon>
+    <h2>Cargando encuesta...</h2>
+  </div>
+  }
+</div>

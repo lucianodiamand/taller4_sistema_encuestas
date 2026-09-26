@@ -9,15 +9,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { ClienteService } from '../../../core/services/cliente';
 import { UsuarioService } from '../../../core/services/usuario';
-import { EncuestaService } from '../../../core/services/encuesta';
-import { EstadoEncuesta } from '../../models/estado-encuesta';
 import { Rol } from '../../models/rol';
 import { DatosModal } from '../../models/modal-interface';
-import { Cliente } from '../../models/cliente-interface';
 import { Usuario } from '../../models/usuario-interface';
-import { Encuesta } from '../../models/encuesta-interface';
+import { Cliente } from '../../models/cliente-interface';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
@@ -41,19 +37,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 })
 export class Modal {
   private fb = inject(FormBuilder);
-  private clienteService = inject(ClienteService);
   private usuarioService = inject(UsuarioService);
-  private encuestaService = inject(EncuestaService);
 
   // Exponemos los enums para usarlos en los <mat-select> del template
   protected readonly roles = Rol;
-  protected readonly estados = EstadoEncuesta;
 
   // Formulario reactivo según el tipo de entidad (acciones "modificar" y "crear")
   form: FormGroup = this.fb.group({});
-
-  // Clientes disponibles para el select de la encuesta (signal para que el select se actualice solo)
-  clientes = signal<Cliente[]>([]);
 
   errorMessage = '';
 
@@ -82,14 +72,6 @@ export class Modal {
         ['email', 'Email'],
         ['rol', 'Rol'],
         ['activo', 'Activo'],
-      ],
-      Encuesta: [
-        ['titulo', 'Título'],
-        ['descripcion', 'Descripción'],
-        ['clienteNombre', 'Cliente'],
-        ['estado', 'Estado'],
-        ['fechaCreacion', 'Creada el'],
-        ['usuarioNombre', 'Creador'],
       ],
       Respuesta: [
         ['codigo', 'Código'],
@@ -123,11 +105,6 @@ export class Modal {
   }
 
   private inicializar() {
-    // Para crear/modificar una encuesta hace falta el listado de clientes
-    if (this.data.tipoEntidad === 'Encuesta') {
-      this.clienteService.obtenerTodos().subscribe((data) => this.clientes.set(data));
-    }
-
     if (this.data.tipoAccion !== 'modificar' && this.data.tipoAccion !== 'crear') {
       return;
     }
@@ -150,14 +127,6 @@ export class Modal {
         // La contraseña solo es obligatoria al crear (u == null)
         password: ['', u ? [] : Validators.required],
         activo: [u?.activo ?? true],
-      });
-    } else if (this.data.tipoEntidad === 'Encuesta') {
-      const e: Encuesta | null = this.data.entidad;
-      this.form = this.fb.group({
-        titulo: [e?.titulo ?? '', Validators.required],
-        descripcion: [e?.descripcion ?? ''],
-        clienteId: [e?.clienteId ?? '', Validators.required],
-        estado: [e?.estado ?? EstadoEncuesta.ACTIVA, Validators.required],
       });
     }
   }
@@ -184,22 +153,8 @@ export class Modal {
 
     switch (this.data.tipoEntidad) {
       case 'Cliente':
-        if (editando) {
-          return this.clienteService.modificar(id, {
-            nombre: datos.nombre,
-            email: datos.email,
-            telefono: datos.telefono || null,
-            cuit: Number(datos.cuit),
-            activo: datos.activo,
-          });
-        }
-        return this.clienteService.crear({
-          nombre: datos.nombre,
-          email: datos.email,
-          telefono: datos.telefono || null,
-          cuit: Number(datos.cuit),
-          usuarioId: 1, // el mock asume que crea el admin (id 1)
-        });
+        // Cliente is handled in dashboard, not here
+        return of(undefined);
       case 'Encuestador':
         if (editando) {
           return this.usuarioService.modificar(id, {
@@ -216,22 +171,9 @@ export class Modal {
           // El formulario no tiene el campo rol: asumimos encuestador
           rol: datos.rol ?? Rol.ENCUESTADOR,
         });
-      case 'Encuesta':
-        if (editando) {
-          return this.encuestaService.modificar(id, {
-            titulo: datos.titulo,
-            descripcion: datos.descripcion || null,
-            clienteId: Number(datos.clienteId),
-            estado: datos.estado,
-          });
-        }
-        return this.encuestaService.crear({
-          titulo: datos.titulo,
-          descripcion: datos.descripcion || null,
-          clienteId: Number(datos.clienteId),
-          usuarioId: 1, // el mock asume que crea el admin (id 1)
-          preguntas: [], // la edición de preguntas se agrega más adelante
-        });
+      case 'Respuesta':
+        // Respuesta is read-only in modal
+        return of(undefined);
       default:
         // 'ver' y 'eliminar' no guardan datos
         return of(undefined);

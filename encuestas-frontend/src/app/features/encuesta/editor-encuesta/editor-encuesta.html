@@ -1,0 +1,149 @@
+<div class="editor-container">
+  <header class="editor-header">
+    <button mat-icon-button color="primary" (click)="volver()" aria-label="Volver">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>{{ getTitulo() }}</h2>
+  </header>
+
+  @if (errorCarga) {
+  <div class="editor-error">
+    <mat-icon color="warn">error</mat-icon>
+    <p>Encuesta no encontrada</p>
+    <button mat-raised-button color="primary" (click)="volver()">Volver al panel</button>
+  </div>
+  } @else {
+
+  <form [formGroup]="form" class="editor-form">
+    <mat-card class="editor-card">
+      <mat-card-header>
+        <mat-card-title>Datos de la encuesta</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="titulo" placeholder="Ej: Satisfacción Q1" />
+            @if (form.get('titulo')?.hasError('required') && form.get('titulo')?.touched) {
+            <mat-error>El título es obligatorio</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="descripcion" rows="2"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Cliente</mat-label>
+            <mat-select formControlName="clienteId">
+              @for (cliente of clientes(); track cliente.id) {
+              <mat-option [value]="cliente.id">{{ cliente.nombre }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get('clienteId')?.hasError('required') && form.get('clienteId')?.touched) {
+            <mat-error>Selecciona un cliente</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estado">
+              <mat-option [value]="estados.ACTIVA">Activa</mat-option>
+              <mat-option [value]="estados.CERRADA">Cerrada</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="editor-card">
+      <mat-card-header>
+        <mat-card-title>Preguntas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (preguntas.length === 0) {
+        <p class="editor-vacio">No hay preguntas. Agregá la primera.</p>
+        } @else {
+        @for (pregunta of preguntas.controls; track $index; let i = $index) {
+        <div class="pregunta-card" formArrayName="preguntas">
+          <div class="pregunta-header">
+            <h3>Pregunta {{ i + 1 }}</h3>
+            <button mat-icon-button color="warn" type="button" (click)="quitarPregunta(i)" aria-label="Eliminar pregunta">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <mat-divider></mat-divider>
+
+          <div class="pregunta-campos" [formGroupName]="i">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título de la pregunta</mat-label>
+              <input matInput formControlName="texto" placeholder="Ej: ¿Cómo calificarías el servicio?" />
+              @if (pregunta.get('texto')?.hasError('required') && pregunta.get('texto')?.touched) {
+              <mat-error>El título es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Tipo de respuesta</mat-label>
+              <mat-select formControlName="tipo">
+                @for (t of tiposPregunta; track t.value) {
+                <mat-option [value]="t.value">{{ t.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            @if (usaOpciones(pregunta.get('tipo')?.value)) {
+            <div class="opciones-section">
+              <div class="opciones-header">
+                <h4>Opciones</h4>
+                <button mat-stroked-button type="button" (click)="agregarOpcion(i)">
+                  <mat-icon>add</mat-icon>
+                  Agregar opción
+                </button>
+              </div>
+              <div class="opciones-lista" formArrayName="opciones">
+                @for (opcion of getOpciones(i).controls; track $index; let oi = $index) {
+                <div class="opcion-fila" [formGroupName]="oi">
+                  <mat-form-field appearance="outline" class="opcion-input">
+                    <mat-label>Opción {{ oi + 1 }}</mat-label>
+                    <input matInput formControlName="0" />
+                    @if (opcion.hasError('required') && opcion.touched) {
+                    <mat-error>La opción es obligatoria</mat-error>
+                    }
+                  </mat-form-field>
+                  <button mat-icon-button color="warn" type="button" (click)="quitarOpcion(i, oi)" aria-label="Eliminar opción">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                } @if (getOpciones(i).length === 0) {
+                <p class="editor-vacio">Sin opciones. Agregá al menos una.</p>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
+        }
+        <button mat-raised-button color="primary" type="button" (click)="agregarPregunta()">
+          <mat-icon>add</mat-icon>
+          Agregar pregunta
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    @if (errorMessage) {
+    <div class="error-message">
+      <mat-icon color="warn">error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    }
+
+    <div class="editor-actions">
+      <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
+      <button mat-raised-button color="primary" type="button" (click)="guardar()">Guardar encuesta</button>
+    </div>
+  </form>
+  }
+</div>

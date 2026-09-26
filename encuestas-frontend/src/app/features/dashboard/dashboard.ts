@@ -70,6 +70,16 @@ export class Dashboard implements OnInit {
     this.router.navigate(['/encuestas', encuesta.id]);
   }
 
+  // Navega al editor para crear una nueva encuesta
+  nuevaEncuesta() {
+    this.router.navigate(['/encuestas/nueva']);
+  }
+
+  // Navega al editor para modificar una encuesta existente
+  editarEncuesta(encuesta: Encuesta) {
+    this.router.navigate(['/encuestas', encuesta.id, 'editar']);
+  }
+
   // Cambia el estado de la encuesta (activa <-> cerrada) usando el servicio
   cambiarEstado(encuesta: Encuesta) {
     const nuevoEstado =

@@ -15,14 +15,23 @@ export const routes: Routes = [
     loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard) 
   },
   {
+    path: 'encuestas/nueva',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/encuesta/editor-encuesta/editor-encuesta').then(m => m.EditorEncuesta),
+  },
+  {
+    path: 'encuestas/:id/editar',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/encuesta/editor-encuesta/editor-encuesta').then(m => m.EditorEncuesta),
+  },
+  {
     path: 'encuestas/:id',
     canActivate: [authGuard],
     loadComponent: () => import('./features/encuesta/detalle-encuesta/detalle-encuesta').then(m => m.DetalleEncuesta),
   },
-  // Ruta pública a la que accederán los encuestados anónimos
-/*   { 
-    path: 'encuesta/:codigo', 
-    loadComponent: () => import('./features/public/responder-encuesta/responder-encuesta').then(m => m.ResponderEncuesta) 
-  }, */
+  {
+    path: 'responder/:token',
+    loadComponent: () => import('./features/public/responder-encuesta/responder-encuesta').then(m => m.ResponderEncuesta),
+  },
   { path: '**', redirectTo: 'login' } // Fallback
 ];

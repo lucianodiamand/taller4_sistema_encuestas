@@ -102,42 +102,6 @@
     }
     }
 
-    <!-- ===== ENCUESTA ===== -->
-    @if (data.tipoEntidad === 'Encuesta') {
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Título</mat-label>
-      <input matInput formControlName="titulo" placeholder="Ej: Satisfacción Q1">
-      @if (form.get('titulo')?.hasError('required') && form.get('titulo')?.touched) {
-      <mat-error>El título es obligatorio</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="descripcion" rows="2"></textarea>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Cliente</mat-label>
-      <mat-select formControlName="clienteId">
-        @for (cliente of clientes(); track cliente.id) {
-        <mat-option [value]="cliente.id">{{ cliente.nombre }}</mat-option>
-        }
-      </mat-select>
-      @if (form.get('clienteId')?.hasError('required') && form.get('clienteId')?.touched) {
-      <mat-error>Selecciona un cliente</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Estado</mat-label>
-      <mat-select formControlName="estado">
-        <mat-option [value]="estados.ACTIVA">Activa</mat-option>
-        <mat-option [value]="estados.CERRADA">Cerrada</mat-option>
-      </mat-select>
-    </mat-form-field>
-    }
-
     @if (errorMessage) {
     <div class="error-message">
       <mat-icon color="warn">error</mat-icon>

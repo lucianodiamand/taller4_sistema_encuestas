@@ -1,0 +1,198 @@
+/* ==========================================================================
+   SECCIÓN: EDITOR DE ENCUESTAS
+   ========================================================================== */
+
+.editor-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.editor-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.editor-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  color: #c62828;
+  text-align: center;
+}
+
+.editor-error mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.editor-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.editor-card mat-card-header {
+  padding: 16px 16px 0;
+}
+
+.editor-card mat-card-content {
+  padding: 16px;
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.card-header-row mat-card-title {
+  margin: 0;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.pregunta-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fafafa;
+}
+
+.pregunta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.pregunta-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.pregunta-campos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.opciones-section {
+  padding-top: 8px;
+}
+
+.opciones-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.opciones-header h4 {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.opciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opcion-fila {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.opcion-input {
+  flex: 1;
+}
+
+.editor-vacio {
+  color: #888;
+  font-style: italic;
+  margin: 8px 0;
+  text-align: center;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c62828;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 12px;
+  background: #fdecea;
+  border: 1px solid #f5c6c3;
+  border-radius: 8px;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .editor-container {
+    padding: 12px;
+  }
+
+  .card-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .opcion-fila {
+    flex-direction: column;
+  }
+
+  .opcion-input {
+    width: 100%;
+  }
+
+  .editor-actions {
+    flex-direction: column-reverse;
+  }
+
+  .editor-actions button {
+    width: 100%;
+  }
+}
