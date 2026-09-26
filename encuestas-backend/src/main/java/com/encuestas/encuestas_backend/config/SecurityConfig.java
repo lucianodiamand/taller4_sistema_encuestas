@@ -5,6 +5,7 @@ import com.encuestas.encuestas_backend.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -46,6 +47,8 @@ public class SecurityConfig {
                         // TODO: Revisar request en base a roles
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers("/api/clientes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/encuestas/*/estadisticas").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/encuestas/*/exportar-csv").hasRole("ADMIN")   // nueva línea, ANTES de las de abajo
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/encuestas/**").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/api/encuestas/**").hasRole("ADMIN")
                         .requestMatchers("/api/enlaces/**").hasRole("ENCUESTADOR")

@@ -88,4 +88,47 @@ public class RespuestaEncuestaService {
         RespuestaEncuesta guardada = respuestaEncuestaRepository.save(respuesta);
         return new RespuestaEncuestaResponseDTO(guardada);
     }
+
+    public String generarCsv(Long encuestaId) {
+        List<RespuestaEncuesta> aprobadas = respuestaEncuestaRepository
+                .findByEnlaceEncuestaIdAndEstadoValidacion(encuestaId, EstadoRespuesta.APROBADA);
+
+        if (aprobadas.isEmpty()) {
+            throw new RuntimeException("No hay respuestas aprobadas para exportar en esta encuesta.");
+        }
+
+        StringBuilder csv = new StringBuilder();
+
+        // Encabezado: usamos las preguntas de la PRIMERA respuesta como referencia de columnas
+        csv.append("Fecha de respuesta");
+        for (RespuestaPregunta r : aprobadas.get(0).getRespuestas()) {
+            csv.append(",").append(escaparCsv(r.getTextoPregunta()));
+        }
+        csv.append("\n");
+
+        // Una fila por cada respuesta aprobada
+        for (RespuestaEncuesta respuestaEncuesta : aprobadas) {
+            csv.append(escaparCsv(respuestaEncuesta.getFechaRespuesta().toString()));
+            for (RespuestaPregunta r : respuestaEncuesta.getRespuestas()) {
+                csv.append(",").append(escaparCsv(r.getRespuesta()));
+            }
+            csv.append("\n");
+        }
+
+        return csv.toString();
+    }
+
+
+    // Un valor de respuesta libre podría tener comas, comillas o saltos de línea,
+    // lo cual rompería el formato CSV si no lo tratamos. Esta función lo "protege"
+    // envolviéndolo en comillas dobles cuando hace falta (regla estándar del formato CSV).
+    private String escaparCsv(String valor) {
+        if (valor == null) {
+            return "";
+        }
+        if (valor.contains(",") || valor.contains("\"") || valor.contains("\n")) {
+            return "\"" + valor.replace("\"", "\"\"") + "\"";
+        }
+        return valor;
+    }
 }
