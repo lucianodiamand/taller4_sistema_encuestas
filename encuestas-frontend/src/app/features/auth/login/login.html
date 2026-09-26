@@ -8,12 +8,14 @@
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
         
-        <!-- Campo Usuario -->
+        <!-- Campo Email -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Usuario</mat-label>
-          <input matInput formControlName="username" placeholder="Ej: admin" autocomplete="username">
-          @if (loginForm.get('username')?.hasError('required')) {
-            <mat-error>El usuario es obligatorio</mat-error>
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="Ej: admin@test.com" autocomplete="email">
+          @if (loginForm.get('email')?.hasError('required')) {
+            <mat-error>El email es obligatorio</mat-error>
+          } @else if (loginForm.get('email')?.hasError('email')) {
+            <mat-error>Ingresá un email válido</mat-error>
           }
         </mat-form-field>
 

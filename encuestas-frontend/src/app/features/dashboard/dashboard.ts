@@ -52,12 +52,17 @@ export class Dashboard implements OnInit {
 
   // Simula la carga que haría la app contra la API
   cargarDatos() {
-    this.clienteService.obtenerTodos().subscribe((data) => this.clientes.set(data));
     this.encuestaService.obtenerTodas().subscribe((data) => this.encuestas.set(data));
-    this.usuarioService.obtenerEncuestadores().subscribe((data) => this.encuestadores.set(data));
     this.respuestaService
       .obtenerPendientes()
       .subscribe((data) => this.respuestasPendientes.set(data));
+
+    // Solo ADMIN carga clientes y encuestadores (con backend real, encuestador recibe 403)
+    if (this.rolActual === Rol.ADMIN) {
+      this.clienteService.obtenerTodos().subscribe((data) => this.clientes.set(data));
+      this.usuarioService.obtenerEncuestadores().subscribe((data) => this.encuestadores.set(data));
+    }
+
     console.log('Datos cargados: ', {
       clientes: this.clientes(),
       encuestas: this.encuestas(),
@@ -133,6 +138,14 @@ export class Dashboard implements OnInit {
       this.respuestaService
         .obtenerPendientes()
         .subscribe((data) => this.respuestasPendientes.set(data));
+    });
+  }
+
+  // Cambia el estado activo/inactivo del encuestador
+  cambiarEstadoEncuestador(encuestador: any) {
+    const nuevoActivo = !encuestador.activo;
+    this.usuarioService.modificar(encuestador.id, { activo: nuevoActivo }).subscribe((actualizado) => {
+      this.encuestadores.set(this.encuestadores().map((e) => (e.id === actualizado.id ? actualizado : e)));
     });
   }
 

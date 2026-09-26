@@ -9,7 +9,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
+import { ClienteService } from '../../../core/services/cliente';
 import { UsuarioService } from '../../../core/services/usuario';
+import { AuthService } from '../../../core/services/auth';
 import { Rol } from '../../models/rol';
 import { DatosModal } from '../../models/modal-interface';
 import { Usuario } from '../../models/usuario-interface';
@@ -37,7 +39,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 })
 export class Modal {
   private fb = inject(FormBuilder);
+  private clienteService = inject(ClienteService);
   private usuarioService = inject(UsuarioService);
+  private authService = inject(AuthService);
 
   // Exponemos los enums para usarlos en los <mat-select> del template
   protected readonly roles = Rol;
@@ -153,14 +157,18 @@ export class Modal {
 
     switch (this.data.tipoEntidad) {
       case 'Cliente':
-        // Cliente is handled in dashboard, not here
-        return of(undefined);
+        const payload = { nombre: datos.nombre, email: datos.email, telefono: datos.telefono, cuit: Number(datos.cuit) };
+        if (editando) {
+          return this.clienteService.modificar(id, { ...payload, activo: datos.activo });
+        }
+        return this.clienteService.crear({ ...payload, usuarioId: this.authService.currentUserId() ?? 1 });
       case 'Encuestador':
         if (editando) {
           return this.usuarioService.modificar(id, {
             nombre: datos.nombre,
             apellido: datos.apellido,
             email: datos.email,
+            activo: datos.activo,
           });
         }
         return this.usuarioService.crear({
