@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class EnlaceRequestDTO {
     private Long encuestaId;
-    private Long encuestadorId;
 }

@@ -24,17 +24,16 @@ public class EnlaceService {
     @Autowired
     private QrCodeService qrCodeService;
 
-    public EnlaceResponseDTO generar(EnlaceRequestDTO dto) {
+    public EnlaceResponseDTO generar(EnlaceRequestDTO dto, Long encuestadorId) {
         Encuesta encuesta = encuestaRepository.findById(dto.getEncuestaId())
                 .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + dto.getEncuestaId()));
 
-        // RN01: no se pueden generar enlaces para una encuesta que no esté activa
         if (encuesta.getEstado() != EstadoEncuesta.ACTIVA) {
             throw new RuntimeException("No se pueden generar enlaces para una encuesta que no está activa.");
         }
 
-        Usuario encuestador = usuarioRepository.findById(dto.getEncuestadorId())
-                .orElseThrow(() -> new RuntimeException("Encuestador no encontrado con id: " + dto.getEncuestadorId()));
+        Usuario encuestador = usuarioRepository.findById(encuestadorId)
+                .orElseThrow(() -> new RuntimeException("Encuestador no encontrado con id: " + encuestadorId));
 
         Enlace enlace = new Enlace();
         enlace.setToken(Enlace.generarToken());
@@ -45,7 +44,6 @@ public class EnlaceService {
 
         EnlaceResponseDTO responseDTO = new EnlaceResponseDTO(guardado);
         responseDTO.setQrCodeBase64(qrCodeService.generarQrBase64(responseDTO.getUrlCompleta()));
-
         return responseDTO;
     }
 

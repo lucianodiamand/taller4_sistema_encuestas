@@ -11,6 +11,5 @@ public class EncuestaRequestDTO {
     private String titulo;
     private String descripcion;
     private Long clienteId;
-    private Long usuarioId;
     private List<PreguntaDTO> preguntas = new ArrayList<>();
 }

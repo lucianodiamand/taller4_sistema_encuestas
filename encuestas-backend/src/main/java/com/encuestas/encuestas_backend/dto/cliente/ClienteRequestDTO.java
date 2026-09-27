@@ -10,5 +10,4 @@ public class ClienteRequestDTO {
     private String email;
     private String telefono;
     private Long cuit;
-    private Long usuarioId;
 }

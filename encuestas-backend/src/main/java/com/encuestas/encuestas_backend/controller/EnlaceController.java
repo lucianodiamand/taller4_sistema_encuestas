@@ -2,6 +2,7 @@ package com.encuestas.encuestas_backend.controller;
 
 import com.encuestas.encuestas_backend.dto.enlace.EnlaceRequestDTO;
 import com.encuestas.encuestas_backend.dto.enlace.EnlaceResponseDTO;
+import com.encuestas.encuestas_backend.security.AuthUtil;
 import com.encuestas.encuestas_backend.service.EnlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,11 @@ public class EnlaceController {
     @Autowired
     private EnlaceService enlaceService;
 
+    @Autowired
+    private AuthUtil authUtil;
+
     @PostMapping
     public EnlaceResponseDTO generar(@RequestBody EnlaceRequestDTO dto) {
-        return enlaceService.generar(dto);
+        return enlaceService.generar(dto, authUtil.obtenerUsuarioActualId());
     }
 }

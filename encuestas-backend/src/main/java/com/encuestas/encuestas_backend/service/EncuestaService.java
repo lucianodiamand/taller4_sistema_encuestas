@@ -37,12 +37,12 @@ public class EncuestaService {
         return new EncuestaResponseDTO(encuesta);
     }
 
-    public EncuestaResponseDTO guardar(EncuestaRequestDTO dto) {
+    public EncuestaResponseDTO guardar(EncuestaRequestDTO dto, Long usuarioId) {
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + dto.getClienteId()));
 
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + dto.getUsuarioId()));
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + usuarioId));
 
         Encuesta encuesta = new Encuesta();
         encuesta.setTitulo(dto.getTitulo());
@@ -50,7 +50,6 @@ public class EncuestaService {
         encuesta.setCliente(cliente);
         encuesta.setUsuario(usuario);
         encuesta.setPreguntas(convertirPreguntas(dto.getPreguntas()));
-        // el "estado" arranca en ACTIVA por defecto (definido en la entidad), no hace falta setearlo acá
 
         Encuesta guardada = encuestaRepository.save(encuesta);
         return new EncuestaResponseDTO(guardada);

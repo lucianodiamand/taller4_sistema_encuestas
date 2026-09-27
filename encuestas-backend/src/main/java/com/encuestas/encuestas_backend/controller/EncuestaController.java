@@ -4,6 +4,7 @@ import com.encuestas.encuestas_backend.dto.encuesta.EncuestaRequestDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EncuestaResponseDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EstadisticasEncuestaDTO;
 import com.encuestas.encuestas_backend.model.EstadoEncuesta;
+import com.encuestas.encuestas_backend.security.AuthUtil;
 import com.encuestas.encuestas_backend.service.EncuestaService;
 import com.encuestas.encuestas_backend.service.EstadisticasService;
 import com.encuestas.encuestas_backend.service.RespuestaEncuestaService;
@@ -24,9 +25,17 @@ public class EncuestaController {
     @Autowired
     private EncuestaService encuestaService;
 
+    @Autowired
+    private AuthUtil authUtil;
+
     @GetMapping
     public List<EncuestaResponseDTO> listar() {
         return encuestaService.listarTodas();
+    }
+
+    @PostMapping
+    public EncuestaResponseDTO crear(@RequestBody EncuestaRequestDTO dto) {
+        return encuestaService.guardar(dto, authUtil.obtenerUsuarioActualId());
     }
 
     @GetMapping("/{id}")
@@ -37,11 +46,6 @@ public class EncuestaController {
     @PatchMapping("/{id}/estado")
     public EncuestaResponseDTO cambiarEstado(@PathVariable Long id, @RequestParam EstadoEncuesta nuevoEstado) {
         return encuestaService.cambiarEstado(id, nuevoEstado);
-    }
-
-    @PostMapping
-    public EncuestaResponseDTO crear(@RequestBody EncuestaRequestDTO dto) {
-        return encuestaService.guardar(dto);
     }
 
     @Autowired

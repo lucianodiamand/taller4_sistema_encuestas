@@ -24,9 +24,9 @@ public class ClienteService {
         return clienteRepository.findAll().stream().map(ClienteResponseDTO::new).collect(Collectors.toList());
     }
 
-    public ClienteResponseDTO guardar(ClienteRequestDTO dto) {
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + dto.getUsuarioId()));
+    public ClienteResponseDTO guardar(ClienteRequestDTO dto, Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + usuarioId));
 
         Cliente cliente = new Cliente();
         cliente.setNombre(dto.getNombre());
