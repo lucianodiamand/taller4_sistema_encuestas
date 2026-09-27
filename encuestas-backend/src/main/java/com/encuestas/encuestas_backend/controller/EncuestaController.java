@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
 @RequestMapping("/api/encuestas")
 public class EncuestaController {
 
