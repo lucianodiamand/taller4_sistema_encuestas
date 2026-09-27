@@ -31,6 +31,12 @@ public class EncuestaService {
                 .collect(Collectors.toList());
     }
 
+    public EncuestaResponseDTO obtenerPorId(Long id) {
+        Encuesta encuesta = encuestaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + id));
+        return new EncuestaResponseDTO(encuesta);
+    }
+
     public EncuestaResponseDTO guardar(EncuestaRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + dto.getClienteId()));

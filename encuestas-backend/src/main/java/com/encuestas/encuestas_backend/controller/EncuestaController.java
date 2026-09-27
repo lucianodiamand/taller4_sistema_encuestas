@@ -29,6 +29,11 @@ public class EncuestaController {
         return encuestaService.listarTodas();
     }
 
+    @GetMapping("/{id}")
+    public EncuestaResponseDTO obtenerPorId(@PathVariable Long id) {
+        return encuestaService.obtenerPorId(id);
+    }
+
     @PatchMapping("/{id}/estado")
     public EncuestaResponseDTO cambiarEstado(@PathVariable Long id, @RequestParam EstadoEncuesta nuevoEstado) {
         return encuestaService.cambiarEstado(id, nuevoEstado);
