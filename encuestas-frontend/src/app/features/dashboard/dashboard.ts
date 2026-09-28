@@ -57,7 +57,10 @@ export class Dashboard implements OnInit {
     this.encuestaService.obtenerTodas().subscribe((data) => this.encuestas.set(data));
     this.respuestaService
       .obtenerPendientes()
-      .subscribe((data) => this.respuestasPendientes.set(data));
+      .subscribe((data) => {
+        console.log('Respuestas pendientes cargadas: ', data);
+        this.respuestasPendientes.set(data)
+      });
 
     // Solo ADMIN carga clientes y encuestadores (con backend real, encuestador recibe 403)
     if (this.rolActual === Rol.ADMIN) {

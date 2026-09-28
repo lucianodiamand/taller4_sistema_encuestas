@@ -110,24 +110,27 @@
   <section class="detalle-seccion">
     <h3>Respuestas pendientes de esta encuesta</h3>
     <div class="list-grid">
-      @for (res of pendientes(); track res.id) {
-      <div class="card-item">
-        <div class="card-info">
-          <h4>Código: {{ res.codigo }}</h4>
-          <p>Fecha: {{ res.fecha | date: 'dd/MM/yyyy' }}</p>
-        </div>
-        <div class="card-actions">
-          <button mat-icon-button color="primary" (click)="validarRespuesta(res,estadoResp.APROBADA )">
-            <mat-icon>check_circle</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="validarRespuesta(res, estadoResp.RECHAZADA)">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </div>
-      </div>
-      } @empty {
-      <p class="detalle-vacio">No hay respuestas pendientes para esta encuesta.</p>
-      }
+          @for (res of pendientes(); track res.id) {
+          <div class="card-item">
+            <div class="card-info">
+              <h3>#{{ res.encuestaId }} - {{res.encuestaTitulo}}</h3>
+              <p>#{{ res.id }} | {{ res.fechaRespuesta | date:'dd-MM-yyyy hh:mm' }}</p>
+            </div>
+            <div class="card-actions">
+              <button mat-icon-button color="primary">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, estadoResp.APROBADA)">
+                <mat-icon>check_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="validarRespuesta(res.id,estadoResp.RECHAZADA)">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </div>
+          </div>
+          } @empty {
+          <p>No hay respuestas pendientes.</p>
+          }
     </div>
   </section>
   }

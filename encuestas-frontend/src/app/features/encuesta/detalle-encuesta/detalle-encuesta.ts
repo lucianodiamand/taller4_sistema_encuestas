@@ -89,12 +89,9 @@ export class DetalleEncuesta implements OnInit {
     });
   }
 
-  validarRespuesta(respuesta: RespuestaEncuesta, estado: EstadoRespuesta) {
-    this.respuestaService.validar(respuesta.id, estado).subscribe(() => {
-      const encuesta = this.encuesta();
-      if (encuesta) {
-        this.cargarPendientes(encuesta.id);
-      }
+  validarRespuesta(idRespuesta: number, estado: EstadoRespuesta) {
+    this.respuestaService.validar(idRespuesta, estado).subscribe(() => {
+       this.cargarPendientes(idRespuesta);
     });
   }
 
