@@ -38,4 +38,33 @@ public class ClienteService {
         Cliente guardado = clienteRepository.save(cliente);
         return new ClienteResponseDTO(guardado);
     }
+
+    //Metodos para editar o desactivar (eliminado soft) un Cliente
+    public ClienteResponseDTO editar(Long id, ClienteRequestDTO dto) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+
+        cliente.setNombre(dto.getNombre());
+        cliente.setEmail(dto.getEmail());
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setCuit(dto.getCuit());
+        // Notá que NO tocamos "usuario" (el creador original) al editar
+
+        Cliente actualizado = clienteRepository.save(cliente);
+        return new ClienteResponseDTO(actualizado);
+    }
+
+    public void desactivar(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+        cliente.setActivo(false);
+        clienteRepository.save(cliente);
+    }
+
+    public void activar(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+        cliente.setActivo(true);
+        clienteRepository.save(cliente);
+    }
 }

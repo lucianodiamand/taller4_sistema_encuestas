@@ -1,5 +1,6 @@
 package com.encuestas.encuestas_backend.service;
 
+import com.encuestas.encuestas_backend.dto.usuario.UsuarioEditRequestDTO;
 import com.encuestas.encuestas_backend.dto.usuario.UsuarioRequestDTO;
 import com.encuestas.encuestas_backend.dto.usuario.UsuarioResponseDTO;
 import com.encuestas.encuestas_backend.model.Usuario;
@@ -20,7 +21,10 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;   // Spring nos inyecta el Bean que creamos arriba
 
     public List<UsuarioResponseDTO> listarTodos() {
-        return usuarioRepository.findAll().stream().map(UsuarioResponseDTO::new).collect(Collectors.toList());
+        return usuarioRepository.findByEliminadoFalse()   // cambia acá: antes era findAll()
+                .stream()
+                .map(UsuarioResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     public UsuarioResponseDTO guardar(UsuarioRequestDTO dto) {
@@ -33,5 +37,43 @@ public class UsuarioService {
 
         Usuario guardado = usuarioRepository.save(usuario);
         return new UsuarioResponseDTO(guardado);
+    }
+
+    //Metodos para editar o desactivar (eliminado soft) un Usuario
+    public UsuarioResponseDTO editar(Long id, UsuarioEditRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+
+        usuario.setNombre(dto.getNombre());
+        usuario.setApellido(dto.getApellido());
+        usuario.setEmail(dto.getEmail());
+        usuario.setActivo(dto.getActivo());
+        // "rol" y "password" quedan afuera de este endpoint a propósito
+
+        Usuario actualizado = usuarioRepository.save(usuario);
+        return new UsuarioResponseDTO(actualizado);
+    }
+
+    public void desactivar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+        usuario.setActivo(false);
+        usuarioRepository.save(usuario);
+    }
+
+    public void activar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+        usuario.setActivo(true);
+        usuarioRepository.save(usuario);
+    }
+
+    public void eliminar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+
+        usuario.setEliminado(true);
+        usuario.setActivo(false);   // tiene sentido que un usuario eliminado también quede inactivo
+        usuarioRepository.save(usuario);
     }
 }
