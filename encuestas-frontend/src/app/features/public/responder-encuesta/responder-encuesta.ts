@@ -41,7 +41,10 @@ export class ResponderEncuesta implements OnInit {
   private enlaceService = inject(EnlaceService);
   private respuestaService = inject(RespuestaService);
 
+
   protected readonly tipos = TipoPregunta;
+
+  token = this.route.snapshot.paramMap.get('token') ?? '';
 
   encuesta = signal<Encuesta | null>(null);
   errorTipo = signal<'INVALIDO' | 'USADO' | 'CERRADA' | null>(null);
@@ -51,8 +54,7 @@ export class ResponderEncuesta implements OnInit {
   respuestas = this.fb.array<AbstractControl>([]);
 
   ngOnInit() {
-    const token = this.route.snapshot.paramMap.get('token') ?? '';
-    this.enlaceService.obtenerPorToken(token).subscribe({
+    this.enlaceService.obtenerPorToken(this.token).subscribe({
       next: (encuesta) => {
         if (!encuesta) {
           this.errorTipo.set('INVALIDO');
@@ -163,13 +165,15 @@ export class ResponderEncuesta implements OnInit {
       respuestas,
     };
 
-    this.respuestaService.enviar(datos).subscribe({
-      next: () => {
+    this.respuestaService.enviar(datos, this.token).subscribe({
+      next: () => this.finalizada.set(true),
+/*       next: () => {
+
         this.enlaceService.marcarRespondido(datos.token).subscribe({
           next: () => this.finalizada.set(true),
           error: () => (this.errorMessage = 'Error al marcar el enlace.'),
         });
-      },
+      }, */
       error: () => (this.errorMessage = 'No se pudo enviar la respuesta. Inténtalo de nuevo.'),
     });
   }

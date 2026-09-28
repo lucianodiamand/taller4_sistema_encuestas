@@ -49,10 +49,10 @@ export class EnlaceService {
     });
   }
 
-  // GET /api/enlaces/{token}  (endpoint a confirmar en backend)
+  // GET /api/publico/encuestas/{token}  (endpoint a confirmar en backend)
   obtenerPorToken(token: string): Observable<Encuesta> {
     if (USAR_BACKEND_REAL) {
-      return this.http.get<Encuesta>(`${API_URL}/enlaces/${token}`);
+      return this.http.get<Encuesta>(`${API_URL}/publico/encuestas/${token}`);
     }
     // Token fijo 'demo' para probar a mano aunque se recargue la página
     if (token === 'demo') {
