@@ -2,4 +2,4 @@
 export enum EstadoEncuesta {
   ACTIVA = 'ACTIVA',
   CERRADA = 'CERRADA',
-}
+}  

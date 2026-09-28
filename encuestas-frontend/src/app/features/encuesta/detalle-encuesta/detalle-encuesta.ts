@@ -14,6 +14,7 @@ import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
 import { Enlace } from '../../../shared/models/enlace-interface';
 import { RespuestaEncuesta } from '../../../shared/models/respuesta-encuesta-interface';
 import { Rol } from '../../../shared/models/rol';
+import { EstadoRespuesta } from '../../../shared/models/estado-respuesta';
 
 @Component({
   selector: 'app-detalle-encuesta',
@@ -33,6 +34,7 @@ export class DetalleEncuesta implements OnInit {
   // Exponemos los enums para compararlos en el template
   protected readonly estados = EstadoEncuesta;
   protected readonly roles = Rol;
+  protected readonly estadoResp = EstadoRespuesta;
 
   rolActual = this.authService.currentUserRole();
 
@@ -87,7 +89,7 @@ export class DetalleEncuesta implements OnInit {
     });
   }
 
-  validarRespuesta(respuesta: RespuestaEncuesta, estado: 'APROBADA' | 'RECHAZADA') {
+  validarRespuesta(respuesta: RespuestaEncuesta, estado: EstadoRespuesta) {
     this.respuestaService.validar(respuesta.id, estado).subscribe(() => {
       const encuesta = this.encuesta();
       if (encuesta) {

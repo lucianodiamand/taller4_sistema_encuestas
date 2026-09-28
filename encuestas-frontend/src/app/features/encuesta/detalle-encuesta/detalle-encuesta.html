@@ -117,10 +117,10 @@
           <p>Fecha: {{ res.fecha | date: 'dd/MM/yyyy' }}</p>
         </div>
         <div class="card-actions">
-          <button mat-icon-button color="primary" (click)="validarRespuesta(res, 'APROBADA')">
+          <button mat-icon-button color="primary" (click)="validarRespuesta(res,estadoResp.APROBADA )">
             <mat-icon>check_circle</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="validarRespuesta(res, 'RECHAZADA')">
+          <button mat-icon-button color="warn" (click)="validarRespuesta(res, estadoResp.RECHAZADA)">
             <mat-icon>cancel</mat-icon>
           </button>
         </div>

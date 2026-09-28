@@ -68,15 +68,7 @@
               <button mat-icon-button color="accent" (click)="abrirModal(encuestador, 'Encuestador', 'modificar')">
                 <mat-icon>edit</mat-icon>
               </button>
-              @if (encuestador.activo) {
-              <button mat-raised-button color="warn" (click)="cambiarEstadoEncuestador(encuestador)">
-                Desactivar
-              </button>
-              } @else {
-              <button mat-raised-button color="primary" (click)="cambiarEstadoEncuestador(encuestador)">
-                Activar
-              </button>
-              }
+
               <button mat-icon-button color="warn" (click)="abrirModal(encuestador, 'Encuestador', 'eliminar')">
                 <mat-icon>delete</mat-icon>
               </button>
@@ -162,10 +154,10 @@
               <button mat-icon-button color="primary" (click)="abrirModal(res, 'Respuesta', 'ver')">
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, 'APROBADA')">
+              <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, estadoResp.APROBADA)">
                 <mat-icon>check_circle</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="validarRespuesta(res.id, 'RECHAZADA')">
+              <button mat-icon-button color="warn" (click)="validarRespuesta(res.id,estadoResp.RECHAZADA)">
                 <mat-icon>cancel</mat-icon>
               </button>
             </div>

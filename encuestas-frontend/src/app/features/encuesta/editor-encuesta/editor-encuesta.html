@@ -69,7 +69,8 @@
         <div class="pregunta-card" formArrayName="preguntas">
           <div class="pregunta-header">
             <h3>Pregunta {{ i + 1 }}</h3>
-            <button mat-icon-button color="warn" type="button" (click)="quitarPregunta(i)" aria-label="Eliminar pregunta">
+            <button mat-icon-button color="warn" type="button" (click)="quitarPregunta(i)"
+              aria-label="Eliminar pregunta">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -104,18 +105,25 @@
               </div>
               <div class="opciones-lista" formArrayName="opciones">
                 @for (opcion of getOpciones(i).controls; track $index; let oi = $index) {
-                <div class="opcion-fila" [formGroupName]="oi">
+
+                <!-- ACÁ ESTÁ EL CAMBIO: Se eliminó el [formGroupName]="oi" del div -->
+                <div class="opcion-fila">
                   <mat-form-field appearance="outline" class="opcion-input">
                     <mat-label>Opción {{ oi + 1 }}</mat-label>
-                    <input matInput formControlName="0" />
+
+                    <!-- ACÁ ESTÁ EL CAMBIO: Se usa [formControlName]="oi" directamente en el input -->
+                    <input matInput [formControlName]="oi" />
+
                     @if (opcion.hasError('required') && opcion.touched) {
                     <mat-error>La opción es obligatoria</mat-error>
                     }
                   </mat-form-field>
-                  <button mat-icon-button color="warn" type="button" (click)="quitarOpcion(i, oi)" aria-label="Eliminar opción">
+                  <button mat-icon-button color="warn" type="button" (click)="quitarOpcion(i, oi)"
+                    aria-label="Eliminar opción">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
+
                 } @if (getOpciones(i).length === 0) {
                 <p class="editor-vacio">Sin opciones. Agregá al menos una.</p>
                 }

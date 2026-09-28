@@ -84,14 +84,7 @@
           }
           @case (tipos.ESCALA) {
           <div class="escala-wrapper">
-            <mat-slider
-              [min]="1"
-              [max]="5"
-              [step]="1"
-              [discrete]="true"
-              [showTickMarks]="true"
-              class="full-width"
-            >
+            <mat-slider [min]="1" [max]="5" [step]="1" [discrete]="true" [showTickMarks]="true" class="full-width">
               <input matSliderThumb [formControl]="getControl(i)" />
             </mat-slider>
             <div class="escala-labels">
@@ -122,6 +115,7 @@
             @for (opcion of pregunta.opciones; track opcion; let oi = $index) {
             <mat-checkbox [formControl]="getCheckbox(i, oi)">{{ opcion }}</mat-checkbox>
             }
+
           </div>
           @if (getCheckboxes(i).hasError('alMenosUnaOpcion') && getCheckboxes(i).touched) {
           <mat-error class="opciones-error">Elegí al menos una opción</mat-error>

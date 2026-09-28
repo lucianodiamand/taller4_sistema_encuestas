@@ -17,6 +17,7 @@ import { EstadoEncuesta } from '../../shared/models/estado-encuesta';
 import { RespuestaEncuesta } from '../../shared/models/respuesta-encuesta-interface';
 import { Rol } from '../../shared/models/rol';
 import { Usuario } from '../../shared/models/usuario-interface';
+import { EstadoRespuesta } from '../../shared/models/estado-respuesta';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,6 +37,7 @@ export class Dashboard implements OnInit {
 
   // Exponemos el enum para poder compararlo en el template
   protected readonly estados = EstadoEncuesta;
+  protected readonly estadoResp = EstadoRespuesta;
 
   rolActual: Rol | null = this.authService.currentUserRole();
 
@@ -101,7 +103,7 @@ export class Dashboard implements OnInit {
     accion: 'ver' | 'modificar' | 'eliminar' | 'crear',
   ) {
     const dialogRef = this.dialog.open(Modal, {
-      width: '650px', 
+      width: '650px',
       maxWidth: '90vw',
       data: {
         titulo: `${accion.toUpperCase()} ${tipoEntidad}`,
@@ -133,7 +135,7 @@ export class Dashboard implements OnInit {
     });
   }
 
-  validarRespuesta(idRespuesta: number, estado: 'APROBADA' | 'RECHAZADA') {
+  validarRespuesta(idRespuesta: number, estado: EstadoRespuesta) {
     this.respuestaService.validar(idRespuesta, estado).subscribe(() => {
       this.respuestaService
         .obtenerPendientes()
@@ -141,13 +143,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  // Cambia el estado activo/inactivo del encuestador
-  cambiarEstadoEncuestador(encuestador: any) {
-    const nuevoActivo = !encuestador.activo;
-    this.usuarioService.modificar(encuestador.id, { activo: nuevoActivo }).subscribe((actualizado) => {
-      this.encuestadores.set(this.encuestadores().map((e) => (e.id === actualizado.id ? actualizado : e)));
-    });
-  }
 
   logout() {
     this.authService.logout();

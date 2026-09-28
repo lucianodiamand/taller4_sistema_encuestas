@@ -49,7 +49,7 @@ export class RespuestaService {
   // GET /api/encuestas/{id}/estadisticas (RF17 - endpoint a confirmar en backend)
   obtenerEstadisticas(encuestaId: number): Observable<EstadisticasEncuesta> {
     //if (USAR_BACKEND_REAL) {
-      return this.http.get<EstadisticasEncuesta>(`${API_URL}/encuestas/${encuestaId}/estadisticas`);
+    return this.http.get<EstadisticasEncuesta>(`${API_URL}/encuestas/${encuestaId}/estadisticas`);
     //}
     /*// Mock coherente: la encuesta 1 tiene 2 pendientes en el mock
     return of({
@@ -63,7 +63,7 @@ export class RespuestaService {
 
   // PATCH /api/respuestas/{id}/validacion?estado=... (RF15 - endpoint a confirmar en backend)
   //http://localhost:8080/api/respuestas/1/estado?nuevoEstado=APROBADA
-  validar(id: number, nuevoEstado: 'APROBADA' | 'RECHAZADA'): Observable<void> {
+  validar(id: number, nuevoEstado: EstadoRespuesta): Observable<void> {
     if (USAR_BACKEND_REAL) {
       return this.http.patch<void>(`${API_URL}/respuestas/${id}/estado`, null, {
         params: { nuevoEstado },
