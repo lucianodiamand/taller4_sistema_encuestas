@@ -19,9 +19,9 @@ export class RespuestaService {
 
   // ===== Datos de ejemplo (mock) =====
   private mockRespuestas: RespuestaEncuesta[] = [
-    { id: 501, encuesta_id: 1, codigo: 'ABC-123', fecha: '2026-09-20', estado: EstadoRespuesta.PENDIENTE },
-    { id: 502, encuesta_id: 1, codigo: 'XYZ-987', fecha: '2026-09-21', estado: EstadoRespuesta.PENDIENTE },
-    { id: 503, encuesta_id: 2, codigo: 'LMN-456', fecha: '2026-09-22', estado: EstadoRespuesta.PENDIENTE },
+/*     { id: 501, encuestaId: 1, fechaRespuesta: '2026-09-20', estadoValidacion: EstadoRespuesta.PENDIENTE },
+    { id: 502, encuestaId: 1, fechaRespuesta: '2026-09-21', estadoValidacion: EstadoRespuesta.PENDIENTE },
+    { id: 503, encuestaId: 2, fechaRespuesta: '2026-09-22', estadoValidacion: EstadoRespuesta.PENDIENTE }, */
   ];
 
   // GET /api/respuestas/pendientes (endpoint a confirmar en backend)
@@ -29,7 +29,7 @@ export class RespuestaService {
     if (USAR_BACKEND_REAL) {
       return this.http.get<RespuestaEncuesta[]>(`${API_URL}/respuestas/pendientes`);
     }
-    return of(this.mockRespuestas.filter((r) => r.estado === EstadoRespuesta.PENDIENTE));
+    return of(this.mockRespuestas.filter((r) => r.estadoValidacion === EstadoRespuesta.PENDIENTE));
   }
 
   // Pendientes de una encuesta puntual (RF14, ya filtradas por el encuestador logueado en backend)
@@ -41,7 +41,7 @@ export class RespuestaService {
     }
     return of(
       this.mockRespuestas.filter(
-        (r) => r.encuesta_id === encuestaId && r.estado === EstadoRespuesta.PENDIENTE,
+        (r) => r.encuestaId === encuestaId && r.estadoValidacion === EstadoRespuesta.PENDIENTE,
       ),
     );
   }
@@ -74,18 +74,19 @@ export class RespuestaService {
   }
 
   // POST /api/respuestas (endpoint a confirmar en backend)
-  enviar(datos: RespuestaEnviada): Observable<RespuestaEncuesta> {
+  enviar(datos: RespuestaEnviada, token: string): Observable<RespuestaEncuesta> {
     if (USAR_BACKEND_REAL) {
-      return this.http.post<RespuestaEncuesta>(`${API_URL}/respuestas`, datos);
+      return this.http.post<RespuestaEncuesta>(`${API_URL}/publico/encuestas/${token}/responder`, datos);
     }
     const siguienteId = this.mockRespuestas.length ? Math.max(...this.mockRespuestas.map((r) => r.id)) + 1 : 504;
     const codigo = `${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}-${Math.floor(100 + Math.random() * 900)}`;
     const nueva: RespuestaEncuesta = {
       id: siguienteId,
-      encuesta_id: datos.encuestaId,
-      codigo,
-      fecha: new Date().toISOString().slice(0, 10),
-      estado: EstadoRespuesta.PENDIENTE,
+      encuestaId: datos.encuestaId,
+      fechaRespuesta: new Date().toISOString().slice(0, 10),
+      estadoValidacion: EstadoRespuesta.PENDIENTE,
+      respuestas: datos.respuestas,
+      encuestaTitulo: '', // en el mock no se resuelve el título de la encuesta
     };
     this.mockRespuestas = [...this.mockRespuestas, nueva];
     return of(nueva);
