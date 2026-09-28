@@ -91,6 +91,7 @@ export class Dashboard implements OnInit {
   cambiarEstado(encuesta: Encuesta) {
     const nuevoEstado =
       encuesta.estado === EstadoEncuesta.ACTIVA ? EstadoEncuesta.CERRADA : EstadoEncuesta.ACTIVA;
+
     this.encuestaService.cambiarEstado(encuesta.id, nuevoEstado).subscribe((actualizada) => {
       this.encuestas.set(this.encuestas().map((e) => (e.id === actualizada.id ? actualizada : e)));
     });

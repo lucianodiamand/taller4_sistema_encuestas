@@ -28,6 +28,8 @@
               <button mat-icon-button color="accent" (click)="editarEncuesta(enc)">
                 <mat-icon>edit</mat-icon>
               </button>
+
+              <!-- Compara el string que llega del back con tu variable del enum -->
               @if (enc.estado === estados.ACTIVA) {
               <button mat-raised-button color="warn" (click)="cambiarEstado(enc)">
                 Cerrar
