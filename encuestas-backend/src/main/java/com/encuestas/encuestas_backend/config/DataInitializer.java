@@ -29,7 +29,6 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // Evita duplicar los datos si reiniciás la app varias veces
         if (usuarioRepository.count() > 0) {
             System.out.println("DataInitializer: ya hay datos cargados, se omite la carga inicial.");
             return;
@@ -45,6 +44,7 @@ public class DataInitializer implements CommandLineRunner {
         admin.setApellido("Gómez");
         admin.setRol(Rol.ADMIN);
         admin.setActivo(true);
+        admin.setEliminado(false);
         admin = usuarioRepository.save(admin);
 
         Usuario encuestador = new Usuario();
@@ -54,16 +54,8 @@ public class DataInitializer implements CommandLineRunner {
         encuestador.setApellido("Marquez");
         encuestador.setRol(Rol.ENCUESTADOR);
         encuestador.setActivo(true);
+        encuestador.setEliminado(false);
         encuestador = usuarioRepository.save(encuestador);
-
-        Usuario encuestador2 = new Usuario();
-        encuestador2.setEmail("encuestador2@test.com");
-        encuestador2.setPassword(passwordEncoder.encode("encuestador123"));
-        encuestador2.setNombre("Teresa");
-        encuestador2.setApellido("Sanchez");
-        encuestador2.setRol(Rol.ENCUESTADOR);
-        encuestador2.setActivo(true);
-        encuestador2 = usuarioRepository.save(encuestador2);
 
         // --- Clientes ---
         Cliente cliente1 = new Cliente();
@@ -96,9 +88,7 @@ public class DataInitializer implements CommandLineRunner {
         List<Cliente> clientes = List.of(cliente1, cliente2, cliente3);
 
         // --- Encuestas: 6 en total, 2 por cada cliente ---
-        for (int i = 0; i < clientes.size(); i++) {
-            Cliente clienteActual = clientes.get(i);
-
+        for (Cliente clienteActual : clientes) {
             for (int j = 1; j <= 2; j++) {
                 Encuesta encuesta = new Encuesta();
                 encuesta.setTitulo("Encuesta de satisfacción " + j + " - " + clienteActual.getNombre());

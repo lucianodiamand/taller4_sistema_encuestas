@@ -22,7 +22,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + email));
 
-        // "ROLE_" es un prefijo obligatorio que espera Spring Security para reconocer roles
+        if (usuario.getEliminado() || !usuario.getActivo()) {
+            throw new UsernameNotFoundException("Usuario no encontrado: " + email);
+        }
+
         return new User(
                 usuario.getEmail(),
                 usuario.getPassword(),

@@ -21,7 +21,10 @@ public class UsuarioService {
     private PasswordEncoder passwordEncoder;   // Spring nos inyecta el Bean que creamos arriba
 
     public List<UsuarioResponseDTO> listarTodos() {
-        return usuarioRepository.findAll().stream().map(UsuarioResponseDTO::new).collect(Collectors.toList());
+        return usuarioRepository.findByEliminadoFalse()   // cambia acá: antes era findAll()
+                .stream()
+                .map(UsuarioResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     public UsuarioResponseDTO guardar(UsuarioRequestDTO dto) {
@@ -62,6 +65,15 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
         usuario.setActivo(true);
+        usuarioRepository.save(usuario);
+    }
+
+    public void eliminar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+
+        usuario.setEliminado(true);
+        usuario.setActivo(false);   // tiene sentido que un usuario eliminado también quede inactivo
         usuarioRepository.save(usuario);
     }
 }

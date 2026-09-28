@@ -30,6 +30,11 @@ public class UsuarioController { //TODO: /api/usuarios recuperar propio usuario 
         return usuarioService.editar(id, dto);
     }
 
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Long id) {
+        usuarioService.eliminar(id);
+    }
+
     @PatchMapping("/{id}/desactivar")
     public void desactivar(@PathVariable Long id) {
         usuarioService.desactivar(id);
