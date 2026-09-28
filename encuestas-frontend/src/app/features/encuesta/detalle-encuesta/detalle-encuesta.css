@@ -15,9 +15,9 @@
 
 .detalle-header {
   margin-bottom: 20px;
-  background: linear-gradient(to right, #eee0ecea, #e0e0e0);
+  /* background: linear-gradient(to right, #f6d5f1ea, #facfcf);
   border-radius: 10px;
-  padding: 20px;
+  padding: 20px;*/
   /* IDEAS ACÁ:
      - background: linear-gradient(to right, #tuColor1, #tuColor2); -> Para un fondo en degradado.
      - ; -> Si le ponés fondo, esto redondea las puntas.

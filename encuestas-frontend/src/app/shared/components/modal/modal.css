@@ -5,6 +5,11 @@
   color: #333;
 }
 
+.modal-header {
+  margin: 1rem;
+  padding-left: 0;
+}
+
 .modal-contenido {
   padding: 16px;
   display: flex;
@@ -14,9 +19,6 @@
 
 /* ===== Vista "ver": Lista de Angular Material ===== */
 .material-detail-list {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
   /* Reseteamos el padding para que el fondo abarque todo y los bordes queden limpios */
   padding-top: 0 !important;
   padding-bottom: 0 !important;
@@ -30,14 +32,12 @@
 
 .detail-label {
   font-weight: 600;
-  color: #64748b;
   width: 120px;
   /* Ancho fijo para que todos los dos puntos queden alineados */
   flex-shrink: 0;
 }
 
 .detail-value {
-  color: #1e293b;
   font-weight: 500;
   word-wrap: break-word;
   flex-grow: 1;
@@ -46,7 +46,6 @@
 /* ===== Vista "crear / modificar": formulario ===== */
 .modal-subtitle {
   margin: 0;
-  color: #666;
   font-size: 0.9rem;
 }
 

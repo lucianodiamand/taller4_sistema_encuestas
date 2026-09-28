@@ -1,8 +1,28 @@
 <div class="dashboard-container">
-  <header class="dashboard-header">
-    <h2>Panel de Control ({{ rolActual }})</h2>
-    <button matButton="elevated" (click)="logout()">Logout</button>
+  <header class="dashboard-header header">
+    <h2>Dashboard </h2>
+
+    <button mat-stroked-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      logout
+    </button>
+
   </header>
+
+
+  <header class="dashboard-info">
+    <div class="info-list">
+      <span>
+        nombre apelldo
+      </span>
+      <span>
+        email@gmail.com
+      </span>
+    </div>
+    <span class="role-badge">{{ rolActual }}</span>
+
+  </header>
+
 
   <mat-tab-group animationDuration="0ms" class="responsive-tabs">
     <!-- TABS PARA ADMINISTRADOR -->

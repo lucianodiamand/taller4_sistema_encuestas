@@ -1,10 +1,13 @@
 <div class="detalle-container">
-  <header class="detalle-header">
+
+  <header class="detalle-header header">
+
     <button mat-stroked-button (click)="volver()">
       <mat-icon>arrow_back</mat-icon>
       Volver al panel
     </button>
   </header>
+
 
   @if (errorCarga()) {
   <div class="detalle-error">
@@ -42,37 +45,6 @@
     </div>
   </section>
 
-  <section class="detalle-seccion">
-    <h3>Estadísticas</h3>
-    @if (estadisticas(); as stats) {
-    <div class="stats-grid">
-      <div class="stat-tile">
-        <span class="stat-valor">{{ stats.enlacesRespondidos }}</span>
-        <span class="stat-etiqueta">Total de respuestas</span>
-      </div>
-      <div class="stat-tile stat-aprobadas">
-        <span class="stat-valor">{{ stats.respuestasAprobadas }}</span>
-        <span class="stat-etiqueta">Válidas (aprobadas)</span>
-      </div>
-      <div class="stat-tile stat-pendientes">
-        <span class="stat-valor">{{ stats.respuestasPendientesValidacion }}</span>
-        <span class="stat-etiqueta">Pendientes</span>
-      </div>
-      <div class="stat-tile stat-rechazadas">
-        <span class="stat-valor">{{ stats.respuestasRechazadas }}</span>
-        <span class="stat-etiqueta">Rechazadas</span>
-      </div>
-    </div>
-    } @else {
-    <p class="detalle-vacio">Cargando estadísticas...</p>
-    }
-  </section>
-
-  <section class="detalle-seccion">
-    <h3>Preguntas</h3>
-    <app-lista-preguntas [preguntas]="enc.preguntas"></app-lista-preguntas>
-  </section>
-
   @if (esEncuestador) {
   <section class="detalle-seccion">
     <h3>Generar enlace y QR</h3>
@@ -107,30 +79,63 @@
     }
   </section>
 
+
+  <section class="detalle-seccion">
+    <h3>Estadísticas</h3>
+    @if (estadisticas(); as stats) {
+    <div class="stats-grid">
+      <div class="stat-tile">
+        <span class="stat-valor">{{ stats.enlacesRespondidos }}</span>
+        <span class="stat-etiqueta">Total de respuestas</span>
+      </div>
+      <div class="stat-tile stat-aprobadas">
+        <span class="stat-valor">{{ stats.respuestasAprobadas }}</span>
+        <span class="stat-etiqueta">Válidas (aprobadas)</span>
+      </div>
+      <div class="stat-tile stat-pendientes">
+        <span class="stat-valor">{{ stats.respuestasPendientesValidacion }}</span>
+        <span class="stat-etiqueta">Pendientes</span>
+      </div>
+      <div class="stat-tile stat-rechazadas">
+        <span class="stat-valor">{{ stats.respuestasRechazadas }}</span>
+        <span class="stat-etiqueta">Rechazadas</span>
+      </div>
+    </div>
+    } @else {
+    <p class="detalle-vacio">Cargando estadísticas...</p>
+    }
+  </section>
+
+  <section class="detalle-seccion">
+    <h3>Preguntas</h3>
+    <app-lista-preguntas [preguntas]="enc.preguntas"></app-lista-preguntas>
+  </section>
+
+
   <section class="detalle-seccion">
     <h3>Respuestas pendientes de esta encuesta</h3>
     <div class="list-grid">
-          @for (res of pendientes(); track res.id) {
-          <div class="card-item">
-            <div class="card-info">
-              <h3>#{{ res.encuestaId }} - {{res.encuestaTitulo}}</h3>
-              <p>#{{ res.id }} | {{ res.fechaRespuesta | date:'dd-MM-yyyy hh:mm' }}</p>
-            </div>
-            <div class="card-actions">
-              <button mat-icon-button color="primary">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, estadoResp.APROBADA)">
-                <mat-icon>check_circle</mat-icon>
-              </button>
-              <button mat-icon-button color="warn" (click)="validarRespuesta(res.id,estadoResp.RECHAZADA)">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </div>
-          </div>
-          } @empty {
-          <p>No hay respuestas pendientes.</p>
-          }
+      @for (res of pendientes(); track res.id) {
+      <div class="card-item">
+        <div class="card-info">
+          <h3>#{{ res.encuestaId }} - {{res.encuestaTitulo}}</h3>
+          <p>#{{ res.id }} | {{ res.fechaRespuesta | date:'dd-MM-yyyy hh:mm' }}</p>
+        </div>
+        <div class="card-actions">
+          <button mat-icon-button color="primary">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, estadoResp.APROBADA)">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="validarRespuesta(res.id,estadoResp.RECHAZADA)">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </div>
+      </div>
+      } @empty {
+      <p>No hay respuestas pendientes.</p>
+      }
     </div>
   </section>
   }

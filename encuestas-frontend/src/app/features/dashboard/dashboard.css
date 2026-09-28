@@ -12,14 +12,65 @@
 }
 
 .dashboard-header {
-  margin-bottom: 20px;
-  border-bottom: 2px solid #eee;
-  /* ACÁ: Podés cambiar el grosor y el color. El #eee es un gris aburrido. */
-  padding-bottom: 10px;
-  /* IDEAS ACÁ:
-     - border-bottom: 4px solid #ffcc00; -> Le da un subrayado amarillo intenso y grueso al título principal.
-     - background: linear-gradient(90deg, #002366 0%, #003366 100%); -> Si en lugar de solo subrayarlo preferís pintar toda la cabecera de un azul profundo (acordate de sumarle 'color: white' al texto y un 'padding' para que respire). */
+  display: flex;
+  /* Activa flexbox */
+  justify-content: space-between;
+  /* Empuja el título a la izq y el botón a la der */
+  align-items: center;
+  /* Los centra verticalmente para que no queden desfasados */
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
+
+.dashboard-info {
+  display: flex;
+  /* Activa flexbox */
+  justify-content: space-between;
+  /* Empuja el título a la izq y el botón a la der */
+  align-items: center;
+  /* Los centra verticalmente para que no queden desfasados */
+  background: white;
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* Espacio entre el título y el rol */
+}
+
+.header-title h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* Le da un estilo de "pastilla" al rol para que no sea texto plano */
+.role-badge {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+
+
 
 .tab-content {
   padding: 20px 0;

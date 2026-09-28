@@ -1,4 +1,9 @@
-<h2 mat-dialog-title class="modal-title">{{ data.titulo }}</h2>
+<div class="header modal-header">
+  <h2 mat-dialog-title class="modal-title">{{ data.titulo }}</h2>
+
+</div>
+
+
 <mat-dialog-content class="modal-contenido">
   @if (data.tipoAccion === 'ver') {
   <mat-list class="material-detail-list">
@@ -9,6 +14,7 @@
         <span class="detail-value">{{ campo.valor }}</span>
       </div>
     </mat-list-item>
+
 
     @if (!last) {
     <mat-divider></mat-divider>
