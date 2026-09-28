@@ -27,4 +27,20 @@ public class ClienteController {
     public ClienteResponseDTO crear(@RequestBody ClienteRequestDTO dto) {
         return clienteService.guardar(dto, authUtil.obtenerUsuarioActualId());
     }
+
+    @PutMapping("/{id}")
+    public ClienteResponseDTO editar(@PathVariable Long id, @RequestBody ClienteRequestDTO dto) {
+        return clienteService.editar(id, dto);
+    }
+
+    @PatchMapping("/{id}/desactivar")
+    public void desactivar(@PathVariable Long id) {
+        clienteService.desactivar(id);
+    }
+
+    @PatchMapping("/{id}/activar")
+    public void activar(@PathVariable Long id) {
+        clienteService.activar(id);
+    }
+
 }
