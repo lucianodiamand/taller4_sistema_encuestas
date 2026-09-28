@@ -133,7 +133,7 @@ export class Dashboard implements OnInit {
     });
   }
 
-  validarRespuesta(idRespuesta: number, estado: 'aprobada' | 'rechazada') {
+  validarRespuesta(idRespuesta: number, estado: 'APROBADA' | 'RECHAZADA') {
     this.respuestaService.validar(idRespuesta, estado).subscribe(() => {
       this.respuestaService
         .obtenerPendientes()

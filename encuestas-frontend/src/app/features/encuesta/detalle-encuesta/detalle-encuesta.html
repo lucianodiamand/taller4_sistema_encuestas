@@ -47,19 +47,19 @@
     @if (estadisticas(); as stats) {
     <div class="stats-grid">
       <div class="stat-tile">
-        <span class="stat-valor">{{ stats.totalRespuestas }}</span>
+        <span class="stat-valor">{{ stats.enlacesRespondidos }}</span>
         <span class="stat-etiqueta">Total de respuestas</span>
       </div>
       <div class="stat-tile stat-aprobadas">
-        <span class="stat-valor">{{ stats.aprobadas }}</span>
+        <span class="stat-valor">{{ stats.respuestasAprobadas }}</span>
         <span class="stat-etiqueta">Válidas (aprobadas)</span>
       </div>
       <div class="stat-tile stat-pendientes">
-        <span class="stat-valor">{{ stats.pendientes }}</span>
+        <span class="stat-valor">{{ stats.respuestasPendientesValidacion }}</span>
         <span class="stat-etiqueta">Pendientes</span>
       </div>
       <div class="stat-tile stat-rechazadas">
-        <span class="stat-valor">{{ stats.rechazadas }}</span>
+        <span class="stat-valor">{{ stats.respuestasRechazadas }}</span>
         <span class="stat-etiqueta">Rechazadas</span>
       </div>
     </div>
@@ -117,10 +117,10 @@
           <p>Fecha: {{ res.fecha | date: 'dd/MM/yyyy' }}</p>
         </div>
         <div class="card-actions">
-          <button mat-icon-button color="primary" (click)="validarRespuesta(res, 'aprobada')">
+          <button mat-icon-button color="primary" (click)="validarRespuesta(res, 'APROBADA')">
             <mat-icon>check_circle</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="validarRespuesta(res, 'rechazada')">
+          <button mat-icon-button color="warn" (click)="validarRespuesta(res, 'RECHAZADA')">
             <mat-icon>cancel</mat-icon>
           </button>
         </div>

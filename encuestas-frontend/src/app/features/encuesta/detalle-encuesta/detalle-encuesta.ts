@@ -62,6 +62,7 @@ export class DetalleEncuesta implements OnInit {
       this.encuesta.set(encuesta);
       this.respuestaService.obtenerEstadisticas(encuesta.id).subscribe((stats) => {
         this.estadisticas.set(stats);
+        console.log(stats)
       });
       if (this.esEncuestador) {
         this.cargarPendientes(encuesta.id);
@@ -86,7 +87,7 @@ export class DetalleEncuesta implements OnInit {
     });
   }
 
-  validarRespuesta(respuesta: RespuestaEncuesta, estado: 'aprobada' | 'rechazada') {
+  validarRespuesta(respuesta: RespuestaEncuesta, estado: 'APROBADA' | 'RECHAZADA') {
     this.respuestaService.validar(respuesta.id, estado).subscribe(() => {
       const encuesta = this.encuesta();
       if (encuesta) {
