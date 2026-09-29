@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -59,5 +61,10 @@ public class JwtUtil {
         } catch (Exception e) {
             return false;   // token corrupto, mal firmado, o vencido
         }
+    }
+
+    public LocalDateTime extraerFechaExpiracion(String token) {
+        Date expiracion = extraerClaim(token, Claims::getExpiration);
+        return expiracion.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }

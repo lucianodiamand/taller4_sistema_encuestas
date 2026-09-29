@@ -1,5 +1,6 @@
 package com.encuestas.encuestas_backend.security;
 
+import com.encuestas.encuestas_backend.service.TokenBlacklistService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,25 +23,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
-        // Si no hay header, o no empieza con "Bearer ", dejamos pasar el request sin autenticar
-        // (Spring Security después decide si ese endpoint requiere login o no)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7); // saca el "Bearer " de adelante
+        String token = authHeader.substring(7);
+
+        // Si el token fue deslogueado explícitamente, lo tratamos como inválido
+        if (tokenBlacklistService.estaInvalidado(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
             String email = jwtUtil.extraerEmail(token);
 
-            // Si el email es válido y todavía no hay nadie autenticado en este request
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -48,13 +55,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                    // Acá es donde efectivamente "logueamos" al usuario para este request
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
         } catch (Exception e) {
-            // Token inválido/corrupto: no autenticamos, el request sigue como anónimo
+            // token inválido/corrupto: no autenticamos
         }
 
         filterChain.doFilter(request, response);
