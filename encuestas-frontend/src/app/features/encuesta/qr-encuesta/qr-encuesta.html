@@ -1,0 +1,69 @@
+<div class="qr-container">
+  <header class="qr-header">
+    <button mat-icon-button color="primary" (click)="volver()" aria-label="Volver">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>QR de la Encuesta</h2>
+  </header>
+
+  @if (errorCarga()) {
+  <div class="qr-error">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <p>Encuesta no encontrada.</p>
+    <button mat-raised-button color="primary" (click)="volver()">Volver al panel</button>
+  </div>
+  } @else if (encuesta(); as enc) {
+
+  <mat-card class="qr-card">
+    <mat-card-header>
+      <mat-card-title>{{ enc.titulo }}</mat-card-title>
+      @if (enc.descripcion) {
+      <mat-card-subtitle>{{ enc.descripcion }}</mat-card-subtitle>
+      }
+    </mat-card-header>
+    <mat-card-content class="qr-content">
+      @if (enc.estado !== estados.ACTIVA) {
+      <div class="qr-aviso">
+        <mat-icon color="warn">warning</mat-icon>
+        <span>La encuesta no está activa (estado: {{ enc.estado }}). No se puede generar QR.</span>
+      </div>
+      } @else if (generando()) {
+      <div class="qr-cargando">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Generando QR...</p>
+      </div>
+      } @else if (errorGenerar()) {
+      <div class="qr-error">
+        <mat-icon color="warn">error_outline</mat-icon>
+        <span>No se pudo generar el QR. Inténtalo de nuevo.</span>
+      </div>
+      } @else if (enlace(); as link) {
+      <div class="qr-resultado">
+        @if (link.qrCodeBase64) {
+        <img class="qr-imagen" [src]="'data:image/png;base64,' + link.qrCodeBase64" alt="Código QR" />
+        } @else {
+        <div class="qr-placeholder">
+          <mat-icon>qr_code</mat-icon>
+          <p>QR (placeholder - base64 no disponible en mock)</p>
+        </div>
+        }
+        <div class="qr-url">
+          <span class="url-texto">{{ link.urlCompleta }}</span>
+          <button mat-icon-button color="primary" (click)="copiarEnlace()" [attr.aria-label]="copiado() ? 'Copiado' : 'Copiar enlace'">
+            <mat-icon>{{ copiado() ? 'check' : 'content_copy' }}</mat-icon>
+          </button>
+          @if (copiado()) {
+          <span class="copiado-texto">¡Copiado!</span>
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="qr-cargando">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Generando QR...</p>
+      </div>
+      }
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

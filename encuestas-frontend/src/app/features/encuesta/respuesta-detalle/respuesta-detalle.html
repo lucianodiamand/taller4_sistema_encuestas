@@ -1,0 +1,98 @@
+<div class="respuesta-detalle-container">
+  <header class="respuesta-header">
+    <button mat-icon-button color="primary" (click)="volver()" aria-label="Volver">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>Detalle de Respuesta</h2>
+  </header>
+
+  @if (errorCarga()) {
+  <div class="respuesta-error">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <p>Respuesta no encontrada.</p>
+    <button mat-raised-button color="primary" (click)="volver()">Volver al panel</button>
+  </div>
+  } @else if (respuesta(); as resp) {
+
+  <mat-card class="respuesta-card">
+    <mat-card-header>
+      <mat-card-title>
+        <span class="respuesta-id">#{{ resp.id }}</span>
+        <span class="respuesta-titulo">{{ resp.encuestaTitulo }}</span>
+      </mat-card-title>
+      <mat-card-subtitle>
+        {{ resp.fechaRespuesta | date:'short' }}
+        <mat-chip-set>
+          @switch (resp.estadoValidacion) {
+          @case (estados.PENDIENTE) {
+          <mat-chip color="accent" class="estado-chip">Pendiente</mat-chip>
+          }
+          @case (estados.APROBADA) {
+          <mat-chip color="primary" class="estado-chip">Aprobada</mat-chip>
+          }
+          @case (estados.RECHAZADA) {
+          <mat-chip color="warn" class="estado-chip">Rechazada</mat-chip>
+          }
+          }
+        </mat-chip-set>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Barra de acciones ARRIBA (solo PENDIENTE) -->
+      @if (resp.estadoValidacion === estados.PENDIENTE) {
+      <div class="acciones-barra">
+        <button mat-raised-button color="primary" (click)="validar('aprobada')" [disabled]="validando()">
+          <mat-icon>check_circle</mat-icon> Aprobar
+        </button>
+        <button mat-raised-button color="warn" (click)="validar('rechazada')" [disabled]="validando()">
+          <mat-icon>cancel</mat-icon> Rechazar
+        </button>
+      </div>
+      <mat-divider></mat-divider>
+      }
+
+      <!-- Lista de respuestas -->
+      <div class="respuestas-lista">
+        @for (r of resp.respuestas; track r.ordenPregunta; let i = $index) {
+        <div class="respuesta-item">
+          <div class="pregunta-info">
+            <span class="pregunta-num">Pregunta {{ r.ordenPregunta }}</span>
+            <span class="pregunta-texto">{{ r.textoPregunta }}</span>
+          </div>
+          <div class="respuesta-valor">
+            {{ r.respuesta || '—' }}
+          </div>
+        </div>
+        @if (i < resp.respuestas.length - 1) {
+        <mat-divider class="item-divider"></mat-divider>
+        }
+        }
+      </div>
+
+      <!-- Barra de acciones ABAJO (solo PENDIENTE) -->
+      @if (resp.estadoValidacion === estados.PENDIENTE) {
+      <mat-divider></mat-divider>
+      <div class="acciones-barra">
+        <button mat-raised-button color="primary" (click)="validar('aprobada')" [disabled]="validando()">
+          <mat-icon>check_circle</mat-icon> Aprobar
+        </button>
+        <button mat-raised-button color="warn" (click)="validar('rechazada')" [disabled]="validando()">
+          <mat-icon>cancel</mat-icon> Rechazar
+        </button>
+      </div>
+      }
+
+      @if (mensaje()) {
+      <div class="mensaje-resultado">
+        <mat-icon [color]="mensaje().includes('aprobada') ? 'primary' : 'warn'">
+          {{ mensaje().includes('aprobada') ? 'check_circle' : 'info' }}
+        </mat-icon>
+        <span>{{ mensaje() }}</span>
+      </div>
+      }
+
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

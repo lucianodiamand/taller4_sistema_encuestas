@@ -3,8 +3,8 @@ export enum TipoPregunta {
   TEXTO_LIBRE = 'TEXTO_LIBRE', // respuesta abierta
   OPCION_UNICA = 'OPCION_UNICA', // elige 1 opción (radio button)
   OPCION_MULTIPLE = 'OPCION_MULTIPLE', // elige varias opciones (checkbox)
-  ESCALA = 'ESCALA',
+  ESCALA = 'ESCALA', // ejemplo: del 1 al 5
   EMAIL = 'EMAIL',
   NUMERO = 'NUMERO',
-  TELEFONO = 'TELEFONO', // ejemplo: del 1 al 5
+  TELEFONO = 'TELEFONO',
 }

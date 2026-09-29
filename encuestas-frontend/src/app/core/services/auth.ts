@@ -20,6 +20,8 @@ export class AuthService {
   currentUserId = signal<number | null>(this.getUserId());
   // Estado activo del usuario actual
   currentUserActivo = signal<boolean | null>(null);
+  // Email real del usuario logueado
+  currentUserEmail = signal<string | null>(this.getEmailFromStorage());
 
   constructor(private router: Router) {}
 
@@ -27,7 +29,7 @@ export class AuthService {
     if (USAR_BACKEND_REAL) {
       return this.http.post<LoginResponse>(`${API_URL}/auth/login`, { email, password: clave }).pipe(
         map((res) => {
-          this.setSession(res.token, res.rol as Rol, res.usuarioId, true);
+          this.setSession(res.token, res.rol as Rol, res.usuarioId, true, res.email);
           return true;
         }),
         catchError((err) => {
@@ -39,29 +41,31 @@ export class AuthService {
 
     // MOCK: aceptar credenciales del seed y las viejas (admin/1234, encuestador/1234)
     if ((email === 'admin@test.com' || email === 'admin') && clave === '1234') {
-      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true);
+      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true, email);
       return of(true);
     } else if ((email === 'encuestador@test.com' || email === 'encuestador') && clave === '1234') {
-      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true);
+      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true, email);
       return of(true);
     } else if (email === 'admin@test.com' && clave === 'admin123') {
-      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true);
+      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true, email);
       return of(true);
     } else if (email === 'encuestador@test.com' && clave === 'encuestador123') {
-      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true);
+      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true, email);
       return of(true);
     }
     return throwError(() => new Error('CREDENCIALES_INVALIDAS'));
   }
 
-  private setSession(token: string, role: Rol, userId: number, activo: boolean) {
+  private setSession(token: string, role: Rol, userId: number, activo: boolean, email: string) {
     localStorage.setItem('jwt', token);
     localStorage.setItem('role', role);
     localStorage.setItem('userId', String(userId));
     localStorage.setItem('activo', String(activo));
+    localStorage.setItem('email', email);
     this.currentUserRole.set(role);
     this.currentUserId.set(userId);
     this.currentUserActivo.set(activo);
+    this.currentUserEmail.set(email);
     this.router.navigate(['/dashboard']);
   }
 
@@ -70,9 +74,11 @@ export class AuthService {
     localStorage.removeItem('role');
     localStorage.removeItem('userId');
     localStorage.removeItem('activo');
+    localStorage.removeItem('email');
     this.currentUserRole.set(null);
     this.currentUserId.set(null);
     this.currentUserActivo.set(null);
+    this.currentUserEmail.set(null);
     this.router.navigate(['/login']);
   }
 
@@ -88,6 +94,10 @@ export class AuthService {
   getActivoFromStorage(): boolean {
     const activo = localStorage.getItem('activo');
     return activo === 'true';
+  }
+
+  getEmailFromStorage(): string | null {
+    return localStorage.getItem('email');
   }
 
   private getUserId(): number | null {

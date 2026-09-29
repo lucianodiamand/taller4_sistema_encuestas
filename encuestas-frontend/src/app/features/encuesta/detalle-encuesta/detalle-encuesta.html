@@ -21,6 +21,12 @@
     <span class="estado-badge" [class.badge-activa]="enc.estado === estados.ACTIVA">
       {{ enc.estado === estados.ACTIVA ? 'Activa' : 'Cerrada' }}
     </span>
+    @if (esEncuestador) {
+    <button mat-raised-button color="primary" class="qr-titulo-btn"
+            [disabled]="enc.estado !== estados.ACTIVA" (click)="verQR()">
+      <mat-icon>qr_code</mat-icon> Generar QR
+    </button>
+    }
   </div>
 
   <section class="detalle-seccion">
@@ -44,41 +50,6 @@
       </div>
     </div>
   </section>
-
-  @if (esEncuestador) {
-  <section class="detalle-seccion">
-    <h3>Generar enlace y QR</h3>
-    <p class="detalle-descripcion">
-      Generá un enlace de un solo uso para que un encuestado responda esta encuesta.
-    </p>
-    <button mat-raised-button color="primary" [disabled]="enc.estado !== estados.ACTIVA" (click)="generarQR()">
-      <mat-icon>qr_code</mat-icon>
-      Generar QR
-    </button>
-    @if (enc.estado !== estados.ACTIVA) {
-    <p class="qr-aviso">Solo se pueden generar enlaces para encuestas activas.</p>
-    }
-
-    @if (enlaceGenerado(); as enlace) {
-    <div class="qr-resultado">
-      @if (enlace.qrCodeBase64) {
-      <img [src]="'data:image/png;base64,' + enlace.qrCodeBase64" alt="Código QR del enlace" class="qr-imagen">
-      } @else {
-      <div class="qr-placeholder">
-        <mat-icon>qr_code</mat-icon>
-      </div>
-      }
-      <div class="qr-url">
-        <span>{{ enlace.urlCompleta }}</span>
-        <button mat-button (click)="copiarEnlace()">
-          <mat-icon>content_copy</mat-icon>
-          {{ copiado() ? '¡Copiado!' : 'Copiar' }}
-        </button>
-      </div>
-    </div>
-    }
-  </section>
-
 
   <section class="detalle-seccion">
     <h3>Estadísticas</h3>
@@ -111,7 +82,7 @@
     <app-lista-preguntas [preguntas]="enc.preguntas"></app-lista-preguntas>
   </section>
 
-
+  @if (esEncuestador) {
   <section class="detalle-seccion">
     <h3>Respuestas pendientes de esta encuesta</h3>
     <div class="list-grid">
@@ -122,7 +93,7 @@
           <p>#{{ res.id }} | {{ res.fechaRespuesta | date:'dd-MM-yyyy hh:mm' }}</p>
         </div>
         <div class="card-actions">
-          <button mat-icon-button color="primary">
+          <button mat-icon-button color="primary" (click)="verRespuesta(res)">
             <mat-icon>visibility</mat-icon>
           </button>
           <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, estadoResp.APROBADA)">

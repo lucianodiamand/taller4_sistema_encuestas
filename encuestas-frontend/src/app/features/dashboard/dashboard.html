@@ -13,10 +13,10 @@
   <header class="dashboard-info">
     <div class="info-list">
       <span>
-        nombre apelldo
+        {{ nombreCompleto() }}
       </span>
       <span>
-        email@gmail.com
+        {{ emailUsuario() ?? 'Sin email' }}
       </span>
     </div>
     <span class="role-badge">{{ rolActual }}</span>
@@ -173,7 +173,7 @@
               <p>#{{ res.id }} | {{ res.fechaRespuesta | date:'dd-MM-yyyy hh:mm' }}</p>
             </div>
             <div class="card-actions">
-              <button mat-icon-button color="primary" (click)="abrirModal(res, 'Respuesta', 'ver')">
+              <button mat-icon-button color="primary" (click)="verRespuesta(res)">
                 <mat-icon>visibility</mat-icon>
               </button>
               <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, estadoResp.APROBADA)">

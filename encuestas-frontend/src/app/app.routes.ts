@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
 import { guestGuard } from './core/guards/guest-guard';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,13 +17,18 @@ export const routes: Routes = [
   },
   {
     path: 'encuestas/nueva',
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
     loadComponent: () => import('./features/encuesta/editor-encuesta/editor-encuesta').then(m => m.EditorEncuesta),
   },
   {
     path: 'encuestas/:id/editar',
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
     loadComponent: () => import('./features/encuesta/editor-encuesta/editor-encuesta').then(m => m.EditorEncuesta),
+  },
+  {
+    path: 'encuestas/:id/qr',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/encuesta/qr-encuesta/qr-encuesta').then(m => m.QrEncuesta),
   },
   {
     path: 'encuestas/:id',
@@ -32,6 +38,11 @@ export const routes: Routes = [
   {
     path: 'responder/:token',
     loadComponent: () => import('./features/public/responder-encuesta/responder-encuesta').then(m => m.ResponderEncuesta),
+  },
+  {
+    path: 'respuestas/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/encuesta/respuesta-detalle/respuesta-detalle').then(m => m.RespuestaDetalle),
   },
   { path: '**', redirectTo: 'login' } // Fallback
 ];

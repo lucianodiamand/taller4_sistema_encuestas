@@ -6,12 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../core/services/auth';
 import { EncuestaService } from '../../../core/services/encuesta';
 import { RespuestaService } from '../../../core/services/respuesta';
-import { EnlaceService } from '../../../core/services/enlace';
 import { ListaPreguntas } from '../../../shared/components/lista-preguntas/lista-preguntas';
 import { Encuesta } from '../../../shared/models/encuesta-interface';
 import { EstadisticasEncuesta } from '../../../shared/models/estadisticas-encuesta';
 import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
-import { Enlace } from '../../../shared/models/enlace-interface';
 import { RespuestaEncuesta } from '../../../shared/models/respuesta-encuesta-interface';
 import { Rol } from '../../../shared/models/rol';
 import { EstadoRespuesta } from '../../../shared/models/estado-respuesta';
@@ -29,7 +27,6 @@ export class DetalleEncuesta implements OnInit {
   private authService = inject(AuthService);
   private encuestaService = inject(EncuestaService);
   private respuestaService = inject(RespuestaService);
-  private enlaceService = inject(EnlaceService);
 
   // Exponemos los enums para compararlos en el template
   protected readonly estados = EstadoEncuesta;
@@ -41,8 +38,6 @@ export class DetalleEncuesta implements OnInit {
   encuesta = signal<Encuesta | null>(null);
   estadisticas = signal<EstadisticasEncuesta | null>(null);
   pendientes = signal<RespuestaEncuesta[]>([]);
-  enlaceGenerado = signal<Enlace | null>(null);
-  copiado = signal(false);
   errorCarga = signal(false);
 
   get esEncuestador(): boolean {
@@ -64,7 +59,6 @@ export class DetalleEncuesta implements OnInit {
       this.encuesta.set(encuesta);
       this.respuestaService.obtenerEstadisticas(encuesta.id).subscribe((stats) => {
         this.estadisticas.set(stats);
-        console.log(stats)
       });
       if (this.esEncuestador) {
         this.cargarPendientes(encuesta.id);
@@ -78,29 +72,22 @@ export class DetalleEncuesta implements OnInit {
     });
   }
 
-  // Genera un enlace de un solo uso + QR (solo encuestador y con encuesta activa, RN01)
-  generarQR() {
-    const encuesta = this.encuesta();
-    if (!encuesta || !this.esEncuestador || encuesta.estado !== EstadoEncuesta.ACTIVA) {
-      return;
-    }
-    this.enlaceService.generar(encuesta.id, encuesta.titulo).subscribe((enlace) => {
-      this.enlaceGenerado.set(enlace);
-    });
+  // Navega a la página QR
+  verQR() {
+    const enc = this.encuesta();
+    if (enc) this.router.navigate(['/encuestas', enc.id, 'qr']);
+  }
+
+  // Navega a la página de detalle de respuesta
+  verRespuesta(res: RespuestaEncuesta) {
+    this.router.navigate(['/respuestas', res.id], { queryParams: { origen: 'encuesta' } });
   }
 
   validarRespuesta(idRespuesta: number, estado: EstadoRespuesta) {
     this.respuestaService.validar(idRespuesta, estado).subscribe(() => {
-       this.cargarPendientes(idRespuesta);
+      const enc = this.encuesta();
+      if (enc) this.cargarPendientes(enc.id);
     });
-  }
-
-  copiarEnlace() {
-    const enlace = this.enlaceGenerado();
-    if (!enlace?.urlCompleta) return;
-    navigator.clipboard?.writeText(enlace.urlCompleta);
-    this.copiado.set(true);
-    setTimeout(() => this.copiado.set(false), 2000);
   }
 
   volver() {

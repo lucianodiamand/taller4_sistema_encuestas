@@ -1,8 +1,9 @@
 // Respuesta enviada por un encuestado anónimo (payload del envío).
-// "preguntaOrden" identifica la pregunta (la Pregunta no tiene id, solo orden).
+// Alineado con el backend: RespuestaEncuestaResponseDTO.respuestas = [{ ordenPregunta, textoPregunta, respuesta }]
 export interface RespuestaPregunta {
-  preguntaOrden: number;
-  valor: string | number | string[];
+  ordenPregunta: number;
+  textoPregunta: string;
+  respuesta: string; // para OPCION_MULTIPLE: opciones unidas con ', '
 }
 
 export interface RespuestaEnviada {

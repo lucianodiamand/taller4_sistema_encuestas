@@ -133,7 +133,7 @@ export class ResponderEncuesta implements OnInit {
     return this.getCheckboxes(i).at(oi) as FormControl;
   }
 
-  enviar() {
+enviar() {
     this.errorMessage = '';
 
     if (this.respuestas.invalid) {
@@ -147,16 +147,16 @@ export class ResponderEncuesta implements OnInit {
 
     const respuestas: RespuestaPregunta[] = encuesta.preguntas.map((p, i) => {
       const control = this.respuestas.at(i);
-      let valor: string | number | string[];
+      let valor: string;
 
       if (p.tipo === TipoPregunta.OPCION_MULTIPLE) {
         const checks = (control as FormArray).value as boolean[];
-        valor = p.opciones.filter((_, oi) => checks[oi]);
+        valor = p.opciones.filter((_, oi) => checks[oi]).join(', ');
       } else {
-        valor = control.value;
+        valor = String(control.value);
       }
 
-      return { preguntaOrden: p.orden, valor };
+      return { ordenPregunta: p.orden, textoPregunta: p.texto, respuesta: valor };
     });
 
     const datos: RespuestaEnviada = {
@@ -165,15 +165,8 @@ export class ResponderEncuesta implements OnInit {
       respuestas,
     };
 
-    this.respuestaService.enviar(datos, this.token).subscribe({
+    this.respuestaService.enviar(datos).subscribe({
       next: () => this.finalizada.set(true),
-/*       next: () => {
-
-        this.enlaceService.marcarRespondido(datos.token).subscribe({
-          next: () => this.finalizada.set(true),
-          error: () => (this.errorMessage = 'Error al marcar el enlace.'),
-        });
-      }, */
       error: () => (this.errorMessage = 'No se pudo enviar la respuesta. Inténtalo de nuevo.'),
     });
   }

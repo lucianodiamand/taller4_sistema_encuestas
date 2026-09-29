@@ -40,6 +40,8 @@ export class Dashboard implements OnInit {
   protected readonly estadoResp = EstadoRespuesta;
 
   rolActual: Rol | null = this.authService.currentUserRole();
+  emailUsuario = this.authService.currentUserEmail;
+  usuarioInfo = signal<{ nombre: string; apellido: string } | null>(null);
 
   // Listas que se llenan al cargar los servicios (cargarDatos).
   // Se usan signals para que la vista se actualice sola al cambiar su valor.
@@ -65,7 +67,17 @@ export class Dashboard implements OnInit {
     // Solo ADMIN carga clientes y encuestadores (con backend real, encuestador recibe 403)
     if (this.rolActual === Rol.ADMIN) {
       this.clienteService.obtenerTodos().subscribe((data) => this.clientes.set(data));
-      this.usuarioService.obtenerEncuestadores().subscribe((data) => this.encuestadores.set(data));
+      this.usuarioService.obtenerEncuestadores().subscribe((data) => {
+        this.encuestadores.set(data);
+        // Buscar usuario actual por id para mostrar nombre/apellido real
+        const userId = this.authService.currentUserId();
+        if (userId) {
+          const usuario = data.find((u) => u.id === userId);
+          if (usuario) {
+            this.usuarioInfo.set({ nombre: usuario.nombre, apellido: usuario.apellido });
+          }
+        }
+      });
     }
 
     console.log('Datos cargados: ', {
@@ -73,6 +85,20 @@ export class Dashboard implements OnInit {
       encuestas: this.encuestas(),
       encuestadores: this.encuestadores(),
     });
+  }
+
+  nombreCompleto(): string {
+    const info = this.usuarioInfo();
+    if (info) {
+      return `${info.nombre} ${info.apellido}`;
+    }
+    if (this.rolActual === Rol.ADMIN) {
+      return 'Administrador';
+    }
+    if (this.rolActual === Rol.ENCUESTADOR) {
+      return 'Encuestador';
+    }
+    return 'Usuario';
   }
 
   // Redirige al detalle de la encuesta (reemplaza al modal "ver")
@@ -147,6 +173,10 @@ export class Dashboard implements OnInit {
     });
   }
 
+  // Navega a la página de detalle de respuesta
+  verRespuesta(res: RespuestaEncuesta) {
+    this.router.navigate(['/respuestas', res.id]);
+  }
 
   logout() {
     this.authService.logout();

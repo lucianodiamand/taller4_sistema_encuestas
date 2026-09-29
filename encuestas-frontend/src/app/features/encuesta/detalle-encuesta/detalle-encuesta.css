@@ -54,6 +54,31 @@
   /* ACÁ: Color del título principal. */
 }
 
+/* Botón QR al costado del título */
+.qr-titulo-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qr-titulo-btn:disabled {
+  opacity: 0.6;
+}
+
+/* Responsive: apilar badge y botón QR en pantallas chicas */
+@media (max-width: 640px) {
+  .detalle-titulo-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .qr-titulo-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
 /* --- BADGES (Etiquetas de estado) --- */
 .estado-badge {
   background: #fdecea;

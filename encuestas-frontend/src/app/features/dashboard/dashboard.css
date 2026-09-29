@@ -6,6 +6,7 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  font-family: 'Segoe UI', system-ui, 'Helvetica Neue', Arial, sans-serif;
   /* IDEAS ACÁ:
      - font-family: 'Segoe UI', sans-serif; -> Para darle una tipografía más limpia a todo el panel.
      - background-color: #f8f9fa; -> Poner un fondo gris muy clarito en toda la pantalla ayuda a que las tarjetas blancas resalten mucho más por contraste. */
@@ -40,6 +41,21 @@
 .info-list {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+}
+
+.info-list span:first-child {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: #1e293b;
+}
+
+.info-list span:last-child {
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: #64748b;
 }
 
 
