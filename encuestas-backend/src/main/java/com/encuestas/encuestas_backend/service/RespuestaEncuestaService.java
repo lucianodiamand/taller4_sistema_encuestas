@@ -5,6 +5,7 @@ import com.encuestas.encuestas_backend.dto.publico.EnviarRespuestaDTO;
 import com.encuestas.encuestas_backend.dto.publico.RespuestaPreguntaDTO;
 import com.encuestas.encuestas_backend.dto.respuesta.RespuestaEncuestaResponseDTO;
 import com.encuestas.encuestas_backend.model.*;
+import com.encuestas.encuestas_backend.repository.EncuestaRepository;
 import com.encuestas.encuestas_backend.repository.EnlaceRepository;
 import com.encuestas.encuestas_backend.repository.RespuestaEncuestaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class RespuestaEncuestaService {
 
     @Autowired
     private RespuestaEncuestaRepository respuestaEncuestaRepository;
+
+    @Autowired
+    private EncuestaRepository encuestaRepository;
 
     // Paso 1 del flujo público: el encuestado accede al link y necesita ver la encuesta
     public EncuestaPublicaDTO obtenerEncuestaPorToken(String token) {
@@ -46,6 +50,14 @@ public class RespuestaEncuestaService {
         // RF13: el enlace queda marcado como "respondido" e inhabilitado
         enlace.setEstado(EstadoEnlace.RESPONDIDO);
         enlaceRepository.save(enlace);
+
+        // Marcamos la encuesta como "inicializada" en cuanto recibe su primera respuesta.
+        // Solo la tocamos si todavía no lo estaba, para no hacer un UPDATE de más en cada respuesta siguiente.
+        Encuesta encuesta = enlace.getEncuesta();
+        if (!encuesta.getInicializada()) {
+            encuesta.setInicializada(true);
+            encuestaRepository.save(encuesta);
+        }
     }
 
     private List<RespuestaPregunta> convertirRespuestas(List<RespuestaPreguntaDTO> dtos) {

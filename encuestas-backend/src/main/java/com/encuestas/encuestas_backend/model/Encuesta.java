@@ -43,4 +43,7 @@ public class Encuesta {
     @Convert(converter = PreguntaListConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<Pregunta> preguntas = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Boolean inicializada = false;
 }

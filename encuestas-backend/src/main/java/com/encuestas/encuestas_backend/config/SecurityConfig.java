@@ -56,8 +56,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/clientes/**").hasRole("ADMIN")
                         // .requestMatchers(HttpMethod.GET, "/api/encuestas/*/estadisticas").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/exportar-csv").hasRole("ADMIN")   // nueva línea, ANTES de las de abajo
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/encuestas/**").hasRole("ADMIN")
-                        .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/api/encuestas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/encuestas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/encuestas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/encuestas/**").hasRole("ADMIN")
                         .requestMatchers("/api/enlaces/**").hasRole("ENCUESTADOR")
                         // .requestMatchers("/api/respuestas/**").hasRole("ENCUESTADOR")
 

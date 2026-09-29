@@ -1,5 +1,6 @@
 package com.encuestas.encuestas_backend.controller;
 
+import com.encuestas.encuestas_backend.dto.encuesta.EncuestaEditRequestDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EncuestaRequestDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EncuestaResponseDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EstadisticasEncuestaDTO;
@@ -36,6 +37,11 @@ public class EncuestaController {
     @PostMapping
     public EncuestaResponseDTO crear(@RequestBody EncuestaRequestDTO dto) {
         return encuestaService.guardar(dto, authUtil.obtenerUsuarioActualId());
+    }
+
+    @PutMapping("/{id}")
+    public EncuestaResponseDTO editar(@PathVariable Long id, @RequestBody EncuestaEditRequestDTO dto) {
+        return encuestaService.editar(id, dto);
     }
 
     @GetMapping("/{id}")

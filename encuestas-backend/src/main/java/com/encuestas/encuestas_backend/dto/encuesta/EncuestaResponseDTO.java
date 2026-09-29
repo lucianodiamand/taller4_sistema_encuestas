@@ -22,6 +22,7 @@ public class EncuestaResponseDTO {
     private Long usuarioId;
     private String usuarioNombre;
     private List<PreguntaDTO> preguntas;
+    private Boolean inicializada;
 
     public EncuestaResponseDTO(Encuesta encuesta) {
         this.id = encuesta.getId();
@@ -36,6 +37,7 @@ public class EncuestaResponseDTO {
         this.preguntas = encuesta.getPreguntas().stream()
                 .map(this::convertirPregunta)
                 .collect(Collectors.toList());
+        this.inicializada = encuesta.getInicializada();
     }
 
     // Convierte cada Pregunta (modelo) en un PreguntaDTO

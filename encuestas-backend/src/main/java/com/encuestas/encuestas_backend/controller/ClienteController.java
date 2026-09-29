@@ -29,6 +29,11 @@ public class ClienteController {
         return clienteService.guardar(dto, authUtil.obtenerUsuarioActualId());
     }
 
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Long id) {
+        clienteService.eliminar(id);
+    }
+
     @PutMapping("/{id}")
     public ClienteResponseDTO editar(@PathVariable Long id, @RequestBody ClienteEditRequestDTO dto) {
         return clienteService.editar(id, dto);

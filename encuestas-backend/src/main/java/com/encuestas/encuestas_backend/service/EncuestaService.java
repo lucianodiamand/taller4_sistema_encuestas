@@ -1,5 +1,6 @@
 package com.encuestas.encuestas_backend.service;
 
+import com.encuestas.encuestas_backend.dto.encuesta.EncuestaEditRequestDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EncuestaRequestDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.EncuestaResponseDTO;
 import com.encuestas.encuestas_backend.dto.encuesta.PreguntaDTO;
@@ -41,6 +42,10 @@ public class EncuestaService {
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + dto.getClienteId()));
 
+        if (cliente.getEliminado()) {
+            throw new RuntimeException("No se puede crear una encuesta para un cliente eliminado.");
+        }
+
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + usuarioId));
 
@@ -76,5 +81,33 @@ public class EncuestaService {
                     return pregunta;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public EncuestaResponseDTO editar(Long id, EncuestaEditRequestDTO dto) {
+        Encuesta encuesta = encuestaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + id));
+
+        // Regla de negocio: una vez que la encuesta recibió su primera respuesta,
+        // ya no se puede editar (evita inconsistencias con respuestas ya guardadas,
+        // que hacen referencia a las preguntas por su "orden")
+        if (encuesta.getInicializada()) {
+            throw new RuntimeException("No se puede editar una encuesta que ya fue inicializada (recibió respuestas).");
+        }
+
+        Cliente cliente = clienteRepository.findById(dto.getClienteId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + dto.getClienteId()));
+
+        if (cliente.getEliminado()) {
+            throw new RuntimeException("No se puede asociar la encuesta a un cliente eliminado.");
+        }
+
+        encuesta.setTitulo(dto.getTitulo());
+        encuesta.setDescripcion(dto.getDescripcion());
+        encuesta.setCliente(cliente);
+        encuesta.setPreguntas(convertirPreguntas(dto.getPreguntas()));
+        // "usuario" (el creador) y "estado" quedan afuera de este endpoint a propósito
+
+        Encuesta actualizada = encuestaRepository.save(encuesta);
+        return new EncuestaResponseDTO(actualizada);
     }
 }

@@ -74,6 +74,7 @@ public class DataInitializer implements CommandLineRunner {
         cliente1.setTelefono("3415551234");
         cliente1.setCuit(30712345678L);
         cliente1.setActivo(true);
+        cliente1.setEliminado(false);
         cliente1.setUsuario(admin);
         cliente1 = clienteRepository.save(cliente1);
 
@@ -83,6 +84,7 @@ public class DataInitializer implements CommandLineRunner {
         cliente2.setTelefono("3415552345");
         cliente2.setCuit(30798765432L);
         cliente2.setActivo(true);
+        cliente2.setEliminado(false);
         cliente2.setUsuario(admin);
         cliente2 = clienteRepository.save(cliente2);
 
@@ -92,6 +94,7 @@ public class DataInitializer implements CommandLineRunner {
         cliente3.setTelefono("3415553456");
         cliente3.setCuit(30755511122L);
         cliente3.setActivo(true);
+        cliente3.setEliminado(false);
         cliente3.setUsuario(admin);
         cliente3 = clienteRepository.save(cliente3);
 
@@ -104,6 +107,7 @@ public class DataInitializer implements CommandLineRunner {
                 encuesta.setTitulo("Encuesta de satisfacción " + j + " - " + clienteActual.getNombre());
                 encuesta.setDescripcion("Encuesta de prueba generada automáticamente");
                 encuesta.setEstado(EstadoEncuesta.ACTIVA);
+                encuesta.setInicializada(false);
                 encuesta.setCliente(clienteActual);
                 encuesta.setUsuario(admin);
                 encuesta.setPreguntas(crearPreguntasDePrueba());

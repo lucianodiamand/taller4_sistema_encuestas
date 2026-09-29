@@ -22,7 +22,10 @@ public class ClienteService {
     private UsuarioRepository usuarioRepository;
 
     public List<ClienteResponseDTO> listarTodos() {
-        return clienteRepository.findAll().stream().map(ClienteResponseDTO::new).collect(Collectors.toList());
+        return clienteRepository.findByEliminadoFalse()   // cambia acá: antes era findAll()
+                .stream()
+                .map(ClienteResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     public ClienteResponseDTO guardar(ClienteRequestDTO dto, Long usuarioId) {
@@ -67,6 +70,15 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
         cliente.setActivo(true);
+        clienteRepository.save(cliente);
+    }
+
+    public void eliminar(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
+
+        cliente.setEliminado(true);
+        cliente.setActivo(false);
         clienteRepository.save(cliente);
     }
 }
