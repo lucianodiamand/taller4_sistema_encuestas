@@ -167,12 +167,6 @@
   text-align: left;
 }
 
-.copiado-texto {
-  color: #1e7d32;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
 .qr-url button {
   flex-shrink: 0;
 }

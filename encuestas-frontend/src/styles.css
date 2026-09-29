@@ -17,3 +17,17 @@
     width: 2.5rem !important;
     height: 2.5rem !important;
 }
+
+/* ==========================================================================
+   SNACKBAR NOTIFICATIONS (MatSnackBar)
+   ========================================================================== */
+.snack-exito {
+  --mdc-snackbar-container-color: #1e7d32;
+  --mat-snackbar-action-color: #fff;
+  color: #fff;
+}
+.snack-error {
+  --mdc-snackbar-container-color: #c62828;
+  --mat-snackbar-action-color: #fff;
+  color: #fff;
+}

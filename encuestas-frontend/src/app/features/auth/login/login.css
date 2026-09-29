@@ -28,14 +28,6 @@
   width: 100%;
 }
 
-.error-message {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #f44336; /* mat-warn color */
-  margin-bottom: 1rem;
-}
-
 .submit-btn {
   padding: 1.5rem 0;
   font-size: 1.1rem;

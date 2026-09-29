@@ -5,11 +5,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EncuestaService } from '../../../core/services/encuesta';
 import { EnlaceService } from '../../../core/services/enlace';
 import { Encuesta } from '../../../shared/models/encuesta-interface';
 import { Enlace } from '../../../shared/models/enlace-interface';
 import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
+import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-qr-encuesta',
@@ -29,14 +31,13 @@ export class QrEncuesta implements OnInit {
   private router = inject(Router);
   private encuestaService = inject(EncuestaService);
   private enlaceService = inject(EnlaceService);
+  private snack = inject(MatSnackBar);
 
   protected readonly estados = EstadoEncuesta;
 
   encuesta = signal<Encuesta | null>(null);
   enlace = signal<Enlace | null>(null);
   errorCarga = signal(false);
-  errorGenerar = signal(false);
-  copiado = signal(false);
   generando = signal(false);
 
   ngOnInit() {
@@ -71,7 +72,7 @@ export class QrEncuesta implements OnInit {
         this.generando.set(false);
       },
       error: () => {
-        this.errorGenerar.set(true);
+        notificarError(this.snack, 'No se pudo generar el QR. Inténtalo de nuevo.');
         this.generando.set(false);
       },
     });
@@ -81,8 +82,7 @@ export class QrEncuesta implements OnInit {
     const link = this.enlace()?.urlCompleta;
     if (!link) return;
     navigator.clipboard?.writeText(link);
-    this.copiado.set(true);
-    setTimeout(() => this.copiado.set(false), 2000);
+    notificarExito(this.snack, 'Enlace copiado al portapapeles');
   }
 
   volver() {

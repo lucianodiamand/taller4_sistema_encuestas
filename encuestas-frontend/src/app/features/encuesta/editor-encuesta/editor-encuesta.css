@@ -146,19 +146,6 @@
   text-align: center;
 }
 
-.error-message {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #c62828;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 12px;
-  background: #fdecea;
-  border: 1px solid #f5c6c3;
-  border-radius: 8px;
-}
-
 .editor-actions {
   display: flex;
   justify-content: flex-end;

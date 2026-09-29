@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClienteService } from '../../../core/services/cliente';
 import { EncuestaService } from '../../../core/services/encuesta';
 import { AuthService } from '../../../core/services/auth';
@@ -17,6 +18,7 @@ import { Encuesta } from '../../../shared/models/encuesta-interface';
 import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
 import { Pregunta } from '../../../shared/models/pregunta-interface';
 import { TipoPregunta } from '../../../shared/models/tipo-pregunta';
+import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-editor-encuesta',
@@ -42,6 +44,7 @@ export class EditorEncuesta implements OnInit {
   private clienteService = inject(ClienteService);
   private encuestaService = inject(EncuestaService);
   private authService = inject(AuthService);
+  private snack = inject(MatSnackBar);
 
   protected readonly estados = EstadoEncuesta;
   protected readonly tipos = TipoPregunta;
@@ -58,7 +61,6 @@ export class EditorEncuesta implements OnInit {
   modoEdicion = false;
   idEncuesta: number | null = null;
   clientes = signal<Cliente[]>([]);
-  errorMessage = '';
   errorCarga = false;
 
   form: FormGroup = this.fb.group({
@@ -147,11 +149,9 @@ export class EditorEncuesta implements OnInit {
   }
 
   guardar() {
-    this.errorMessage = '';
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.errorMessage = 'Completá los campos obligatorios.';
+      notificarError(this.snack, 'Completá los campos obligatorios.');
       return;
     }
 
@@ -163,7 +163,7 @@ export class EditorEncuesta implements OnInit {
         const opcionesValidas = opciones.filter((o) => o.trim() !== '');
         if (opcionesValidas.length === 0) {
           this.form.markAllAsTouched();
-          this.errorMessage = `La pregunta ${i + 1} (${this.getLabelTipo(tipo)}) requiere al menos una opción.`;
+          notificarError(this.snack, `La pregunta ${i + 1} (${this.getLabelTipo(tipo)}) requiere al menos una opción.`);
           return;
         }
       }
@@ -188,16 +188,22 @@ export class EditorEncuesta implements OnInit {
 
     if (this.modoEdicion && this.idEncuesta !== null) {
       this.encuestaService.modificar(this.idEncuesta, datos).subscribe({
-        next: (guardada) => this.router.navigate(['/encuestas', guardada.id]),
-        error: () => (this.errorMessage = 'No se pudo modificar la encuesta.'),
+        next: (guardada) => {
+          notificarExito(this.snack, 'Encuesta guardada correctamente');
+          this.router.navigate(['/encuestas', guardada.id]);
+        },
+        error: () => notificarError(this.snack, 'No se pudo modificar la encuesta.'),
       });
     } else {
       const usuarioId = this.authService.currentUserId() ?? 1;
       this.encuestaService
         .crear({ ...datos, usuarioId })
         .subscribe({
-          next: (guardada) => this.router.navigate(['/encuestas', guardada.id]),
-          error: () => (this.errorMessage = 'No se pudo crear la encuesta.'),
+          next: (guardada) => {
+            notificarExito(this.snack, 'Encuesta guardada correctamente');
+            this.router.navigate(['/encuestas', guardada.id]);
+          },
+          error: () => notificarError(this.snack, 'No se pudo crear la encuesta.'),
         });
     }
   }

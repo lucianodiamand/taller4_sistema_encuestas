@@ -6,9 +6,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RespuestaService } from '../../../core/services/respuesta';
 import { RespuestaEncuesta } from '../../../shared/models/respuesta-encuesta-interface';
 import { EstadoRespuesta } from '../../../shared/models/estado-respuesta';
+import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-respuesta-detalle',
@@ -28,13 +30,13 @@ export class RespuestaDetalle implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private respuestaService = inject(RespuestaService);
+  private snack = inject(MatSnackBar);
 
   protected readonly estados = EstadoRespuesta;
 
   respuesta = signal<RespuestaEncuesta | null>(null);
   errorCarga = signal(false);
   validando = signal(false);
-  mensaje = signal('');
 
   private origen = '';
 
@@ -58,19 +60,18 @@ export class RespuestaDetalle implements OnInit {
       return;
     }
     this.validando.set(true);
-    this.mensaje.set('');
 
     this.respuestaService.validar(resp.id, estado === 'aprobada' ? EstadoRespuesta.APROBADA : EstadoRespuesta.RECHAZADA).subscribe({
       next: () => {
         // Actualizar estado local para que el badge y botones desaparezcan
         this.respuesta.update((r) => r ? { ...r, estadoValidacion: estado === 'aprobada' ? EstadoRespuesta.APROBADA : EstadoRespuesta.RECHAZADA } : null);
-        this.mensaje.set(`Respuesta ${estado === 'aprobada' ? 'aprobada' : 'rechazada'} correctamente.`);
+        notificarExito(this.snack, `Respuesta ${estado === 'aprobada' ? 'aprobada' : 'rechazada'} correctamente`);
         this.validando.set(false);
         // Volver a la pantalla de origen automáticamente
         this.volver();
       },
       error: () => {
-        this.mensaje.set('Error al validar la respuesta. Inténtalo de nuevo.');
+        notificarError(this.snack, 'Error al validar la respuesta. Inténtalo de nuevo.');
         this.validando.set(false);
       },
     });

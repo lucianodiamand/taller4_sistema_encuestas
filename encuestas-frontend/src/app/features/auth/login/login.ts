@@ -5,8 +5,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth';
 import { ActivatedRoute } from '@angular/router';
+import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +28,7 @@ export class Login implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
+  private snack = inject(MatSnackBar);
 
   // Formulario reactivo con campos obligatorios
   loginForm = this.fb.nonNullable.group({
@@ -33,14 +36,13 @@ export class Login implements OnInit {
     password: ['', Validators.required]
   });
 
-  errorMessage = '';
   hidePassword = true;
 
   ngOnInit() {
     // Verificar si viene de un logout por desactivación
     this.route.queryParams.subscribe(params => {
       if (params['desactivado'] === 'true') {
-        this.errorMessage = 'Tu cuenta ha sido desactivada por el administrador. Contacta al administrador para reactivarla.';
+        notificarError(this.snack, 'Tu cuenta ha sido desactivada por el administrador. Contactá al administrador.');
       }
     });
   }
@@ -55,10 +57,8 @@ export class Login implements OnInit {
     const { email, password } = this.loginForm.getRawValue();
     
     this.authService.login(email, password).subscribe({
-      next: () => {},
-      error: () => {
-        this.errorMessage = 'Credenciales inválidas. Usá admin@test.com/admin123 o encuestador@test.com/encuestador123';
-      }
+      next: () => notificarExito(this.snack, 'Sesión iniciada correctamente'),
+      error: () => notificarError(this.snack, 'Credenciales inválidas. Usá admin@test.com/admin123 o encuestador@test.com/encuestador123'),
     });
   }
 }

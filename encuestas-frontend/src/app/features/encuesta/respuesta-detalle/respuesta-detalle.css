@@ -143,24 +143,6 @@
   margin: 8px 0;
 }
 
-.mensaje-resultado {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  margin-top: 16px;
-  border-radius: 8px;
-  background: #e6f4ea;
-  border: 1px solid #b7e0c4;
-  color: #1e7d32;
-}
-
-.mensaje-resultado mat-icon {
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-}
-
 /* Responsive */
 @media (max-width: 600px) {
   .respuesta-detalle-container {

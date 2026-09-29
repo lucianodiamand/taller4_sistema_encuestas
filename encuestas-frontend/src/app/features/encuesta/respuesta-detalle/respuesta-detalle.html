@@ -83,15 +83,6 @@
       </div>
       }
 
-      @if (mensaje()) {
-      <div class="mensaje-resultado">
-        <mat-icon [color]="mensaje().includes('aprobada') ? 'primary' : 'warn'">
-          {{ mensaje().includes('aprobada') ? 'check_circle' : 'info' }}
-        </mat-icon>
-        <span>{{ mensaje() }}</span>
-      </div>
-      }
-
     </mat-card-content>
   </mat-card>
   }

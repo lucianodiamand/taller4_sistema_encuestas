@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth';
 import { EncuestaService } from '../../../core/services/encuesta';
 import { RespuestaService } from '../../../core/services/respuesta';
@@ -13,6 +14,7 @@ import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
 import { RespuestaEncuesta } from '../../../shared/models/respuesta-encuesta-interface';
 import { Rol } from '../../../shared/models/rol';
 import { EstadoRespuesta } from '../../../shared/models/estado-respuesta';
+import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-detalle-encuesta',
@@ -27,6 +29,7 @@ export class DetalleEncuesta implements OnInit {
   private authService = inject(AuthService);
   private encuestaService = inject(EncuestaService);
   private respuestaService = inject(RespuestaService);
+  private snack = inject(MatSnackBar);
 
   // Exponemos los enums para compararlos en el template
   protected readonly estados = EstadoEncuesta;
@@ -84,9 +87,13 @@ export class DetalleEncuesta implements OnInit {
   }
 
   validarRespuesta(idRespuesta: number, estado: EstadoRespuesta) {
-    this.respuestaService.validar(idRespuesta, estado).subscribe(() => {
-      const enc = this.encuesta();
-      if (enc) this.cargarPendientes(enc.id);
+    this.respuestaService.validar(idRespuesta, estado).subscribe({
+      next: () => {
+        const enc = this.encuesta();
+        if (enc) this.cargarPendientes(enc.id);
+        notificarExito(this.snack, `Respuesta ${estado === EstadoRespuesta.APROBADA ? 'aprobada' : 'rechazada'} correctamente`);
+      },
+      error: () => notificarError(this.snack, 'No se pudo validar la respuesta'),
     });
   }
 

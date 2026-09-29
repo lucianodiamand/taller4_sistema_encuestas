@@ -5,6 +5,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth';
 import { ClienteService } from '../../core/services/cliente';
 import { EncuestaService } from '../../core/services/encuesta';
@@ -18,6 +19,7 @@ import { RespuestaEncuesta } from '../../shared/models/respuesta-encuesta-interf
 import { Rol } from '../../shared/models/rol';
 import { Usuario } from '../../shared/models/usuario-interface';
 import { EstadoRespuesta } from '../../shared/models/estado-respuesta';
+import { notificarExito, notificarError } from '../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,6 +36,7 @@ export class Dashboard implements OnInit {
   private usuarioService = inject(UsuarioService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private snack = inject(MatSnackBar);
 
   // Exponemos el enum para poder compararlo en el template
   protected readonly estados = EstadoEncuesta;
@@ -41,7 +44,7 @@ export class Dashboard implements OnInit {
 
   rolActual: Rol | null = this.authService.currentUserRole();
   emailUsuario = this.authService.currentUserEmail;
-  usuarioInfo = this.authService.getCurrentUserNombreCompleto();
+  usuarioInfo = signal<{ nombre: string; apellido: string } | null>(this.authService.getCurrentUserNombreCompleto());
 
   // Listas que se llenan al cargar los servicios (cargarDatos).
   // Se usan signals para que la vista se actualice sola al cambiar su valor.
@@ -77,8 +80,12 @@ export class Dashboard implements OnInit {
     });
   }
 
-  nombreCompleto(): string {
-    return `${this.usuarioInfo?.nombre} ${this.usuarioInfo?.apellido}`;
+  nombreCompleto(): string | null{
+    const info = this.usuarioInfo();
+    if (info) {
+      return `${info.nombre} ${info.apellido}`;
+    }
+    return null;
   }
 
   // Redirige al detalle de la encuesta (reemplaza al modal "ver")
@@ -101,8 +108,12 @@ export class Dashboard implements OnInit {
     const nuevoEstado =
       encuesta.estado === EstadoEncuesta.ACTIVA ? EstadoEncuesta.CERRADA : EstadoEncuesta.ACTIVA;
 
-    this.encuestaService.cambiarEstado(encuesta.id, nuevoEstado).subscribe((actualizada) => {
-      this.encuestas.set(this.encuestas().map((e) => (e.id === actualizada.id ? actualizada : e)));
+    this.encuestaService.cambiarEstado(encuesta.id, nuevoEstado).subscribe({
+      next: (actualizada) => {
+        this.encuestas.set(this.encuestas().map((e) => (e.id === actualizada.id ? actualizada : e)));
+        notificarExito(this.snack, `Encuesta ${nuevoEstado === EstadoEncuesta.ACTIVA ? 'activada' : 'cerrada'} correctamente`);
+      },
+      error: () => notificarError(this.snack, 'No se pudo cambiar el estado de la encuesta'),
     });
   }
 
@@ -132,24 +143,45 @@ export class Dashboard implements OnInit {
       // Eliminar: el modal solo confirma (true); acá se ejecuta la baja
       if (accion === 'eliminar') {
         if (tipoEntidad === 'Cliente')
-          this.clienteService.eliminar(entidad.id).subscribe(() => this.cargarDatos());
+          this.clienteService.eliminar(entidad.id).subscribe({
+            next: () => {
+              notificarExito(this.snack, 'Cliente eliminado correctamente');
+              this.cargarDatos();
+            },
+            error: () => notificarError(this.snack, 'No se pudo eliminar el cliente'),
+          });
         if (tipoEntidad === 'Encuestador')
-          this.usuarioService.eliminar(entidad.id).subscribe(() => this.cargarDatos());
+          this.usuarioService.eliminar(entidad.id).subscribe({
+            next: () => {
+              notificarExito(this.snack, 'Encuestador eliminado correctamente');
+              this.cargarDatos();
+            },
+            error: () => notificarError(this.snack, 'No se pudo eliminar el encuestador'),
+          });
         if (tipoEntidad === 'Encuesta')
-          this.encuestaService.eliminar(entidad.id).subscribe(() => this.cargarDatos());
+          this.encuestaService.eliminar(entidad.id).subscribe({
+            next: () => {
+              notificarExito(this.snack, 'Encuesta eliminada correctamente');
+              this.cargarDatos();
+            },
+            error: () => notificarError(this.snack, 'No se pudo eliminar la encuesta'),
+          });
         return;
       }
 
       // Crear y modificar: el modal ya guardó y devuelve la entidad. Recargamos los datos.
       this.cargarDatos();
+      notificarExito(this.snack, `${tipoEntidad} guardado correctamente`);
     });
   }
 
   validarRespuesta(idRespuesta: number, estado: EstadoRespuesta) {
-    this.respuestaService.validar(idRespuesta, estado).subscribe(() => {
-      this.respuestaService
-        .obtenerPendientes()
-        .subscribe((data) => this.respuestasPendientes.set(data));
+    this.respuestaService.validar(idRespuesta, estado).subscribe({
+      next: () => {
+        this.respuestaService.obtenerPendientes().subscribe((data) => this.respuestasPendientes.set(data));
+        notificarExito(this.snack, `Respuesta ${estado === EstadoRespuesta.APROBADA ? 'aprobada' : 'rechazada'} correctamente`);
+      },
+      error: () => notificarError(this.snack, 'No se pudo validar la respuesta'),
     });
   }
 

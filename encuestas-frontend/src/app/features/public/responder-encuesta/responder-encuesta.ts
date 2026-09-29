@@ -10,12 +10,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EnlaceService } from '../../../core/services/enlace';
 import { RespuestaService } from '../../../core/services/respuesta';
 import { Encuesta } from '../../../shared/models/encuesta-interface';
 import { Pregunta } from '../../../shared/models/pregunta-interface';
 import { TipoPregunta } from '../../../shared/models/tipo-pregunta';
 import { RespuestaEnviada, RespuestaPregunta } from '../../../shared/models/respuesta-enviada-interface';
+import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-responder-encuesta',
@@ -40,7 +42,7 @@ export class ResponderEncuesta implements OnInit {
   private fb = inject(FormBuilder);
   private enlaceService = inject(EnlaceService);
   private respuestaService = inject(RespuestaService);
-
+  private snack = inject(MatSnackBar);
 
   protected readonly tipos = TipoPregunta;
 
@@ -49,7 +51,6 @@ export class ResponderEncuesta implements OnInit {
   encuesta = signal<Encuesta | null>(null);
   errorTipo = signal<'INVALIDO' | 'USADO' | 'CERRADA' | null>(null);
   finalizada = signal(false);
-  errorMessage = '';
 
   respuestas = this.fb.array<AbstractControl>([]);
 
@@ -133,12 +134,10 @@ export class ResponderEncuesta implements OnInit {
     return this.getCheckboxes(i).at(oi) as FormControl;
   }
 
-enviar() {
-    this.errorMessage = '';
-
+  enviar() {
     if (this.respuestas.invalid) {
       this.respuestas.markAllAsTouched();
-      this.errorMessage = 'Completá todas las preguntas obligatorias.';
+      notificarError(this.snack, 'Completá todas las preguntas obligatorias.');
       return;
     }
 
@@ -167,7 +166,7 @@ enviar() {
 
     this.respuestaService.enviar(datos).subscribe({
       next: () => this.finalizada.set(true),
-      error: () => (this.errorMessage = 'No se pudo enviar la respuesta. Inténtalo de nuevo.'),
+      error: () => notificarError(this.snack, 'No se pudo enviar la respuesta. Inténtalo de nuevo.'),
     });
   }
 }

@@ -32,11 +32,6 @@
         <mat-spinner diameter="48"></mat-spinner>
         <p>Generando QR...</p>
       </div>
-      } @else if (errorGenerar()) {
-      <div class="qr-error">
-        <mat-icon color="warn">error_outline</mat-icon>
-        <span>No se pudo generar el QR. Inténtalo de nuevo.</span>
-      </div>
       } @else if (enlace(); as link) {
       <div class="qr-resultado">
         @if (link.qrCodeBase64) {
@@ -49,12 +44,9 @@
         }
         <div class="qr-url">
           <span class="url-texto">{{ link.urlCompleta }}</span>
-          <button mat-icon-button color="primary" (click)="copiarEnlace()" [attr.aria-label]="copiado() ? 'Copiado' : 'Copiar enlace'">
-            <mat-icon>{{ copiado() ? 'check' : 'content_copy' }}</mat-icon>
+          <button mat-icon-button color="primary" (click)="copiarEnlace()" aria-label="Copiar enlace">
+            <mat-icon>content_copy</mat-icon>
           </button>
-          @if (copiado()) {
-          <span class="copiado-texto">¡Copiado!</span>
-          }
         </div>
       </div>
       } @else {

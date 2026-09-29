@@ -141,13 +141,6 @@
       </mat-card-content>
     </mat-card>
 
-    @if (errorMessage) {
-    <div class="error-message">
-      <mat-icon color="warn">error</mat-icon>
-      <span>{{ errorMessage }}</span>
-    </div>
-    }
-
     <div class="editor-actions">
       <button mat-stroked-button type="button" (click)="volver()">Cancelar</button>
       <button mat-raised-button color="primary" type="button" (click)="guardar()">Guardar encuesta</button>

@@ -31,14 +31,6 @@
           }
         </mat-form-field>
 
-        <!-- Mensaje de error personalizado (simulando respuesta 401 del back) -->
-        @if (errorMessage) {
-          <div class="error-message">
-            <mat-icon color="warn">error</mat-icon>
-            <span class="mat-body-2">{{ errorMessage }}</span>
-          </div>
-        }
-
         <button mat-raised-button color="primary" type="submit" class="submit-btn">
           Iniciar Sesión
         </button>

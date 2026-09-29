@@ -18,6 +18,8 @@ import { Usuario } from '../../models/usuario-interface';
 import { Cliente } from '../../models/cliente-interface';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { notificarError } from '../../../core/utils/notificaciones';
 
 @Component({
   selector: 'app-modal',
@@ -42,14 +44,13 @@ export class Modal {
   private clienteService = inject(ClienteService);
   private usuarioService = inject(UsuarioService);
   private authService = inject(AuthService);
+  private snack = inject(MatSnackBar);
 
   // Exponemos los enums para usarlos en los <mat-select> del template
   protected readonly roles = Rol;
 
   // Formulario reactivo según el tipo de entidad (acciones "modificar" y "crear")
   form: FormGroup = this.fb.group({});
-
-  errorMessage = '';
 
   constructor(
     public dialogRef: MatDialogRef<Modal>,
@@ -145,7 +146,7 @@ export class Modal {
 
     this.guardar().subscribe({
       next: (guardado) => this.dialogRef.close(guardado),
-      error: () => (this.errorMessage = 'No se pudo guardar. Inténtalo de nuevo.'),
+      error: () => notificarError(this.snack, 'No se pudo guardar. Inténtalo de nuevo.'),
     });
   }
 

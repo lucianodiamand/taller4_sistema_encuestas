@@ -72,12 +72,3 @@
   border: 1px solid #f5c6c3;
   font-weight: 500;
 }
-
-.error-message {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #c62828;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
