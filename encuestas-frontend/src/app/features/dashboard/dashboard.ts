@@ -41,7 +41,7 @@ export class Dashboard implements OnInit {
 
   rolActual: Rol | null = this.authService.currentUserRole();
   emailUsuario = this.authService.currentUserEmail;
-  usuarioInfo = signal<{ nombre: string; apellido: string } | null>(null);
+  usuarioInfo = this.authService.getCurrentUserNombreCompleto();
 
   // Listas que se llenan al cargar los servicios (cargarDatos).
   // Se usan signals para que la vista se actualice sola al cambiar su valor.
@@ -57,26 +57,16 @@ export class Dashboard implements OnInit {
   // Simula la carga que haría la app contra la API
   cargarDatos() {
     this.encuestaService.obtenerTodas().subscribe((data) => this.encuestas.set(data));
-    this.respuestaService
-      .obtenerPendientes()
-      .subscribe((data) => {
-        console.log('Respuestas pendientes cargadas: ', data);
-        this.respuestasPendientes.set(data)
-      });
+    this.respuestaService.obtenerPendientes().subscribe((data) => {
+      console.log('Respuestas pendientes cargadas: ', data);
+      this.respuestasPendientes.set(data);
+    });
 
     // Solo ADMIN carga clientes y encuestadores (con backend real, encuestador recibe 403)
     if (this.rolActual === Rol.ADMIN) {
       this.clienteService.obtenerTodos().subscribe((data) => this.clientes.set(data));
       this.usuarioService.obtenerEncuestadores().subscribe((data) => {
         this.encuestadores.set(data);
-        // Buscar usuario actual por id para mostrar nombre/apellido real
-        const userId = this.authService.currentUserId();
-        if (userId) {
-          const usuario = data.find((u) => u.id === userId);
-          if (usuario) {
-            this.usuarioInfo.set({ nombre: usuario.nombre, apellido: usuario.apellido });
-          }
-        }
       });
     }
 
@@ -88,17 +78,7 @@ export class Dashboard implements OnInit {
   }
 
   nombreCompleto(): string {
-    const info = this.usuarioInfo();
-    if (info) {
-      return `${info.nombre} ${info.apellido}`;
-    }
-    if (this.rolActual === Rol.ADMIN) {
-      return 'Administrador';
-    }
-    if (this.rolActual === Rol.ENCUESTADOR) {
-      return 'Encuestador';
-    }
-    return 'Usuario';
+    return `${this.usuarioInfo?.nombre} ${this.usuarioInfo?.apellido}`;
   }
 
   // Redirige al detalle de la encuesta (reemplaza al modal "ver")

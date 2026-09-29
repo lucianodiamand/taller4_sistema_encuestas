@@ -22,6 +22,8 @@ export class AuthService {
   currentUserActivo = signal<boolean | null>(null);
   // Email real del usuario logueado
   currentUserEmail = signal<string | null>(this.getEmailFromStorage());
+  currentUserNombre = signal<string | null>(this.getNameFromStorage());
+  currentUserApellido = signal<string | null>(this.getApellidoFromStorage());
 
   constructor(private router: Router) {}
 
@@ -29,7 +31,7 @@ export class AuthService {
     if (USAR_BACKEND_REAL) {
       return this.http.post<LoginResponse>(`${API_URL}/auth/login`, { email, password: clave }).pipe(
         map((res) => {
-          this.setSession(res.token, res.rol as Rol, res.usuarioId, true, res.email);
+          this.setSession(res.token, res.rol as Rol, res.usuarioId, true, res.email, res.nombre, res.apellido);
           return true;
         }),
         catchError((err) => {
@@ -41,31 +43,35 @@ export class AuthService {
 
     // MOCK: aceptar credenciales del seed y las viejas (admin/1234, encuestador/1234)
     if ((email === 'admin@test.com' || email === 'admin') && clave === '1234') {
-      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true, email);
+      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true, email, 'Admin', 'User');
       return of(true);
     } else if ((email === 'encuestador@test.com' || email === 'encuestador') && clave === '1234') {
-      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true, email);
+      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true, email, 'Encuestador', 'User');
       return of(true);
     } else if (email === 'admin@test.com' && clave === 'admin123') {
-      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true, email);
+      this.setSession('fake-jwt-token-admin', Rol.ADMIN, 1, true, email, 'Admin', 'User');
       return of(true);
     } else if (email === 'encuestador@test.com' && clave === 'encuestador123') {
-      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true, email);
+      this.setSession('fake-jwt-token-encuestador', Rol.ENCUESTADOR, 2, true, email, 'Encuestador', 'User');
       return of(true);
     }
     return throwError(() => new Error('CREDENCIALES_INVALIDAS'));
   }
 
-  private setSession(token: string, role: Rol, userId: number, activo: boolean, email: string) {
+  private setSession(token: string, role: Rol, userId: number, activo: boolean, email: string, nombre: string, apellido: string) {
     localStorage.setItem('jwt', token);
     localStorage.setItem('role', role);
     localStorage.setItem('userId', String(userId));
     localStorage.setItem('activo', String(activo));
     localStorage.setItem('email', email);
+    localStorage.setItem('name', nombre);
+    localStorage.setItem('apellido', apellido);
     this.currentUserRole.set(role);
     this.currentUserId.set(userId);
     this.currentUserActivo.set(activo);
     this.currentUserEmail.set(email);
+    this.currentUserNombre.set(nombre);
+    this.currentUserApellido.set(apellido);
     this.router.navigate(['/dashboard']);
   }
 
@@ -75,10 +81,14 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('activo');
     localStorage.removeItem('email');
+    localStorage.removeItem('name');
+    localStorage.removeItem('apellido');
     this.currentUserRole.set(null);
     this.currentUserId.set(null);
     this.currentUserActivo.set(null);
     this.currentUserEmail.set(null);
+    this.currentUserNombre.set(null);
+    this.currentUserApellido.set(null);
     this.router.navigate(['/login']);
   }
 
@@ -100,6 +110,14 @@ export class AuthService {
     return localStorage.getItem('email');
   }
 
+  getNameFromStorage(): string | null {
+    return localStorage.getItem('nombre');
+  }
+
+  getApellidoFromStorage(): string | null {
+    return localStorage.getItem('apellido');
+  }
+
   private getUserId(): number | null {
     const raw = localStorage.getItem('userId');
     if (!raw) return null;
@@ -109,6 +127,15 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+  
+  getCurrentUserNombreCompleto(): { nombre: string; apellido: string } | null {
+    const nombre = this.currentUserNombre();
+    const apellido = this.currentUserApellido();
+    if (nombre && apellido) {
+      return { nombre, apellido };
+    }
+    return null;
   }
 
   // Verifica si el usuario actual (encuestador) está activo
