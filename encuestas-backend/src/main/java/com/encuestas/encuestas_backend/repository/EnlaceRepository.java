@@ -9,4 +9,7 @@ public interface EnlaceRepository extends JpaRepository<Enlace, Long> {
     Optional<Enlace> findByToken(String token);
     long countByEncuestaId(Long encuestaId);
     long countByEncuestaIdAndEstado(Long encuestaId, EstadoEnlace estado);
+
+    long countByEncuestaIdAndEncuestadorId(Long encuestaId, Long encuestadorId);
+    long countByEncuestaIdAndEncuestadorIdAndEstado(Long encuestaId, Long encuestadorId, EstadoEnlace estado);
 }

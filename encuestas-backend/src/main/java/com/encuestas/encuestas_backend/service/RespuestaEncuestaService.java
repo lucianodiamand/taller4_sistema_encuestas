@@ -73,10 +73,21 @@ public class RespuestaEncuestaService {
     }
 
     // RF14: el encuestador ve sus respuestas pendientes de validación
-    public List<RespuestaEncuestaResponseDTO> listarPendientesPorEncuestador(Long encuestadorId) {
-        return respuestaEncuestaRepository
-                .findByEnlaceEncuestadorIdAndEstadoValidacion(encuestadorId, EstadoRespuesta.PENDIENTE)
-                .stream()
+    public List<RespuestaEncuestaResponseDTO> listarPendientesPorEncuestador(Long encuestadorId, Long encuestaId) {
+        List<RespuestaEncuesta> respuestas;
+
+        if (encuestaId != null) {
+            // Filtra por encuestador Y por esa encuesta puntual
+            respuestas = respuestaEncuestaRepository
+                    .findByEnlaceEncuestadorIdAndEnlaceEncuestaIdAndEstadoValidacion(
+                            encuestadorId, encuestaId, EstadoRespuesta.PENDIENTE);
+        } else {
+            // Sin encuestaId: todas las pendientes del encuestador, como ya funcionaba antes
+            respuestas = respuestaEncuestaRepository
+                    .findByEnlaceEncuestadorIdAndEstadoValidacion(encuestadorId, EstadoRespuesta.PENDIENTE);
+        }
+
+        return respuestas.stream()
                 .map(RespuestaEncuestaResponseDTO::new)
                 .collect(Collectors.toList());
     }
