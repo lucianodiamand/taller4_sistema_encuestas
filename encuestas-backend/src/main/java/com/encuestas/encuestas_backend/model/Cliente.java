@@ -34,4 +34,7 @@ public class Cliente {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    @Column(nullable = false)
+    private Boolean eliminado = false;
 }

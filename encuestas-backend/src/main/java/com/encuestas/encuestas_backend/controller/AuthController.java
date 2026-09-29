@@ -5,6 +5,8 @@ import com.encuestas.encuestas_backend.dto.auth.LoginResponseDTO;
 import com.encuestas.encuestas_backend.model.Usuario;
 import com.encuestas.encuestas_backend.repository.UsuarioRepository;
 import com.encuestas.encuestas_backend.security.JwtUtil;
+import com.encuestas.encuestas_backend.service.TokenBlacklistService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,6 +22,9 @@ public class AuthController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -42,5 +47,15 @@ public class AuthController {
         String token = jwtUtil.generarToken(usuario.getEmail(), usuario.getRol().name());
 
         return new LoginResponseDTO(token, usuario.getNombre(), usuario.getApellido(), usuario.getEmail(), usuario.getRol().name(), usuario.getId());
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            tokenBlacklistService.invalidarToken(token);
+        }
     }
 }
