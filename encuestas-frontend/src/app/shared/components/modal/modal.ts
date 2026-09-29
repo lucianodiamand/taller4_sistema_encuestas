@@ -51,6 +51,13 @@ export class Modal {
 
   errorMessage = '';
 
+  constructor(
+    public dialogRef: MatDialogRef<Modal>,
+    @Inject(MAT_DIALOG_DATA) public data: DatosModal,
+  ) {
+    this.inicializar();
+  }
+
   // true si el modal muestra el formulario (crear/modificar), false en ver/eliminar
   get esFormulario(): boolean {
     return this.data.tipoAccion === 'modificar' || this.data.tipoAccion === 'crear';
@@ -99,13 +106,6 @@ export class Modal {
     if (Array.isArray(valor)) return valor.length > 0 ? `${valor.length} elemento(s)` : '-';
     if (typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}/.test(valor)) return valor.slice(0, 10);
     return String(valor);
-  }
-
-  constructor(
-    public dialogRef: MatDialogRef<Modal>,
-    @Inject(MAT_DIALOG_DATA) public data: DatosModal,
-  ) {
-    this.inicializar();
   }
 
   private inicializar() {

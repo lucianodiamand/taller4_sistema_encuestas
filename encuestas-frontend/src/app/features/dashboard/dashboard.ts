@@ -116,7 +116,7 @@ export class Dashboard implements OnInit {
       width: '650px',
       maxWidth: '90vw',
       data: {
-        titulo: `${accion.toUpperCase()} ${tipoEntidad}`,
+        titulo: accion,
         tipoAccion: accion,
         entidad: entidad,
         tipoEntidad: tipoEntidad,

@@ -1,6 +1,12 @@
 <div class="header modal-header">
-  <h2 mat-dialog-title class="modal-title">{{ data.titulo }}</h2>
-
+  <!-- <h2>{{ data.titulo | titlecase }}</h2> -->
+  <h2> {{ data.tipoEntidad}} </h2>
+  @if (data.tipoAccion === 'modificar' || data.tipoAccion === 'crear') {
+    <mat-icon class="icono-grande">edit</mat-icon>
+  }
+  @if (data.tipoAccion === 'ver') {
+    <mat-icon class="icono-grande">visibility</mat-icon>
+  }
 </div>
 
 
