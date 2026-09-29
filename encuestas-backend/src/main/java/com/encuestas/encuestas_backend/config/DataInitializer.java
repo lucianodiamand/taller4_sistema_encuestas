@@ -57,6 +57,16 @@ public class DataInitializer implements CommandLineRunner {
         encuestador.setEliminado(false);
         encuestador = usuarioRepository.save(encuestador);
 
+        Usuario encuestador2 = new Usuario();
+        encuestador2.setEmail("encuestador2@test.com");
+        encuestador2.setPassword(passwordEncoder.encode("encuestador123"));
+        encuestador2.setNombre("Teresa");
+        encuestador2.setApellido("Pugliese");
+        encuestador2.setRol(Rol.ENCUESTADOR);
+        encuestador2.setActivo(true);
+        encuestador2.setEliminado(false);
+        encuestador2 = usuarioRepository.save(encuestador2);
+
         // --- Clientes ---
         Cliente cliente1 = new Cliente();
         cliente1.setNombre("Supermercado Norte");

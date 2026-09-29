@@ -1,5 +1,6 @@
 package com.encuestas.encuestas_backend.service;
 
+import com.encuestas.encuestas_backend.dto.cliente.ClienteEditRequestDTO;
 import com.encuestas.encuestas_backend.dto.cliente.ClienteRequestDTO;
 import com.encuestas.encuestas_backend.dto.cliente.ClienteResponseDTO;
 import com.encuestas.encuestas_backend.model.Cliente;
@@ -40,15 +41,16 @@ public class ClienteService {
     }
 
     //Metodos para editar o desactivar (eliminado soft) un Cliente
-    public ClienteResponseDTO editar(Long id, ClienteRequestDTO dto) {
+    public ClienteResponseDTO editar(Long id, ClienteEditRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
 
         cliente.setNombre(dto.getNombre());
         cliente.setEmail(dto.getEmail());
-        cliente.setTelefono(dto.getTelefono());
         cliente.setCuit(dto.getCuit());
-        // Notá que NO tocamos "usuario" (el creador original) al editar
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setActivo(dto.getActivo());
+        // "usuario" (el creador original) queda afuera de este endpoint a propósito
 
         Cliente actualizado = clienteRepository.save(cliente);
         return new ClienteResponseDTO(actualizado);

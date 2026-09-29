@@ -1,5 +1,6 @@
 package com.encuestas.encuestas_backend.controller;
 
+import com.encuestas.encuestas_backend.dto.cliente.ClienteEditRequestDTO;
 import com.encuestas.encuestas_backend.dto.cliente.ClienteRequestDTO;
 import com.encuestas.encuestas_backend.dto.cliente.ClienteResponseDTO;
 import com.encuestas.encuestas_backend.security.AuthUtil;
@@ -29,7 +30,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ClienteResponseDTO editar(@PathVariable Long id, @RequestBody ClienteRequestDTO dto) {
+    public ClienteResponseDTO editar(@PathVariable Long id, @RequestBody ClienteEditRequestDTO dto) {
         return clienteService.editar(id, dto);
     }
 
