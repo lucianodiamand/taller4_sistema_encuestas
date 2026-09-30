@@ -1,21 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 .header {
-    background: linear-gradient(to right, #f6d5f1ea, #facfcf);
-    border-radius: 10px;
-    padding: 20px;
+  background: linear-gradient(to right, #f6d5f1ea, #facfcf);
+  border-radius: 10px;
+  padding: 20px;
 }
 
 .header h2 {
-    font-weight: 300;
-    color: #3f3f3f;
-    font-size: 1.8rem;
+  font-weight: 300;
+  color: #3f3f3f;
+  font-size: 1.8rem;
 }
 
 .icono-grande {
-    font-size: 2.5rem;
-    color: #3f3f3f;
-    width: 2.5rem !important;
-    height: 2.5rem !important;
+  font-size: 2.5rem;
+  color: #3f3f3f;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+/* Efecto hover para las pestañas (Tabs) que NO están seleccionadas */
+.mat-mdc-tab:not(.mdc-tab--active):hover {
+  background-color: rgba(0, 0, 0, 0.10) !important;
+  transition: background-color 0.2s ease;
 }
 
 /* ==========================================================================
@@ -26,6 +32,7 @@
   --mat-snackbar-action-color: #fff;
   color: #fff;
 }
+
 .snack-error {
   --mdc-snackbar-container-color: #c62828;
   --mat-snackbar-action-color: #fff;

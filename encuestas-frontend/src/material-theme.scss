@@ -5,18 +5,18 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+:root {
+  @include mat.button-toggle-overrides((shape: 4px));
+}
+
 html {
   height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$rose-palette,
+  @include mat.theme((color: (primary: mat.$rose-palette,
         tertiary: mat.$red-palette,
       ),
       typography: Roboto,
       density: 0,
-    )
-  );
+    ));
 }
 
 body {

@@ -4,17 +4,13 @@
 
 .dashboard-container {
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1220px;
   margin: 0 auto;
   font-family: 'Segoe UI', system-ui, 'Helvetica Neue', Arial, sans-serif;
-  /* IDEAS ACÁ:
-     - font-family: 'Segoe UI', sans-serif; -> Para darle una tipografía más limpia a todo el panel.
-     - background-color: #f8f9fa; -> Poner un fondo gris muy clarito en toda la pantalla ayuda a que las tarjetas blancas resalten mucho más por contraste. */
 }
 
 .dashboard-header {
   display: flex;
-  /* Activa flexbox */
   justify-content: space-between;
   /* Empuja el título a la izq y el botón a la der */
   align-items: center;
@@ -25,7 +21,6 @@
 
 .dashboard-info {
   display: flex;
-  /* Activa flexbox */
   justify-content: space-between;
   /* Empuja el título a la izq y el botón a la der */
   align-items: center;
@@ -162,8 +157,8 @@
 
 /* Cada card: info a la izquierda y botones de acción a la derecha */
 .card-item {
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: rgb(253, 253, 253);
+  border: 1px solid #a7a7a7;
   border-radius: 8px;
   /* ACÁ: Si te gustan los diseños más modernos y redondeados, subí esto a 12px o 16px. */
   padding: 15px;
@@ -208,6 +203,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  /* ACÁ: Si los botones de editar/ver/borrar están muy pegados, subí este número. */
-  flex-shrink: 0;
+  /* Separa los botones entre sí */
+  background-color: #fadddd;
+  /* Tono grisáceo celeste muy sutil */
+  padding: 6px 16px;
+  border-radius: 8px;
+  /* Acompaña el redondeo general de tus tarjetas */
+  border: 1px solid #8d8e91;
+  /* Borde apenas más oscuro para delimitar */
 }

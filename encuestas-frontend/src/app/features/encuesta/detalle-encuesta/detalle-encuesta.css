@@ -55,14 +55,14 @@
 }
 
 /* Botón QR al costado del título */
-.qr-titulo-btn {
+.detalle-titulo-btn {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.qr-titulo-btn:disabled {
+.detalle-titulo-btn:disabled {
   opacity: 0.6;
 }
 
@@ -73,6 +73,7 @@
     align-items: flex-start;
     gap: 8px;
   }
+
   .qr-titulo-btn {
     width: 100%;
     margin-left: 0;
@@ -116,9 +117,24 @@
      - transition: transform 0.2s; -> Si querés que al pasar el mouse haga algo. */
 }
 
-.detalle-seccion h3 {
+.detalle-seccion-titulo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detalle-seccion-titulo h3 {
   margin: 0 0 12px 0;
   color: #333;
+}
+
+.detalle-seccion-info {
+  display: flex;
+  align-items: center;
+}
+
+.detalle-seccion-info div {
+  margin-right: auto;
+
 }
 
 .detalle-descripcion {
@@ -132,12 +148,6 @@
   font-style: italic;
 }
 
-.detail-list {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  column-gap: 14px;
-  row-gap: 10px;
-}
 
 .detail-label {
   color: #666;
@@ -155,8 +165,10 @@
 /* --- ESTADÍSTICAS (Las cajitas numéricas) --- */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  /* Esto fuerza exactamente 3 columnas del mismo tamaño */
+  gap: 16px;
+  /* Ajustá este valor para darle la separación que prefieras */
 }
 
 .stat-tile {

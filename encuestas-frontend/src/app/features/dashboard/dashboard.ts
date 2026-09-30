@@ -25,6 +25,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatBadgeModule } from '@angular/material/badge';
 
 
 @Component({
@@ -40,7 +41,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonToggleModule, 
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatBadgeModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

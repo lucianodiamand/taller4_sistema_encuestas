@@ -15,11 +15,12 @@ import { RespuestaEncuesta } from '../../../shared/models/respuesta-encuesta-int
 import { Rol } from '../../../shared/models/rol';
 import { EstadoRespuesta } from '../../../shared/models/estado-respuesta';
 import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-detalle-encuesta',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, ListaPreguntas],
+  imports: [CommonModule, MatButtonModule, MatIconModule, ListaPreguntas, MatCardModule],
   templateUrl: './detalle-encuesta.html',
   styleUrl: './detalle-encuesta.css',
 })
@@ -47,6 +48,10 @@ export class DetalleEncuesta implements OnInit {
     return this.rolActual === Rol.ENCUESTADOR;
   }
 
+  get esAdministrador(): boolean {
+    return this.rolActual === Rol.ADMIN;
+  }
+
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) {
@@ -66,7 +71,7 @@ export class DetalleEncuesta implements OnInit {
       if (this.esEncuestador) {
         this.cargarPendientes(encuesta.id);
       }
-    });
+    }); 
   }
 
   private cargarPendientes(encuestaId: number) {
@@ -110,6 +115,8 @@ export class DetalleEncuesta implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
+
+
   exportarCsv() {
     const enc = this.encuesta();
     if (!enc) return;
@@ -126,4 +133,6 @@ export class DetalleEncuesta implements OnInit {
       error: () => notificarError(this.snack, 'No se pudo exportar el CSV.'),
     });
   }
+
+
 }

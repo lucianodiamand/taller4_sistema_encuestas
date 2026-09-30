@@ -42,12 +42,12 @@
       <!-- Barra de acciones ARRIBA (solo PENDIENTE) -->
       @if (resp.estadoValidacion === estados.PENDIENTE) {
       <div class="acciones-barra">
-        <button mat-raised-button color="primary" (click)="validar('aprobada')" [disabled]="validando()">
+        <!-- <button mat-raised-button color="primary" (click)="validar('aprobada')" [disabled]="validando()">
           <mat-icon>check_circle</mat-icon> Aprobar
         </button>
         <button mat-raised-button color="warn" (click)="validar('rechazada')" [disabled]="validando()">
           <mat-icon>cancel</mat-icon> Rechazar
-        </button>
+        </button> -->
       </div>
       <mat-divider></mat-divider>
       }
@@ -64,10 +64,9 @@
             {{ r.respuesta || '—' }}
           </div>
         </div>
-        @if (i < resp.respuestas.length - 1) {
-        <mat-divider class="item-divider"></mat-divider>
-        }
-        }
+        @if (i < resp.respuestas.length - 1) { <mat-divider class="item-divider"></mat-divider>
+          }
+          }
       </div>
 
       <!-- Barra de acciones ABAJO (solo PENDIENTE) -->
