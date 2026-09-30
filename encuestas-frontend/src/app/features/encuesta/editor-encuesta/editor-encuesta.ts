@@ -19,6 +19,7 @@ import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
 import { Pregunta } from '../../../shared/models/pregunta-interface';
 import { TipoPregunta } from '../../../shared/models/tipo-pregunta';
 import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
+import { ListaPreguntas } from '../../../shared/components/lista-preguntas/lista-preguntas';
 
 @Component({
   selector: 'app-editor-encuesta',
@@ -33,6 +34,7 @@ import { notificarExito, notificarError } from '../../../core/utils/notificacion
     MatSelectModule,
     MatCardModule,
     MatDividerModule,
+    ListaPreguntas,
   ],
   templateUrl: './editor-encuesta.html',
   styleUrl: './editor-encuesta.css',
@@ -62,6 +64,8 @@ export class EditorEncuesta implements OnInit {
   idEncuesta: number | null = null;
   clientes = signal<Cliente[]>([]);
   errorCarga = false;
+  inicializada = signal(false);
+  preguntasOriginales: Pregunta[] = [];
 
   form: FormGroup = this.fb.group({
     titulo: ['', Validators.required],
@@ -88,6 +92,8 @@ export class EditorEncuesta implements OnInit {
         this.errorCarga = true;
         return;
       }
+      this.inicializada.set(encuesta.inicializada === true);
+      this.preguntasOriginales = encuesta.preguntas;
       this.form.patchValue({
         titulo: encuesta.titulo,
         descripcion: encuesta.descripcion,
@@ -121,10 +127,12 @@ export class EditorEncuesta implements OnInit {
   }
 
   agregarPregunta() {
+    if (this.inicializada()) return;
     this.preguntas.push(this.nuevaPreguntaFG());
   }
 
   quitarPregunta(index: number) {
+    if (this.inicializada()) return;
     this.preguntas.removeAt(index);
   }
 
@@ -133,10 +141,12 @@ export class EditorEncuesta implements OnInit {
   }
 
   agregarOpcion(preguntaIndex: number) {
+    if (this.inicializada()) return;
     this.getOpciones(preguntaIndex).push(this.fb.control('', Validators.required));
   }
 
   quitarOpcion(preguntaIndex: number, opcionIndex: number) {
+    if (this.inicializada()) return;
     this.getOpciones(preguntaIndex).removeAt(opcionIndex);
   }
 

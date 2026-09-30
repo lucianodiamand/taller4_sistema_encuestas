@@ -6,6 +6,10 @@
       <mat-icon>arrow_back</mat-icon>
       Volver al panel
     </button>
+    <button mat-stroked-button (click)="exportarCsv()">
+      <mat-icon>download</mat-icon> Exportar CSV
+    </button>
+
   </header>
 
 
@@ -56,8 +60,16 @@
     @if (estadisticas(); as stats) {
     <div class="stats-grid">
       <div class="stat-tile">
+        <span class="stat-valor">{{ stats.enlacesGenerados }}</span>
+        <span class="stat-etiqueta">Enlaces generados</span>
+      </div>
+      <div class="stat-tile">
         <span class="stat-valor">{{ stats.enlacesRespondidos }}</span>
-        <span class="stat-etiqueta">Total de respuestas</span>
+        <span class="stat-etiqueta">Enlaces respondidos</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-valor">{{ stats.enlacesPendientes }}</span>
+        <span class="stat-etiqueta">Enlaces pendientes</span>
       </div>
       <div class="stat-tile stat-aprobadas">
         <span class="stat-valor">{{ stats.respuestasAprobadas }}</span>

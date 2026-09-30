@@ -24,4 +24,5 @@ export interface Encuesta {
   usuarioId: number;
   usuarioNombre: string;
   preguntas: Pregunta[];
+  inicializada?: boolean;
 }

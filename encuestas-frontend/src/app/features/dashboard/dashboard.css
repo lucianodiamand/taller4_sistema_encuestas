@@ -63,13 +63,23 @@
   height: 40px;
 }
 
+:host ::ng-deep .ordenador .mat-mdc-text-field-wrapper,
+:host ::ng-deep .buscador .mat-mdc-text-field-wrapper {
+  min-height: 56px;
+}
+
+/* Centrado vertical del contenido interno */
+:host ::ng-deep .ordenador .mat-mdc-form-field-flex,
+:host ::ng-deep .buscador .mat-mdc-form-field-flex {
+  min-height: 56px;
+  align-items: center;
+}
+
 .buscador {
   flex-grow: 1;
   /* Hace que el buscador tome el espacio sobrante en el medio */
-  max-width: 400px;
+  max-width: 1000px;
   /* Evita que se estire demasiado en pantallas gigantes */
-  margin: 0 16px;
-  /* Lo separa de los botones de los costados */
 }
 
 .info-list {

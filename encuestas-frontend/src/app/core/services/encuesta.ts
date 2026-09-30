@@ -4,7 +4,7 @@
  */
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { EstadoEncuesta } from '../../shared/models/estado-encuesta';
 import { Encuesta, EncuestaCrear } from '../../shared/models/encuesta-interface';
 import { TipoPregunta } from '../../shared/models/tipo-pregunta';
@@ -28,6 +28,7 @@ export class EncuestaService {
       clienteNombre: 'Empresa Alpha',
       usuarioId: 1,
       usuarioNombre: 'Admin Sistema',
+      inicializada: false,
       preguntas: [
         { orden: 1, texto: '¿Cómo calificarías el servicio?', tipo: TipoPregunta.ESCALA, opciones: [] },
         { orden: 2, texto: '¿Qué nos recomendarías mejorar?', tipo: TipoPregunta.TEXTO_LIBRE, opciones: [] },
@@ -43,6 +44,7 @@ export class EncuestaService {
       clienteNombre: 'Consultora Beta',
       usuarioId: 1,
       usuarioNombre: 'Admin Sistema',
+      inicializada: false,
       preguntas: [
         {
           orden: 1,
@@ -83,6 +85,7 @@ export class EncuestaService {
       fechaCreacion: new Date().toISOString(),
       clienteNombre: 'Admin Sistema', // en el mock no se resuelve el nombre del cliente
       usuarioNombre: 'Admin Sistema',
+      inicializada: false,
     };
     this.mockEncuestas = [...this.mockEncuestas, nueva];
     return of(nueva);
@@ -115,5 +118,13 @@ export class EncuestaService {
     }
     this.mockEncuestas = this.mockEncuestas.filter((e) => e.id !== id);
     return of(undefined);
+  }
+
+  // GET /api/encuestas/{id}/exportar-csv  → descarga el CSV (blob)
+  exportarCsv(id: number): Observable<Blob> {
+    if (USAR_BACKEND_REAL) {
+      return this.http.get(`${API_URL}/encuestas/${id}/exportar-csv`, { responseType: 'blob' });
+    }
+    return throwError(() => new Error('CSV_MOCK'));
   }
 }

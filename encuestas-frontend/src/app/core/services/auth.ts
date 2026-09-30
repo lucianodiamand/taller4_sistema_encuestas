@@ -76,12 +76,24 @@ export class AuthService {
   }
 
   logout() {
+    if (USAR_BACKEND_REAL) {
+      // POST /api/auth/logout: el jwt.interceptor agrega el Bearer token al header.
+      this.http.post<void>(`${API_URL}/auth/logout`, null).subscribe({
+        next: () => this.cerrarSesionLocal(),
+        error: () => this.cerrarSesionLocal(), // aunque falle, se limpia la sesión local
+      });
+    } else {
+      this.cerrarSesionLocal();
+    }
+  }
+
+  private cerrarSesionLocal() {
     localStorage.removeItem('jwt');
     localStorage.removeItem('role');
     localStorage.removeItem('userId');
     localStorage.removeItem('activo');
     localStorage.removeItem('email');
-    localStorage.removeItem('name');
+    localStorage.removeItem('nombre');   // FIX: hoy borra 'name' (que no se usa) y queda 'nombre' colgado
     localStorage.removeItem('apellido');
     this.currentUserRole.set(null);
     this.currentUserId.set(null);
@@ -176,5 +188,3 @@ export class AuthService {
   }
 
 }
-
-

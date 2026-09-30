@@ -109,4 +109,21 @@ export class DetalleEncuesta implements OnInit {
   volver() {
     this.router.navigate(['/dashboard']);
   }
+
+  exportarCsv() {
+    const enc = this.encuesta();
+    if (!enc) return;
+    this.encuestaService.exportarCsv(enc.id).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `encuesta_${enc.id}_respuestas.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        notificarExito(this.snack, 'CSV exportado correctamente');
+      },
+      error: () => notificarError(this.snack, 'No se pudo exportar el CSV.'),
+    });
+  }
 }
