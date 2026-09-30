@@ -54,7 +54,7 @@ public class SecurityConfig {
                         // TODO: Revisar request en base a roles
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers("/api/clientes/**").hasRole("ADMIN")
-                        // .requestMatchers(HttpMethod.GET, "/api/encuestas/*/estadisticas").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/encuestas/*/estadisticas").hasAnyRole("ADMIN", "ENCUESTADOR")
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/exportar-csv").hasRole("ADMIN")   // nueva línea, ANTES de las de abajo
                         .requestMatchers(HttpMethod.POST, "/api/encuestas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/encuestas/**").hasRole("ADMIN")

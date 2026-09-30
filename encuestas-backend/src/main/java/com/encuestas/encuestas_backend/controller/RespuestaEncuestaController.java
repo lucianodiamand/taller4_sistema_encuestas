@@ -19,8 +19,9 @@ public class RespuestaEncuestaController {
     private AuthUtil authUtil;   // nuevo
 
     @GetMapping("/pendientes")
-    public List<RespuestaEncuestaResponseDTO> listarPendientes() {
-        return respuestaEncuestaService.listarPendientesPorEncuestador(authUtil.obtenerUsuarioActualId());
+    public List<RespuestaEncuestaResponseDTO> listarPendientes(
+            @RequestParam(required = false) Long encuestaId) {
+        return respuestaEncuestaService.listarPendientesPorEncuestador(authUtil.obtenerUsuarioActualId(), encuestaId);
     }
 
     @PatchMapping("/{id}/estado")

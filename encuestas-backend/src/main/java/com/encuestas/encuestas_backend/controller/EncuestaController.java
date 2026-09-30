@@ -76,7 +76,7 @@ public class EncuestaController {
 
     @GetMapping("/{id}/estadisticas")
     public EstadisticasEncuestaDTO obtenerEstadisticas(@PathVariable Long id) {
-        return estadisticasService.obtenerEstadisticas(id);
+        return estadisticasService.obtenerEstadisticas(id, authUtil.obtenerUsuarioActual());
     }
 
 }

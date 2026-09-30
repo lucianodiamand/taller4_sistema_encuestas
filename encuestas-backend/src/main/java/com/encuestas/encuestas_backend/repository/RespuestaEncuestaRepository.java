@@ -14,5 +14,10 @@ public interface RespuestaEncuestaRepository extends JpaRepository<RespuestaEncu
     List<RespuestaEncuesta> findByEnlaceEncuestaIdAndEstadoValidacion(
             Long encuestaId, EstadoRespuesta estadoValidacion);
 
+    List<RespuestaEncuesta> findByEnlaceEncuestadorIdAndEnlaceEncuestaIdAndEstadoValidacion(
+            Long encuestadorId, Long encuestaId, EstadoRespuesta estadoValidacion);
+
     long countByEnlaceEncuestaIdAndEstadoValidacion(Long encuestaId, EstadoRespuesta estadoValidacion);
+
+    long countByEnlaceEncuestaIdAndEnlaceEncuestadorIdAndEstadoValidacion(Long encuestaId, Long encuestadorId, EstadoRespuesta estadoValidacion);
 }
