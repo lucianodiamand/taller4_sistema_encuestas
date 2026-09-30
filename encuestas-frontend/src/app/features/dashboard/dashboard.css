@@ -9,16 +9,6 @@
   font-family: 'Segoe UI', system-ui, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  /* Empuja el título a la izq y el botón a la der */
-  align-items: center;
-  /* Los centra verticalmente para que no queden desfasados */
-  margin-bottom: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-}
-
 .dashboard-info {
   display: flex;
   justify-content: space-between;
@@ -122,6 +112,8 @@
   font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .ordenador {
@@ -195,7 +187,6 @@
 .card-info p {
   margin: 0;
   color: #666;
-  /* ACÁ: Color de la información secundaria (cliente, estado). */
   font-size: 0.9rem;
 }
 
@@ -203,12 +194,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  /* Separa los botones entre sí */
-  background-color: #fadddd;
-  /* Tono grisáceo celeste muy sutil */
+  background-color: var(--mat-sys-secondary-container);
   padding: 6px 16px;
   border-radius: 8px;
-  /* Acompaña el redondeo general de tus tarjetas */
-  border: 1px solid #8d8e91;
-  /* Borde apenas más oscuro para delimitar */
 }

@@ -11,11 +11,6 @@
   background: #f5f5f5;
 }
 
-.responder-card-header {
-  border-bottom: 2px solid #eee;
-  margin-bottom: 20px;
-}
-
 .responder-screen {
   display: flex;
   flex-direction: column;
@@ -60,15 +55,24 @@
   overflow: hidden;
 }
 
+.page-header {
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+
+
 .responder-card mat-card-header {
   padding: 24px 24px 12px;
 }
 
 .responder-card mat-card-title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 300;
   color: #333;
-  margin: 0;
+  margin: 6px 6px 6px 0;
 }
 
 .responder-card mat-card-subtitle {

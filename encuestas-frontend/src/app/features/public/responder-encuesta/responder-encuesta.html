@@ -25,11 +25,11 @@
   </div>
   } @else if (encuesta(); as enc) {
   <mat-card class="responder-card">
-    <mat-card-header class="responder-card-header">
+    <mat-card-header class="page-header">
       <mat-card-title>{{ enc.titulo }}</mat-card-title>
-      @if (enc.descripcion) {
+<!--       @if (enc.descripcion) {
       <mat-card-subtitle>{{ enc.descripcion }}</mat-card-subtitle>
-      }
+      } -->
     </mat-card-header>
     <mat-card-content>
       <div class="responder-form">
@@ -136,14 +136,14 @@
       </div>
     </mat-card-content>
     <mat-card-actions align="end">
-      <button mat-raised-button color="primary" class="btn-enviar" type="button" (click)="enviar()">
+      <button matButton="filled" color="primary" class="btn-enviar" type="button" (click)="enviar()">
         Enviar
       </button>
     </mat-card-actions>
   </mat-card>
   } @else {
   <div class="responder-screen">
-    <mat-icon color="primary">hourglass_empty</mat-icon>
+    <mat-icon  color="primary">hourglass_empty</mat-icon>
     <h2>Cargando encuesta...</h2>
   </div>
   }

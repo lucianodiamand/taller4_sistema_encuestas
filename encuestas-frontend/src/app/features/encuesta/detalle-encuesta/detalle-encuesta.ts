@@ -97,25 +97,9 @@ export class DetalleEncuesta implements OnInit {
     this.router.navigate(['/respuestas', res.id], { queryParams: { origen: 'encuesta' } });
   }
 
-  validarRespuesta(idRespuesta: number, estado: EstadoRespuesta) {
-    this.respuestaService.validar(idRespuesta, estado).subscribe({
-      next: () => {
-        const enc = this.encuesta();
-        if (enc) {
-          this.cargarPendientes(enc.id);
-          this.cargarEstadisticas(enc.id);
-        }
-        notificarExito(this.snack, `Respuesta ${estado === EstadoRespuesta.APROBADA ? 'aprobada' : 'rechazada'} correctamente`);
-      },
-      error: () => notificarError(this.snack, 'No se pudo validar la respuesta'),
-    });
-  }
-
   volver() {
     this.router.navigate(['/dashboard']);
   }
-
-
 
   exportarCsv() {
     const enc = this.encuesta();

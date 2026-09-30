@@ -1,136 +1,140 @@
 <div class="detalle-container">
-
-  <header class="detalle-header header">
-
-    <button mat-stroked-button (click)="volver()">
+  <header class="page-header header">
+    <button mat-stroked-button (click)="volver()" aria-label="Volver">
       <mat-icon>arrow_back</mat-icon>
       Volver al panel
     </button>
+    <h2>Encuesta</h2>
   </header>
 
-
   @if (errorCarga()) {
-  <div class="detalle-error">
-    <mat-icon color="warn">error</mat-icon>
-    <p>Encuesta no encontrada.</p>
-    <button mat-raised-button (click)="volver()">Volver al panel</button>
-  </div>
+    <div class="detalle-error">
+      <mat-icon color="warn">error</mat-icon>
+      <p>Encuesta no encontrada.</p>
+      <button mat-raised-button (click)="volver()">Volver al panel</button>
+    </div>
   } @else if (encuesta(); as enc) {
-  <div class="detalle-titulo-row">
-    <h2>{{ enc.titulo }}</h2>
-    <span class="estado-badge" [class.badge-activa]="enc.estado === estados.ACTIVA">
-      {{ enc.estado === estados.ACTIVA ? 'Activa' : 'Cerrada' }}
-    </span>
-    @if (esEncuestador) {
-    <button matButton="filled" color="primary" class="detalle-titulo-btn" [disabled]="enc.estado !== estados.ACTIVA"
-      (click)="verQR()">
-      <mat-icon>qr_code</mat-icon> Generar QR
-    </button>
-    }
-    @if (esAdministrador) {
-    <button matButton="filled" class="detalle-titulo-btn" (click)="exportarCsv()">
-      <mat-icon>download</mat-icon> Exportar CSV
-    </button>
-    }
-  </div>
-
-  <section class="detalle-seccion">
-    <div class="detalle-seccion-titulo">
-      <h3>Información de la encuesta</h3>
-      <mat-icon>info</mat-icon>
-    </div>
-
-    <div class="detalle-seccion-info">
-      <div>
-        <span class="detail-label">Cliente:&nbsp;</span>
-        <span class="detail-value">{{ enc.clienteNombre }}</span>
-      </div>
-
-      <div>
-        <span class="detail-label">Creada el:&nbsp;</span>
-        <span class="detail-value">{{ enc.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
-      </div>
-
-      <div>
-        <span class="detail-label">Creador:&nbsp;</span>
-        <span class="detail-value">{{ enc.usuarioNombre }}</span>
-      </div>
-
-    </div>
-
-    <div>
-      <span class="detail-label">Descripción:&nbsp;</span>
-      <span class="detail-value">{{ enc.descripcion || '-' }}</span>
-    </div>
-
-  </section>
-
-  <section class="detalle-seccion">
-    <h3>Estadísticas</h3>
-    @if (estadisticas(); as stats) {
-    <div class="stats-grid">
-      <div class="stat-tile">
-        <span class="stat-valor">{{ stats.enlacesGenerados }}</span>
-        <span class="stat-etiqueta">Enlaces generados</span>
-      </div>
-      <div class="stat-tile">
-        <span class="stat-valor">{{ stats.enlacesRespondidos }}</span>
-        <span class="stat-etiqueta">Enlaces respondidos</span>
-      </div>
-      <div class="stat-tile">
-        <span class="stat-valor">{{ stats.enlacesPendientes }}</span>
-        <span class="stat-etiqueta">Enlaces pendientes</span>
-      </div>
-      <div class="stat-tile stat-aprobadas">
-        <span class="stat-valor">{{ stats.respuestasAprobadas }}</span>
-        <span class="stat-etiqueta">Válidas (aprobadas)</span>
-      </div>
-      <div class="stat-tile stat-pendientes">
-        <span class="stat-valor">{{ stats.respuestasPendientesValidacion }}</span>
-        <span class="stat-etiqueta">Pendientes</span>
-      </div>
-      <div class="stat-tile stat-rechazadas">
-        <span class="stat-valor">{{ stats.respuestasRechazadas }}</span>
-        <span class="stat-etiqueta">Rechazadas</span>
-      </div>
-    </div>
-    } @else {
-    <p class="detalle-vacio">Cargando estadísticas...</p>
-    }
-  </section>
-
-  <section class="detalle-seccion">
-    <h3>Preguntas</h3>
-    <app-lista-preguntas [preguntas]="enc.preguntas"></app-lista-preguntas>
-  </section>
-
-  @if (esEncuestador) {
-  <section class="detalle-seccion">
-    <h3>Respuestas pendientes de esta encuesta</h3>
-    <div class="list-grid">
-      @for (res of pendientes(); track res.id) {
-      <div class="card-item">
-        <div class="card-info">
-          <h3>#{{ res.encuestaId }} - {{res.encuestaTitulo}}</h3>
-          <p>#{{ res.id }} | {{ res.fechaRespuesta | date:'dd-MM-yyyy hh:mm' }}</p>
-        </div>
-        <div class="card-actions">
-          <button mat-icon-button color="primary" (click)="verRespuesta(res)">
-            <mat-icon>visibility</mat-icon>
-          </button>
-          <button mat-icon-button color="primary" (click)="validarRespuesta(res.id, estadoResp.APROBADA)">
-            <mat-icon>check_circle</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="validarRespuesta(res.id,estadoResp.RECHAZADA)">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </div>
-      </div>
-      } @empty {
-      <p>No hay respuestas pendientes.</p>
+    <div class="detalle-titulo-row">
+      <h2>{{ enc.titulo }}</h2>
+      <span class="estado-badge" [class.badge-activa]="enc.estado === estados.ACTIVA">
+        {{ enc.estado === estados.ACTIVA ? 'Activa' : 'Cerrada' }}
+      </span>
+      @if (esEncuestador) {
+        <button
+          matButton="filled"
+          color="primary"
+          class="detalle-titulo-btn"
+          [disabled]="enc.estado !== estados.ACTIVA"
+          (click)="verQR()"
+        >
+          <mat-icon>qr_code</mat-icon> Generar QR
+        </button>
+      }
+      @if (esAdministrador) {
+        <button matButton="filled" class="detalle-titulo-btn" (click)="exportarCsv()">
+          <mat-icon iconPositionEnd>download</mat-icon> Exportar CSV
+        </button>
       }
     </div>
-  </section>
-  }
+
+    <section class="detalle-seccion">
+      <div class="detalle-seccion-titulo">
+        <h3>Información de la encuesta</h3>
+        <mat-icon>info</mat-icon>
+      </div>
+
+      <div class="detalle-seccion-info">
+        <div>
+          <span class="detail-label">Cliente:&nbsp;</span>
+          <span class="detail-value">{{ enc.clienteNombre }}</span>
+        </div>
+
+        <div>
+          <span class="detail-label">Creada el:&nbsp;</span>
+          <span class="detail-value">{{ enc.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
+        </div>
+
+        <div>
+          <span class="detail-label">Creador:&nbsp;</span>
+          <span class="detail-value">{{ enc.usuarioNombre }}</span>
+        </div>
+      </div>
+
+      <div>
+        <span class="detail-label">Descripción</span><br />
+        <span class="detail-value">{{ enc.descripcion || '-' }}</span>
+      </div>
+    </section>
+
+    <section class="detalle-seccion">
+      <div class="detalle-seccion-titulo">
+        <h3>Estadísticas</h3>
+        <mat-icon>analytics</mat-icon>
+      </div>
+      @if (estadisticas(); as stats) {
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <span class="stat-valor">{{ stats.enlacesGenerados }}</span>
+            <span class="stat-etiqueta">Enlaces generados</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-valor">{{ stats.enlacesRespondidos }}</span>
+            <span class="stat-etiqueta">Enlaces respondidos</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-valor">{{ stats.enlacesPendientes }}</span>
+            <span class="stat-etiqueta">Enlaces pendientes</span>
+          </div>
+          <div class="stat-tile stat-aprobadas">
+            <span class="stat-valor">{{ stats.respuestasAprobadas }}</span>
+            <span class="stat-etiqueta">Válidas (aprobadas)</span>
+          </div>
+          <div class="stat-tile stat-pendientes">
+            <span class="stat-valor">{{ stats.respuestasPendientesValidacion }}</span>
+            <span class="stat-etiqueta">Pendientes</span>
+          </div>
+          <div class="stat-tile stat-rechazadas">
+            <span class="stat-valor">{{ stats.respuestasRechazadas }}</span>
+            <span class="stat-etiqueta">Rechazadas</span>
+          </div>
+        </div>
+      } @else {
+        <p class="detalle-vacio">Cargando estadísticas...</p>
+      }
+    </section>
+
+    <section class="detalle-seccion">
+      <div class="detalle-seccion-titulo">
+        <h3>Preguntas</h3>
+        <mat-icon>question_mark</mat-icon>
+      </div>
+      <app-lista-preguntas [preguntas]="enc.preguntas"></app-lista-preguntas>
+    </section>
+
+    @if (esEncuestador) {
+      <section class="detalle-seccion">
+        <div class="detalle-seccion-titulo">
+          <h3>Respuestas pendientes de esta encuesta</h3>
+          <mat-icon>grading</mat-icon>
+        </div>
+        <div class="list-grid">
+          @for (res of pendientes(); track res.id) {
+            <div class="card-item">
+              <div class="card-info">
+                <h3>#{{ res.encuestaId }} - {{ res.encuestaTitulo }}</h3>
+                <p>#{{ res.id }} | {{ res.fechaRespuesta | date: 'dd-MM-yyyy hh:mm' }}</p>
+              </div>
+              <div class="card-actions">
+                <button mat-icon-button color="primary" (click)="verRespuesta(res)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </div>
+            </div>
+          } @empty {
+            <p>No hay respuestas pendientes.</p>
+          }
+        </div>
+      </section>
+    }
   }
 </div>

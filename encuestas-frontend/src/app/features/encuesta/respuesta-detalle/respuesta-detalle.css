@@ -8,18 +8,6 @@
   margin: 0 auto;
 }
 
-.respuesta-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.respuesta-header h2 {
-  margin: 0;
-  color: #333;
-}
-
 .respuesta-error {
   display: flex;
   flex-direction: column;
@@ -49,9 +37,9 @@
 
 .respuesta-card mat-card-title {
   display: flex;
-  align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 6px;
 }
 
 .respuesta-id {
@@ -85,6 +73,7 @@
 
 .acciones-barra {
   display: flex;
+  justify-content: flex-end;
   gap: 12px;
   margin: 16px 0;
   flex-wrap: wrap;
@@ -119,6 +108,9 @@
 }
 
 .pregunta-num {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-weight: 600;
   color: #333;
   font-size: 0.9rem;

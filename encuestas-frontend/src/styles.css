@@ -1,14 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
-.header {
-  background: linear-gradient(to right, #f6d5f1ea, #facfcf);
-  border-radius: 10px;
-  padding: 20px;
-}
+
 
 .header h2 {
   font-weight: 300;
   color: #3f3f3f;
   font-size: 1.8rem;
+}
+
+.page-header {
+    background: linear-gradient(to right, #f6d5f1ea, #facfcf);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  /* Empuja el título a la izq y el botón a la der */
+  align-items: center;
+  /* Los centra verticalmente para que no queden desfasados */
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
 .icono-grande {

@@ -272,16 +272,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  validarRespuesta(idRespuesta: number, estado: EstadoRespuesta) {
-    this.respuestaService.validar(idRespuesta, estado).subscribe({
-      next: () => {
-        this.respuestaService.obtenerPendientes().subscribe((data) => this.respuestasPendientes.set(data));
-        notificarExito(this.snack, `Respuesta ${estado === EstadoRespuesta.APROBADA ? 'aprobada' : 'rechazada'} correctamente`);
-      },
-      error: () => notificarError(this.snack, 'No se pudo validar la respuesta'),
-    });
-  }
-
   // Navega a la página de detalle de respuesta
   verRespuesta(res: RespuestaEncuesta) {
     this.router.navigate(['/respuestas', res.id]);
