@@ -3,8 +3,8 @@
     <h2>Dashboard </h2>
 
     <button mat-stroked-button (click)="logout()">
-      <mat-icon>logout</mat-icon>
-      logout
+      <mat-icon iconPositionEnd>logout</mat-icon>
+      Cerrar Sesión
     </button>
 
   </header>
@@ -29,12 +29,26 @@
     @if (rolActual === 'ADMIN') {
     <mat-tab label="Encuestas">
       <div class="tab-content">
-        <button mat-raised-button color="primary" class="btn-add" (click)="nuevaEncuesta()">
-          Nueva Encuesta
-        </button>
+        <div class="tab-header-actions">
+          <button mat-raised-button color="primary" class="btn-add" (click)="nuevaEncuesta()">
+            Nueva Encuesta
+          </button>
+          <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
+            <mat-label>Buscar por título o cliente...</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (input)="terminoBusquedaEncuestas.set($any($event.target).value)">
+          </mat-form-field>
+
+          <mat-button-toggle-group [value]="filtroEncuestas()" (change)="filtroEncuestas.set($event.value)">
+            <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
+            <mat-button-toggle value="ACTIVOS">Activas</mat-button-toggle>
+            <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
+          </mat-button-toggle-group>
+
+        </div>
 
         <div class="list-grid">
-          @for (enc of encuestas(); track enc.id) {
+          @for (enc of encuestasFiltradas(); track enc.id) {
           <div class="card-item">
             <div class="card-info">
               <h3>{{ enc.titulo }}</h3>
@@ -49,16 +63,10 @@
                 <mat-icon>edit</mat-icon>
               </button>
 
-              <!-- Compara el string que llega del back con tu variable del enum -->
-              @if (enc.estado === estados.ACTIVA) {
-              <button mat-raised-button color="warn" (click)="cambiarEstado(enc)">
-                Cerrar
-              </button>
-              } @else {
-              <button mat-raised-button color="primary" (click)="cambiarEstado(enc)">
-                Activar
-              </button>
-              }
+              <mat-slide-toggle color="primary" class="toggle-item" [checked]="enc.estado === estados.ACTIVA"
+                (change)="cambiarEstado(enc)">
+              </mat-slide-toggle>
+
             </div>
           </div>
           } @empty {
@@ -70,12 +78,29 @@
 
     <mat-tab label="Encuestadores">
       <div class="tab-content">
-        <button mat-raised-button color="primary" class="btn-add" (click)="abrirModal(null, 'Encuestador', 'crear')">
-          Nuevo Encuestador
-        </button>
+        <div class="tab-header-actions">
+          <button mat-raised-button color="primary" class="btn-add" (click)="abrirModal(null, 'Encuestador', 'crear')">
+            Nuevo Encuestador
+          </button>
+
+          <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
+            <mat-label>Buscar por nombre o email...</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (input)="terminoBusquedaEncuestadores.set($any($event.target).value)">
+          </mat-form-field>
+
+
+          <mat-button-toggle-group [value]="filtroEncuestadores()" (change)="filtroEncuestadores.set($event.value)">
+            <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
+            <mat-button-toggle value="ACTIVOS">Activas</mat-button-toggle>
+            <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
+          </mat-button-toggle-group>
+
+
+        </div>
 
         <div class="list-grid">
-          @for (encuestador of encuestadores(); track encuestador.id) {
+          @for (encuestador of encuestadoresFiltrados(); track encuestador.id) {
           <div class="card-item">
             <div class="card-info">
               <h3>{{ encuestador.nombre }} {{ encuestador.apellido }}</h3>
@@ -105,11 +130,28 @@
 
     <mat-tab label="Clientes">
       <div class="tab-content">
-        <button mat-raised-button color="primary" class="btn-add" (click)="abrirModal(null, 'Cliente', 'crear')">
-          Nuevo Cliente
-        </button>
+        <div class="tab-header-actions">
+          <button mat-raised-button color="primary" class="btn-add" (click)="abrirModal(null, 'Cliente', 'crear')">
+            Nuevo Cliente
+          </button>
+          <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
+            <mat-label>Buscar por cliente o email...</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (input)="terminoBusquedaClientes.set($any($event.target).value)">
+          </mat-form-field>
+
+          <mat-button-toggle-group [value]="filtroClientes()" (change)="filtroClientes.set($event.value)">
+            <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
+            <mat-button-toggle value="ACTIVOS">Activas</mat-button-toggle>
+            <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
+          </mat-button-toggle-group>
+
+
+
+        </div>
+
         <div class="list-grid">
-          @for (cliente of clientes(); track cliente.id) {
+          @for (cliente of clientesFiltrados(); track cliente.id) {
           <div class="card-item">
             <div class="card-info">
               <h3>{{ cliente.nombre }}</h3>
@@ -143,8 +185,27 @@
     @if (rolActual === 'ENCUESTADOR') {
     <mat-tab label="Encuestas">
       <div class="tab-content">
+        <div class="tab-header-actions">
+
+          <mat-button-toggle-group [value]="filtroEncuestas()" (change)="filtroEncuestas.set($event.value)">
+            <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
+            <mat-button-toggle value="ACTIVOS">Activas</mat-button-toggle>
+            <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
+          </mat-button-toggle-group>
+
+          <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
+            <mat-label>Buscar por título o cliente...</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (input)="terminoBusquedaEncuestas.set($any($event.target).value)">
+          </mat-form-field>
+
+
+        </div>
+
+
+
         <div class="list-grid">
-          @for (enc of encuestas(); track enc.id) {
+          @for (enc of encuestasFiltradas(); track enc.id) {
           <div class="card-item">
             <div class="card-info">
               <h3>{{ enc.titulo }}</h3>

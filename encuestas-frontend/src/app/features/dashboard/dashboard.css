@@ -38,6 +38,40 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
+.tab-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Esta es la regla principal para alinear verticalmente */
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+/* Reseteamos cualquier margen por defecto que Material le ponga a estos componentes */
+.tab-header-actions .btn-add,
+.tab-header-actions mat-button-toggle-group {
+  margin: 0;
+}
+
+/* (Opcional) Si ves que uno es más alto que el otro, podés forzar la misma altura */
+.tab-header-actions mat-button-toggle-group {
+  height: 35px;
+  /* Ajustá este valor para que quede idéntico al botón */
+}
+
+.tab-header-actions .btn-add {
+  height: 40px;
+}
+
+.buscador {
+  flex-grow: 1;
+  /* Hace que el buscador tome el espacio sobrante en el medio */
+  max-width: 400px;
+  /* Evita que se estire demasiado en pantallas gigantes */
+  margin: 0 16px;
+  /* Lo separa de los botones de los costados */
+}
+
 .info-list {
   display: flex;
   flex-direction: column;

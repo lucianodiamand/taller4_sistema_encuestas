@@ -64,7 +64,7 @@ export class AuthService {
     localStorage.setItem('userId', String(userId));
     localStorage.setItem('activo', String(activo));
     localStorage.setItem('email', email);
-    localStorage.setItem('name', nombre);
+    localStorage.setItem('nombre', nombre);
     localStorage.setItem('apellido', apellido);
     this.currentUserRole.set(role);
     this.currentUserId.set(userId);
@@ -165,4 +165,16 @@ export class AuthService {
     }
     return this.getActivoFromStorage();
   }
+
+  getUsuariosDePrueba() {
+    return [
+      { label: 'Admin', email: 'admin@test.com', clave: 'admin123' },
+      { label: 'Encuestador', email: 'encuestador@test.com', clave: 'encuestador123' },
+      { label: 'Encuestador', email: 'encuestador2@test.com', clave: 'encuestador123'}
+    ];
+
+  }
+
 }
+
+

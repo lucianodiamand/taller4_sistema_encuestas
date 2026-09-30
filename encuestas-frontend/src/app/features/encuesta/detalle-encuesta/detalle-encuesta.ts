@@ -60,9 +60,9 @@ export class DetalleEncuesta implements OnInit {
         return;
       }
       this.encuesta.set(encuesta);
-      this.respuestaService.obtenerEstadisticas(encuesta.id).subscribe((stats) => {
-        this.estadisticas.set(stats);
-      });
+
+      this.cargarEstadisticas(encuesta.id);
+  
       if (this.esEncuestador) {
         this.cargarPendientes(encuesta.id);
       }
@@ -73,6 +73,12 @@ export class DetalleEncuesta implements OnInit {
     this.respuestaService.obtenerPendientesDeEncuesta(encuestaId).subscribe((pendientes) => {
       this.pendientes.set(pendientes);
     });
+  }
+
+  private cargarEstadisticas (encuestaId: number) {
+     this.respuestaService.obtenerEstadisticas(encuestaId).subscribe((stats) => {
+        this.estadisticas.set(stats);
+      });
   }
 
   // Navega a la página QR
@@ -90,7 +96,10 @@ export class DetalleEncuesta implements OnInit {
     this.respuestaService.validar(idRespuesta, estado).subscribe({
       next: () => {
         const enc = this.encuesta();
-        if (enc) this.cargarPendientes(enc.id);
+        if (enc) {
+          this.cargarPendientes(enc.id);
+          this.cargarEstadisticas(enc.id);
+        }
         notificarExito(this.snack, `Respuesta ${estado === EstadoRespuesta.APROBADA ? 'aprobada' : 'rechazada'} correctamente`);
       },
       error: () => notificarError(this.snack, 'No se pudo validar la respuesta'),

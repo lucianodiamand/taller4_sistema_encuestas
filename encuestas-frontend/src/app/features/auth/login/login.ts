@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth';
 import { ActivatedRoute } from '@angular/router';
 import { notificarExito, notificarError } from '../../../core/utils/notificaciones';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ import { notificarExito, notificarError } from '../../../core/utils/notificacion
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.css'
@@ -35,6 +37,23 @@ export class Login implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
   });
+
+  // Cargamos la lista de prueba
+  usuariosPrueba = this.authService.getUsuariosDePrueba(); 
+
+  // Función que el HTML llama al seleccionar un usuario
+  autocompletar(usuario: any) {
+    if (!usuario) {
+      this.loginForm.reset(); 
+      return;
+    }
+    
+    this.loginForm.patchValue({
+      email: usuario.email,
+      password: usuario.clave
+    });
+  } 
+
 
   hidePassword = true;
 

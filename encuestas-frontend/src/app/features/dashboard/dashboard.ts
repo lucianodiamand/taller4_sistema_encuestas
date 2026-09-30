@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -20,11 +20,25 @@ import { Rol } from '../../shared/models/rol';
 import { Usuario } from '../../shared/models/usuario-interface';
 import { EstadoRespuesta } from '../../shared/models/estado-respuesta';
 import { notificarExito, notificarError } from '../../core/utils/notificaciones';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTabsModule, MatButtonModule, MatIconModule, MatDialogModule],
+  imports: [
+    CommonModule, 
+    MatTabsModule, 
+    MatButtonModule, 
+    MatIconModule, 
+    MatDialogModule, 
+    MatSlideToggleModule, 
+    MatButtonToggleModule, 
+    MatFormFieldModule,
+    MatInputModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -45,6 +59,14 @@ export class Dashboard implements OnInit {
   rolActual: Rol | null = this.authService.currentUserRole();
   emailUsuario = this.authService.currentUserEmail;
   usuarioInfo = signal<{ nombre: string; apellido: string } | null>(this.authService.getCurrentUserNombreCompleto());
+  nombreUsuario = this.authService.currentUserNombre; 
+  apellidoUsuario = this.authService.currentUserApellido;
+  filtroEncuestas = signal<'TODOS' | 'ACTIVOS' | 'INACTIVOS'>('TODOS');
+  filtroEncuestadores = signal<'TODOS' | 'ACTIVOS' | 'INACTIVOS'>('TODOS');
+  filtroClientes = signal<'TODOS' | 'ACTIVOS' | 'INACTIVOS'>('TODOS');
+  terminoBusquedaEncuestas = signal<string>('');
+  terminoBusquedaEncuestadores = signal<string>('');
+  terminoBusquedaClientes = signal<string>('');
 
   // Listas que se llenan al cargar los servicios (cargarDatos).
   // Se usan signals para que la vista se actualice sola al cambiar su valor.
@@ -80,12 +102,73 @@ export class Dashboard implements OnInit {
     });
   }
 
-  nombreCompleto(): string | null{
-    const info = this.usuarioInfo();
-    if (info) {
-      return `${info.nombre} ${info.apellido}`;
+  encuestasFiltradas = computed(() => {
+    const filtroEstado = this.filtroEncuestas();
+    const termino = this.terminoBusquedaEncuestas().toLowerCase().trim();
+    let lista = this.encuestas();
+
+    // Primero aplicamos el filtro de botones (Activas/Cerradas)
+    if (filtroEstado === 'ACTIVOS') {
+      lista = lista.filter(e => e.estado === this.estados.ACTIVA);
+    } else if (filtroEstado === 'INACTIVOS') {
+      lista = lista.filter(e => e.estado === this.estados.CERRADA);
     }
-    return null;
+
+    // Después aplicamos el filtro de texto si el usuario escribió algo
+    if (termino) {
+      lista = lista.filter(e => 
+        e.titulo.toLowerCase().includes(termino) || 
+        e.clienteNombre.toLowerCase().includes(termino)
+      );
+    }
+
+    return lista;
+  });
+
+  encuestadoresFiltrados = computed(() => {
+    const filtroEstado = this.filtroEncuestadores();
+    const termino = this.terminoBusquedaEncuestadores().toLowerCase().trim();
+    let lista = this.encuestadores();
+
+    // Filtro por estado
+    if (filtroEstado === 'ACTIVOS') lista = lista.filter(e => e.activo === true);
+    if (filtroEstado === 'INACTIVOS') lista = lista.filter(e => e.activo === false);
+
+    // Filtro por texto
+    if (termino) {
+      lista = lista.filter(e => 
+        e.nombre.toLowerCase().includes(termino) || 
+        e.apellido.toLowerCase().includes(termino) ||
+        e.email.toLowerCase().includes(termino)
+      );
+    }
+
+    return lista;
+  });
+
+  clientesFiltrados = computed(() => {
+    const filtroEstado = this.filtroClientes();
+    const termino = this.terminoBusquedaClientes().toLowerCase().trim();
+    let lista = this.clientes();
+
+    // Filtro por estado
+    if (filtroEstado === 'ACTIVOS') lista = lista.filter(c => c.activo === true);
+    if (filtroEstado === 'INACTIVOS') lista = lista.filter(c => c.activo === false);
+
+    // Filtro por texto
+    if (termino) {
+      lista = lista.filter(c => 
+        c.nombre.toLowerCase().includes(termino) || 
+        c.email.toLowerCase().includes(termino)
+      );
+    }
+    return lista;
+  });
+
+
+
+  nombreCompleto(): string | null{
+      return `${this.nombreUsuario()} ${this.apellidoUsuario()}`;
   }
 
   // Redirige al detalle de la encuesta (reemplaza al modal "ver")
@@ -118,7 +201,7 @@ export class Dashboard implements OnInit {
   }
 
   // Apertura de Modales
-  abrirModal(
+  abrirModal( 
     entidad: any,
     tipoEntidad: string,
     accion: 'ver' | 'modificar' | 'eliminar' | 'crear',

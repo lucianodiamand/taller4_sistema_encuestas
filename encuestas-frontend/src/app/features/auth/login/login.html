@@ -7,27 +7,40 @@
 
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        
+
+        <!-- Selector rápido para desarrollo -->
+        <mat-form-field appearance="outline" class="full-width selector-prueba">
+          <mat-label>Autocompletar (Solo Desarrollo)</mat-label>
+          <mat-select (selectionChange)="autocompletar($event.value)">
+            <mat-option [value]="null">-- Limpiar --</mat-option>
+            @for (usr of usuariosPrueba; track usr.email) {
+            <mat-option [value]="usr">{{ usr.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
         <!-- Campo Email -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput type="email" formControlName="email" placeholder="Ej: admin@test.com" autocomplete="email">
           @if (loginForm.get('email')?.hasError('required')) {
-            <mat-error>El email es obligatorio</mat-error>
+          <mat-error>El email es obligatorio</mat-error>
           } @else if (loginForm.get('email')?.hasError('email')) {
-            <mat-error>Ingresá un email válido</mat-error>
+          <mat-error>Ingresá un email válido</mat-error>
           }
         </mat-form-field>
 
         <!-- Campo Contraseña -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña</mat-label>
-          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="current-password">
-          <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Ocultar contraseña'">
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+            autocomplete="current-password">
+          <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Ocultar contraseña'">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
           @if (loginForm.get('password')?.hasError('required')) {
-            <mat-error>La contraseña es obligatoria</mat-error>
+          <mat-error>La contraseña es obligatoria</mat-error>
           }
         </mat-form-field>
 

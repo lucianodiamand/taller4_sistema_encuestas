@@ -18,7 +18,7 @@ export interface Encuesta {
   titulo: string;
   descripcion?: string | null;
   estado: EstadoEncuesta;
-  fechaCreacion: string; // ISO 8601
+  fechaCreacion: string; // ISO 8601 
   clienteId: number;
   clienteNombre: string;
   usuarioId: number;
