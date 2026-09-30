@@ -45,6 +45,16 @@
             <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
           </mat-button-toggle-group>
 
+          <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
+            <mat-label>Ordenar por</mat-label>
+            <mat-select [value]="ordenEncuestas()" (selectionChange)="ordenEncuestas.set($event.value)">
+              <mat-option value="id_desc">Más recientes primero</mat-option>
+              <mat-option value="id_asc">Más antiguas primero</mat-option>
+              <mat-option value="nombre_asc">Título (A - Z)</mat-option>
+              <mat-option value="nombre_desc">Título (Z - A)</mat-option>
+            </mat-select>
+          </mat-form-field>
+
         </div>
 
         <div class="list-grid">
@@ -96,7 +106,16 @@
             <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
           </mat-button-toggle-group>
 
-
+          <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
+            <mat-label>Ordenar por</mat-label>
+            <mat-select [value]="ordenEncuestadores()" (selectionChange)="ordenEncuestadores.set($event.value)">
+              <!-- Ajustá la señal según el tab -->
+              <mat-option value="id_desc">Más recientes primero</mat-option>
+              <mat-option value="id_asc">Más antiguos primero</mat-option>
+              <mat-option value="nombre_asc">Nombre (A - Z)</mat-option>
+              <mat-option value="nombre_desc">Nombre (Z - A)</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
 
         <div class="list-grid">
@@ -146,6 +165,16 @@
             <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
           </mat-button-toggle-group>
 
+          <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
+            <mat-label>Ordenar por</mat-label>
+            <mat-select [value]="ordenClientes()" (selectionChange)="ordenClientes.set($event.value)">
+              <!-- Ajustá la señal según el tab -->
+              <mat-option value="id_desc">Más recientes primero</mat-option>
+              <mat-option value="id_asc">Más antiguos primero</mat-option>
+              <mat-option value="nombre_asc">Nombre (A - Z)</mat-option>
+              <mat-option value="nombre_desc">Nombre (Z - A)</mat-option>
+            </mat-select>
+          </mat-form-field>
 
 
         </div>

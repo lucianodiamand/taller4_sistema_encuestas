@@ -24,6 +24,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @Component({
@@ -38,7 +39,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSlideToggleModule, 
     MatButtonToggleModule, 
     MatFormFieldModule,
-    MatInputModule],
+    MatInputModule,
+    MatSelectModule
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -67,6 +70,9 @@ export class Dashboard implements OnInit {
   terminoBusquedaEncuestas = signal<string>('');
   terminoBusquedaEncuestadores = signal<string>('');
   terminoBusquedaClientes = signal<string>('');
+  ordenEncuestas = signal<'id_asc' | 'id_desc' | 'nombre_asc' | 'nombre_desc'>('id_desc');
+  ordenEncuestadores = signal<'id_asc' | 'id_desc' | 'nombre_asc' | 'nombre_desc'>('id_desc');
+  ordenClientes = signal<'id_asc' | 'id_desc' | 'nombre_asc' | 'nombre_desc'>('id_desc');
 
   // Listas que se llenan al cargar los servicios (cargarDatos).
   // Se usan signals para que la vista se actualice sola al cambiar su valor.
@@ -102,69 +108,75 @@ export class Dashboard implements OnInit {
     });
   }
 
+// 2. Actualizamos las señales computadas
   encuestasFiltradas = computed(() => {
     const filtroEstado = this.filtroEncuestas();
     const termino = this.terminoBusquedaEncuestas().toLowerCase().trim();
-    let lista = this.encuestas();
+    const orden = this.ordenEncuestas();
+    
+    // Clonamos el array para no mutar el original con el .sort()
+    let lista = [...this.encuestas()];
 
-    // Primero aplicamos el filtro de botones (Activas/Cerradas)
-    if (filtroEstado === 'ACTIVOS') {
-      lista = lista.filter(e => e.estado === this.estados.ACTIVA);
-    } else if (filtroEstado === 'INACTIVOS') {
-      lista = lista.filter(e => e.estado === this.estados.CERRADA);
-    }
-
-    // Después aplicamos el filtro de texto si el usuario escribió algo
+    if (filtroEstado === 'ACTIVOS') lista = lista.filter(e => e.estado === this.estados.ACTIVA);
+    if (filtroEstado === 'INACTIVOS') lista = lista.filter(e => e.estado === this.estados.CERRADA);
+    
     if (termino) {
-      lista = lista.filter(e => 
-        e.titulo.toLowerCase().includes(termino) || 
-        e.clienteNombre.toLowerCase().includes(termino)
-      );
+      lista = lista.filter(e => e.titulo.toLowerCase().includes(termino) || e.clienteNombre.toLowerCase().includes(termino));
     }
 
-    return lista;
+    // Aplicamos el ordenamiento
+    return lista.sort((a, b) => {
+      if (orden === 'id_asc') return a.id - b.id;
+      if (orden === 'id_desc') return b.id - a.id;
+      if (orden === 'nombre_asc') return a.titulo.localeCompare(b.titulo); // Compara strings (A-Z)
+      if (orden === 'nombre_desc') return b.titulo.localeCompare(a.titulo); // Compara strings (Z-A)
+      return 0;
+    });
   });
 
   encuestadoresFiltrados = computed(() => {
     const filtroEstado = this.filtroEncuestadores();
     const termino = this.terminoBusquedaEncuestadores().toLowerCase().trim();
-    let lista = this.encuestadores();
+    const orden = this.ordenEncuestadores();
+    let lista = [...this.encuestadores()];
 
-    // Filtro por estado
     if (filtroEstado === 'ACTIVOS') lista = lista.filter(e => e.activo === true);
     if (filtroEstado === 'INACTIVOS') lista = lista.filter(e => e.activo === false);
 
-    // Filtro por texto
     if (termino) {
-      lista = lista.filter(e => 
-        e.nombre.toLowerCase().includes(termino) || 
-        e.apellido.toLowerCase().includes(termino) ||
-        e.email.toLowerCase().includes(termino)
-      );
+      lista = lista.filter(e => e.nombre.toLowerCase().includes(termino) || e.apellido.toLowerCase().includes(termino) || e.email.toLowerCase().includes(termino));
     }
 
-    return lista;
+    return lista.sort((a, b) => {
+      if (orden === 'id_asc') return a.id - b.id;
+      if (orden === 'id_desc') return b.id - a.id;
+      if (orden === 'nombre_asc') return a.nombre.localeCompare(b.nombre);
+      if (orden === 'nombre_desc') return b.nombre.localeCompare(a.nombre);
+      return 0;
+    });
   });
 
   clientesFiltrados = computed(() => {
     const filtroEstado = this.filtroClientes();
     const termino = this.terminoBusquedaClientes().toLowerCase().trim();
-    let lista = this.clientes();
+    const orden = this.ordenClientes();
+    let lista = [...this.clientes()];
 
-    // Filtro por estado
     if (filtroEstado === 'ACTIVOS') lista = lista.filter(c => c.activo === true);
     if (filtroEstado === 'INACTIVOS') lista = lista.filter(c => c.activo === false);
 
-    // Filtro por texto
     if (termino) {
-      lista = lista.filter(c => 
-        c.nombre.toLowerCase().includes(termino) || 
-        c.email.toLowerCase().includes(termino)
-      );
+      lista = lista.filter(c => c.nombre.toLowerCase().includes(termino) || c.email.toLowerCase().includes(termino));
     }
-    return lista;
-  });
 
+    return lista.sort((a, b) => {
+      if (orden === 'id_asc') return a.id - b.id;
+      if (orden === 'id_desc') return b.id - a.id;
+      if (orden === 'nombre_asc') return a.nombre.localeCompare(b.nombre);
+      if (orden === 'nombre_desc') return b.nombre.localeCompare(a.nombre);
+      return 0;
+    });
+  });
 
 
   nombreCompleto(): string | null{
