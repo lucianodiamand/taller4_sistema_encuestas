@@ -1,0 +1,17 @@
+<div class="acciones-crud">
+  @if (mostrarVer) {
+    <button mat-icon-button color="primary" (click)="ver.emit()" aria-label="Ver">
+      <mat-icon>visibility</mat-icon>
+    </button>
+  }
+  @if (mostrarEditar) {
+    <button mat-icon-button color="accent" (click)="editar.emit()" aria-label="Editar">
+      <mat-icon>edit</mat-icon>
+    </button>
+  }
+  @if (mostrarEliminar) {
+    <button mat-icon-button color="warn" (click)="eliminar.emit()" aria-label="Eliminar">
+      <mat-icon>delete</mat-icon>
+    </button>
+  }
+</div>

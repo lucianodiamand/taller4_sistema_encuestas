@@ -1,0 +1,14 @@
+<mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
+  <mat-label>{{ etiquetaBusqueda }}</mat-label>
+  <mat-icon matPrefix>search</mat-icon>
+  <input matInput [value]="termino" (input)="terminoChange.emit($any($event.target).value)" />
+</mat-form-field>
+<mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
+  <mat-label>Ordenar por</mat-label>
+  <mat-select [value]="orden" (selectionChange)="ordenChange.emit($event.value)">
+    <mat-option value="id_desc">Más recientes primero</mat-option>
+    <mat-option value="id_asc">Más antiguos primero</mat-option>
+    <mat-option value="nombre_asc">{{ etiquetaNombre }} (A - Z)</mat-option>
+    <mat-option value="nombre_desc">{{ etiquetaNombre }} (Z - A)</mat-option>
+  </mat-select>
+</mat-form-field>

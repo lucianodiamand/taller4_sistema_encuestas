@@ -30,24 +30,14 @@
         </ng-template>
         <div class="tab-content">
           <div class="tab-header-actions">
-            <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
-              <mat-label>Buscar por título o cliente...</mat-label>
-              <mat-icon matPrefix>search</mat-icon>
-              <input matInput (input)="terminoBusquedaEncuestas.set($any($event.target).value)" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
-              <mat-label>Ordenar por</mat-label>
-              <mat-select
-                [value]="ordenEncuestas()"
-                (selectionChange)="ordenEncuestas.set($event.value)"
-              >
-                <mat-option value="id_desc">Más recientes primero</mat-option>
-                <mat-option value="id_asc">Más antiguas primero</mat-option>
-                <mat-option value="nombre_asc">Título (A - Z)</mat-option>
-                <mat-option value="nombre_desc">Título (Z - A)</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <app-buscador-ordenador
+              etiquetaBusqueda="Buscar por título o cliente..."
+              etiquetaNombre="Título"
+              [termino]="terminoBusquedaEncuestas()"
+              (terminoChange)="terminoBusquedaEncuestas.set($any($event))"
+              [orden]="ordenEncuestas()"
+              (ordenChange)="ordenEncuestas.set($any($event))"
+            ></app-buscador-ordenador>
           </div>
 
           <div class="tab-header-actions tab-header-actions-lower">
@@ -55,14 +45,12 @@
               Nueva Encuesta
               <mat-icon iconPositionEnd>post_add</mat-icon>
             </button>
-            <mat-button-toggle-group
-              [value]="filtroEncuestas()"
-              (change)="filtroEncuestas.set($event.value)"
-            >
-              <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
-              <mat-button-toggle value="ACTIVOS">Activas</mat-button-toggle>
-              <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
-            </mat-button-toggle-group>
+            <app-filtro-estado
+              [valor]="filtroEncuestas()"
+              (valorChange)="filtroEncuestas.set($any($event))"
+              etiquetaActivos="Activas"
+              etiquetaInactivos="Cerradas"
+            ></app-filtro-estado>
           </div>
 
           <div class="list-grid">
@@ -103,29 +91,15 @@
           <mat-icon class="tab-icon">group_eye</mat-icon>
         </ng-template>
         <div class="tab-content">
-          <!-- Fila 2: Buscador y Ordenador -->
-          <div class="tab-header-actions ">
-            <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
-              <mat-label>Buscar por nombre o email...</mat-label>
-              <mat-icon matPrefix>search</mat-icon>
-              <input
-                matInput
-                (input)="terminoBusquedaEncuestadores.set($any($event.target).value)"
-              />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
-              <mat-label>Ordenar por</mat-label>
-              <mat-select
-                [value]="ordenEncuestadores()"
-                (selectionChange)="ordenEncuestadores.set($event.value)"
-              >
-                <mat-option value="id_desc">Más recientes primero</mat-option>
-                <mat-option value="id_asc">Más antiguos primero</mat-option>
-                <mat-option value="nombre_asc">Nombre (A - Z)</mat-option>
-                <mat-option value="nombre_desc">Nombre (Z - A)</mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="tab-header-actions">
+            <app-buscador-ordenador
+              etiquetaBusqueda="Buscar por nombre o email..."
+              etiquetaNombre="Nombre"
+              [termino]="terminoBusquedaEncuestadores()"
+              (terminoChange)="terminoBusquedaEncuestadores.set($any($event))"
+              [orden]="ordenEncuestadores()"
+              (ordenChange)="ordenEncuestadores.set($any($event))"
+            ></app-buscador-ordenador>
           </div>
           <div class="tab-header-actions tab-header-actions-lower">
             <button
@@ -138,14 +112,12 @@
               Nuevo Encuestador
             </button>
 
-            <mat-button-toggle-group
-              [value]="filtroEncuestadores()"
-              (change)="filtroEncuestadores.set($event.value)"
-            >
-              <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
-              <mat-button-toggle value="ACTIVOS">Activos</mat-button-toggle>
-              <mat-button-toggle value="INACTIVOS">Inactivos</mat-button-toggle>
-            </mat-button-toggle-group>
+            <app-filtro-estado
+              [valor]="filtroEncuestadores()"
+              (valorChange)="filtroEncuestadores.set($any($event))"
+              etiquetaActivos="Activos"
+              etiquetaInactivos="Inactivos"
+            ></app-filtro-estado>
           </div>
 
           <div class="list-grid">
@@ -158,28 +130,11 @@
                   </p>
                 </div>
                 <div class="card-actions">
-                  <button
-                    mat-icon-button
-                    color="primary"
-                    (click)="abrirModal(encuestador, 'Encuestador', 'ver')"
-                  >
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    color="accent"
-                    (click)="abrirModal(encuestador, 'Encuestador', 'modificar')"
-                  >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="abrirModal(encuestador, 'Encuestador', 'eliminar')"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
+                  <app-acciones-crud
+                    (ver)="abrirModal(encuestador, 'Encuestador', 'ver')"
+                    (editar)="abrirModal(encuestador, 'Encuestador', 'modificar')"
+                    (eliminar)="abrirModal(encuestador, 'Encuestador', 'eliminar')"
+                  ></app-acciones-crud>
                 </div>
               </div>
             } @empty {
@@ -195,26 +150,15 @@
           <mat-icon class="tab-icon">sentiment_very_satisfied</mat-icon>
         </ng-template>
         <div class="tab-content">
-          <!-- Fila 2: Buscador y Ordenador -->
           <div class="tab-header-actions">
-            <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
-              <mat-label>Buscar por cliente o email...</mat-label>
-              <mat-icon matPrefix>search</mat-icon>
-              <input matInput (input)="terminoBusquedaClientes.set($any($event.target).value)" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
-              <mat-label>Ordenar por</mat-label>
-              <mat-select
-                [value]="ordenClientes()"
-                (selectionChange)="ordenClientes.set($event.value)"
-              >
-                <mat-option value="id_desc">Más recientes primero</mat-option>
-                <mat-option value="id_asc">Más antiguos primero</mat-option>
-                <mat-option value="nombre_asc">Nombre (A - Z)</mat-option>
-                <mat-option value="nombre_desc">Nombre (Z - A)</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <app-buscador-ordenador
+              etiquetaBusqueda="Buscar por cliente o email..."
+              etiquetaNombre="Nombre"
+              [termino]="terminoBusquedaClientes()"
+              (terminoChange)="terminoBusquedaClientes.set($any($event))"
+              [orden]="ordenClientes()"
+              (ordenChange)="ordenClientes.set($any($event))"
+            ></app-buscador-ordenador>
           </div>
 
           <div class="tab-header-actions tab-header-actions-lower">
@@ -228,14 +172,12 @@
               <mat-icon iconPositionEnd>add_reaction</mat-icon>
             </button>
 
-            <mat-button-toggle-group
-              [value]="filtroClientes()"
-              (change)="filtroClientes.set($event.value)"
-            >
-              <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
-              <mat-button-toggle value="ACTIVOS">Activos</mat-button-toggle>
-              <mat-button-toggle value="INACTIVOS">Inactivos</mat-button-toggle>
-            </mat-button-toggle-group>
+            <app-filtro-estado
+              [valor]="filtroClientes()"
+              (valorChange)="filtroClientes.set($any($event))"
+              etiquetaActivos="Activos"
+              etiquetaInactivos="Inactivos"
+            ></app-filtro-estado>
           </div>
 
           <div class="list-grid">
@@ -250,27 +192,11 @@
                   </p>
                 </div>
                 <div class="card-actions">
-                  <button
-                    mat-icon-button
-                    color="primary"
-                    (click)="abrirModal(cliente, 'Cliente', 'ver')"
-                  >
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    color="accent"
-                    (click)="abrirModal(cliente, 'Cliente', 'modificar')"
-                  >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="abrirModal(cliente, 'Cliente', 'eliminar')"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
+                  <app-acciones-crud
+                    (ver)="abrirModal(cliente, 'Cliente', 'ver')"
+                    (editar)="abrirModal(cliente, 'Cliente', 'modificar')"
+                    (eliminar)="abrirModal(cliente, 'Cliente', 'eliminar')"
+                  ></app-acciones-crud>
                 </div>
               </div>
             } @empty {
@@ -290,33 +216,20 @@
         </ng-template>
         <div class="tab-content">
           <div class="tab-header-actions tab-header-actions-encuestador">
-            <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
-              <mat-label>Buscar por título o cliente...</mat-label>
-              <mat-icon matPrefix>search</mat-icon>
-              <input matInput (input)="terminoBusquedaEncuestas.set($any($event.target).value)" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
-              <mat-label>Ordenar por</mat-label>
-              <mat-select
-                [value]="ordenEncuestas()"
-                (selectionChange)="ordenEncuestas.set($event.value)"
-              >
-                <mat-option value="id_desc">Más recientes primero</mat-option>
-                <mat-option value="id_asc">Más antiguas primero</mat-option>
-                <mat-option value="nombre_asc">Título (A - Z)</mat-option>
-                <mat-option value="nombre_desc">Título (Z - A)</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-button-toggle-group
-              [value]="filtroEncuestas()"
-              (change)="filtroEncuestas.set($event.value)"
-            >
-              <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
-              <mat-button-toggle value="ACTIVOS">Activas</mat-button-toggle>
-              <mat-button-toggle value="INACTIVOS">Cerradas</mat-button-toggle>
-            </mat-button-toggle-group>
+            <app-buscador-ordenador
+              etiquetaBusqueda="Buscar por título o cliente..."
+              etiquetaNombre="Título"
+              [termino]="terminoBusquedaEncuestas()"
+              (terminoChange)="terminoBusquedaEncuestas.set($any($event))"
+              [orden]="ordenEncuestas()"
+              (ordenChange)="ordenEncuestas.set($any($event))"
+            ></app-buscador-ordenador>
+            <app-filtro-estado
+              [valor]="filtroEncuestas()"
+              (valorChange)="filtroEncuestas.set($any($event))"
+              etiquetaActivos="Activas"
+              etiquetaInactivos="Cerradas"
+            ></app-filtro-estado>
           </div>
 
           <div class="list-grid">

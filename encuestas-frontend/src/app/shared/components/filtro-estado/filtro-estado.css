@@ -1,0 +1,5 @@
+:host {
+  display: contents;
+}
+
+/* Sin estilos propios: .tab-header-actions y mat-button-toggle-group están en styles.css (globales) */

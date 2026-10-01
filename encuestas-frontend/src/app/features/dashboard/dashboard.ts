@@ -13,6 +13,9 @@ import { RespuestaService } from '../../core/services/respuesta';
 import { UsuarioService } from '../../core/services/usuario';
 import { Modal } from '../../shared/components/modal/modal';
 import { ListaRespuestasPendientes } from '../../shared/components/lista-respuestas-pendientes/lista-respuestas-pendientes';
+import { BuscadorOrdenador } from '../../shared/components/buscador-ordenador/buscador-ordenador';
+import { FiltroEstado } from '../../shared/components/filtro-estado/filtro-estado';
+import { AccionesCrud } from '../../shared/components/acciones-crud/acciones-crud';
 import { Cliente } from '../../shared/models/cliente-interface';
 import { Encuesta } from '../../shared/models/encuesta-interface';
 import { EstadoEncuesta } from '../../shared/models/estado-encuesta';
@@ -22,10 +25,6 @@ import { Usuario } from '../../shared/models/usuario-interface';
 import { EstadoRespuesta } from '../../shared/models/estado-respuesta';
 import { notificarExito, notificarError } from '../../core/utils/notificaciones';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
 
 
@@ -39,12 +38,11 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatIconModule, 
     MatDialogModule, 
     MatSlideToggleModule, 
-    MatButtonToggleModule, 
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     MatBadgeModule,
-    ListaRespuestasPendientes
+    ListaRespuestasPendientes,
+    BuscadorOrdenador,
+    FiltroEstado,
+    AccionesCrud,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

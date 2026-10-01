@@ -1,0 +1,6 @@
+:host {
+  display: contents;
+}
+
+/* Estilos de .buscador, .ordenador, .tab-header-actions están en styles.css (globales)
+   para que alcancen los form-fields que se renderizan dentro de este componente. */

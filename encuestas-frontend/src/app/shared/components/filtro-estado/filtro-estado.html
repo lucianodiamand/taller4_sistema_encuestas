@@ -1,0 +1,5 @@
+<mat-button-toggle-group [value]="valor" (change)="valorChange.emit($event.value)">
+  <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
+  <mat-button-toggle value="ACTIVOS">{{ etiquetaActivos }}</mat-button-toggle>
+  <mat-button-toggle value="INACTIVOS">{{ etiquetaInactivos }}</mat-button-toggle>
+</mat-button-toggle-group>

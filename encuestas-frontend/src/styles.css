@@ -105,3 +105,64 @@
 .tab-content {
   padding: 20px 0;
 }
+
+/* ==========================================================================
+   BUSCADOR, ORDENADOR Y FILTRO ESTADO (COMPONENTES COMPARTIDOS)
+   ========================================================================== */
+.tab-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.tab-header-actions .btn-add,
+.tab-header-actions mat-button-toggle-group {
+  margin: 0;
+}
+
+.tab-header-actions mat-button-toggle-group {
+  height: 35px;
+}
+
+.tab-header-actions .btn-add {
+  height: 40px;
+}
+
+.buscador {
+  flex-grow: 1;
+  max-width: 1000px;
+}
+
+.ordenador {
+  width: 220px;
+}
+
+.buscador .mat-mdc-text-field-wrapper,
+.ordenador .mat-mdc-text-field-wrapper {
+  min-height: 56px;
+}
+
+.buscador .mat-mdc-form-field-flex,
+.ordenador .mat-mdc-form-field-flex {
+  min-height: 56px;
+  align-items: center;
+}
+
+.ordenador .mat-mdc-form-field-flex {
+  height: 40px;
+  align-items: center;
+}
+
+@media (max-width: 820px) {
+  .tab-header-actions-encuestador {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-header-actions-lower {
+    flex-wrap: wrap;
+  }
+}
