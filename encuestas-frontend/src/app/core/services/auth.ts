@@ -1,4 +1,4 @@
-/* Auth Service - soporta backend real (JWT) y modo mock */
+/* Servicio de autenticación (JWT real y modo mock) */
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';

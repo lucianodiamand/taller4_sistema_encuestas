@@ -34,6 +34,14 @@
         <button matButton="filled" class="detalle-titulo-btn" [disabled]="!puedeExportar()" (click)="exportarCsv()">
           <mat-icon iconPositionEnd>download</mat-icon> Exportar CSV
         </button>
+        <div class="detalle-header-acciones">
+          <button matButton="filled" (click)="editarEncuesta()">
+            <mat-icon>edit</mat-icon> Editar
+          </button>
+          <button matButton="tonal" color="warn" (click)="eliminarEncuesta()">
+            <mat-icon>delete</mat-icon> Eliminar
+          </button>
+        </div>
       }
     </div>
 

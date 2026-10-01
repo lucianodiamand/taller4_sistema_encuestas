@@ -1,8 +1,8 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
+// Incluir temas para Angular Material con `mat.theme()`.
+// Este mixin de Sass definirá variables CSS que se usan para dar estilo a los componentes
+// de Angular Material según la especificación de Material 3 Design.
+// Más información sobre temas y cómo usarlos en los componentes personalizados
+// de tu aplicación en https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
 :root {
@@ -20,19 +20,19 @@ html {
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
+  // Establecer por defecto la aplicación en tema de color claro. Se puede cambiar a
+  // `dark` para habilitar el tema oscuro, o a `light dark` para deferir a la
+  // configuración del sistema del usuario.
   color-scheme: light;
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
+  // Establecer un fondo, fuente y colores de texto por defecto para la aplicación usando
+  // las variables CSS a nivel de sistema de Angular Material. Más información sobre estas
+  // variables en https://material.angular.dev/guide/system-variables
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
 
-  // Reset the user agent margin.
+  // Restablecer el margen del user agent.
   margin: 0;
   height: 100%;
 }

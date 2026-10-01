@@ -2,44 +2,11 @@
    SECCIÓN: LISTA DE RESPUESTAS PENDIENTES (COMPONENTE COMPARTIDO)
    ========================================================================== */
 
-/* Lista de tarjetas: una sola columna, cada card ocupa todo el ancho del padre */
-.list-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+/* .list-grid, .card-item, .card-item:hover, .card-info h3, .card-info p
+   ahora están en styles.css (globales). El componente hereda esos estilos. */
 
-/* Cada card: info a la izquierda y botones de acción a la derecha */
-.card-item {
-  background: rgb(253, 253, 253);
-  border: 1px solid #a7a7a7;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.card-item:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
-  transform: translateY(-4px);
-}
-
-.card-info h3 {
-  margin: 0 0 8px 0;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.card-info p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
+/* Variante scoped del componente: caja de fondo para los botones de acción.
+   Gana por especificidad sobre la .card-actions global (plana). */
 .card-actions {
   display: flex;
   align-items: center;

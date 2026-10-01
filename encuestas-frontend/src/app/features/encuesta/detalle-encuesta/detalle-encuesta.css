@@ -55,6 +55,12 @@
   opacity: 0.6;
 }
 
+/* Acciones de cabecera (Editar / Eliminar) para admin */
+.detalle-header-acciones {
+  display: flex;
+  gap: 8px;
+}
+
 /* Responsive: apilar badge y botón QR en pantallas chicas */
 @media (max-width: 640px) {
   .detalle-titulo-row {
@@ -81,7 +87,7 @@
   /* ACÁ: Si querés que sean más cuadradas, bajá este número (ej: 4px) */
   padding: 2px 12px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 600.
 }
 
 .estado-badge.badge-activa {
@@ -142,7 +148,7 @@
 .detail-label {
   color: #666;
   /* Color de los títulos de la lista (ej: "Cliente:") */
-  font-weight: 500;
+  font-weight: 500.
 }
 
 .detail-value {
@@ -151,6 +157,7 @@
   font-weight: 500;
   overflow-wrap: anywhere;
 }
+
 
 /* --- ESTADÍSTICAS (Las cajitas numéricas) --- */
 .stats-grid {
@@ -204,11 +211,12 @@
   /* Color del textito abajo del número */
 }
 
+
 /* --- CÓDIGO QR --- */
 .qr-aviso {
   color: #b3261e;
   font-size: 0.85rem;
-  margin: 8px 0 0 0;
+  margin: 8px 0 0 0.
 }
 
 .qr-resultado {
@@ -262,101 +270,6 @@
   font-size: 0.85rem;
   color: #1976d2;
   /* Color del link */
-}
-
-
-/* ==========================================================================
-   SECCIÓN: DASHBOARD (Y LISTAS DE TARJETAS GLOBALES)
-   ========================================================================== */
-
-.dashboard-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  /* IDEAS ACÁ:
-     - Igual que en el detalle, podés setear tipografías o fondos para toda la pantalla. */
-}
-
-.dashboard-header {
-  margin-bottom: 20px;
-  border-bottom: 2px solid #eee;
-  /* Podés cambiar el grosor (ej: 4px) y el color de esta línea divisoria */
-  padding-bottom: 10px;
-  /* IDEAS ACÁ:
-     - Podrías meterle un color de fondo y un padding para que sea un banner en vez de solo texto.
-     - color: #tuColor; -> Para teñir el texto del header. */
-}
-
-.tab-content {
-  padding: 20px 0;
-}
-
-.btn-add {
-  margin-bottom: 20px;
-  /* IDEAS ACÁ: 
-     Como es un botón de Material (mat-raised-button), algunos estilos se pisan, pero desde acá podés forzar:
-     - border-radius: 20px; -> Hacerlo bien redondito (estilo píldora).
-     - font-size: 1.1rem; -> Agrandar la letra.
-     - box-shadow: 0 4px 6px rgba(0,0,0,0.2); -> Darle sombra extra al botón. */
-}
-
-/* --- TARJETAS (CARDS) COMPARTIDAS ENTRE VISTAS --- */
-.list-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  /* ACÁ: Es el espacio entre tarjeta y tarjeta. Aumentalo si querés que respiren más. */
-}
-
-.card-item {
-  background: white;
-  /* Color del fondo de la tarjeta */
-  border: 1px solid #e0e0e0;
-  /* Color del borde. Podés hacerlo más oscuro si querés. */
-  border-radius: 8px;
-  /* Qué tan redondeadas son las esquinas de la tarjeta */
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  /* Sombrita base. Los números son: movX, movY, difuminado, color(negro al 5% de opacidad) */
-  transition: box-shadow 0.2s ease;
-  /* Esto hace que el cambio al pasar el mouse no sea brusco */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  /* IDEAS ACÁ:
-     - border-left: 6px solid #tuColor; -> Queda muy moderno ponerle un borde gordo de un solo lado a la tarjeta. */
-}
-
-.card-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Sombra más fuerte al pasar el mouse por arriba */
-  /* IDEAS ACÁ:
-     - transform: translateY(-3px); -> Hace que la tarjeta "suba" un poquito cuando la tocás. Queda genial.
-     - border-color: #tuColor; -> Que el borde cambie de color al hacer hover. */
-}
-
-.card-info h3,
-.card-info h4 {
-  margin: 0 0 8px 0;
-  font-size: 1.1rem;
-  color: #333;
-  /* Color del título de la tarjeta (Ej: nombre de la encuesta) */
-}
-
-.card-info p {
-  margin: 0;
-  color: #666;
-  /* Color del texto secundario de la tarjeta */
-  font-size: 0.9rem;
-}
-
-.card-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  /* Distancia entre los botoncitos de acción (el ojito, el tachito) */
-  flex-shrink: 0;
 }
 
 @media (max-width: 480px) {

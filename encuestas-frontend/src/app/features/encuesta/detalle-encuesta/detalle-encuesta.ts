@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/auth';
 import { EncuestaService } from '../../../core/services/encuesta';
 import { RespuestaService } from '../../../core/services/respuesta';
 import { ListaPreguntas } from '../../../shared/components/lista-preguntas/lista-preguntas';
 import { ListaRespuestasPendientes } from '../../../shared/components/lista-respuestas-pendientes/lista-respuestas-pendientes';
+import { Modal } from '../../../shared/components/modal/modal';
 import { Encuesta } from '../../../shared/models/encuesta-interface';
 import { EstadisticasEncuesta } from '../../../shared/models/estadisticas-encuesta';
 import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
@@ -25,6 +27,7 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
     ListaPreguntas,
     MatCardModule,
     ListaRespuestasPendientes,
@@ -39,6 +42,7 @@ export class DetalleEncuesta implements OnInit {
   private encuestaService = inject(EncuestaService);
   private respuestaService = inject(RespuestaService);
   private snack = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   // Exponemos los enums para compararlos en el template
   protected readonly estados = EstadoEncuesta;
@@ -103,6 +107,33 @@ export class DetalleEncuesta implements OnInit {
   // Navega a la página de detalle de respuesta
   verRespuesta(res: RespuestaEncuesta) {
     this.router.navigate(['/respuestas', res.id], { queryParams: { origen: 'encuesta' } });
+  }
+
+  // Navega al editor para modificar la encuesta
+  editarEncuesta() {
+    const enc = this.encuesta();
+    if (enc) this.router.navigate(['/encuestas', enc.id, 'editar']);
+  }
+
+  // Elimina la encuesta tras confirmación con modal
+  eliminarEncuesta() {
+    const enc = this.encuesta();
+    if (!enc) return;
+    const dialogRef = this.dialog.open(Modal, {
+      width: '650px',
+      maxWidth: '90vw',
+      data: { titulo: 'eliminar', tipoAccion: 'eliminar', entidad: enc, tipoEntidad: 'Encuesta' },
+    });
+    dialogRef.afterClosed().subscribe((confirmado) => {
+      if (!confirmado) return;
+      this.encuestaService.eliminar(enc.id).subscribe({
+        next: () => {
+          notificarExito(this.snack, 'Encuesta eliminada correctamente');
+          this.router.navigate(['/dashboard']);
+        },
+        error: () => notificarError(this.snack, 'No se pudo eliminar la encuesta.'),
+      });
+    });
   }
 
   volver() {
