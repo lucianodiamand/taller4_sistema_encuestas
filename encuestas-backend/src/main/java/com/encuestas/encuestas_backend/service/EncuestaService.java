@@ -90,9 +90,6 @@ public class EncuestaService {
         // Regla de negocio: una vez que la encuesta recibió su primera respuesta,
         // ya no se puede editar (evita inconsistencias con respuestas ya guardadas,
         // que hacen referencia a las preguntas por su "orden")
-/*        if (encuesta.getInicializada()) {
-            throw new RuntimeException("No se puede editar una encuesta que ya fue inicializada (recibió respuestas).");
-        }*/
 
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + dto.getClienteId()));
