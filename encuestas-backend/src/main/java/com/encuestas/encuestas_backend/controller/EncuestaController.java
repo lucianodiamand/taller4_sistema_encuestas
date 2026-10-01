@@ -78,5 +78,9 @@ public class EncuestaController {
     public EstadisticasEncuestaDTO obtenerEstadisticas(@PathVariable Long id) {
         return estadisticasService.obtenerEstadisticas(id, authUtil.obtenerUsuarioActual());
     }
-
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Long id) {
+    	encuestaService.eliminar(id);
+    }
+    
 }
