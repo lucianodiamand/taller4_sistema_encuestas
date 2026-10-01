@@ -36,7 +36,7 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 - Puede ver sus propias estádisticas sobre las encuestas respondidas.
 - Revisa las respuestas recibidas: *aprueba o rechaza* cada una.
 
-## 5. Modelo de Entidades (propuesta – 8 entidades)
+## 5. Modelo de Entidades (propuesta – 5 entidades)
 
 | # | Entidad | Descripción |
 |---|---------|-------------|
