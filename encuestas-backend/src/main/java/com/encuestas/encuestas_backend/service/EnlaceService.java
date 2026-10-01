@@ -7,6 +7,7 @@ import com.encuestas.encuestas_backend.repository.EnlaceRepository;
 import com.encuestas.encuestas_backend.repository.EncuestaRepository;
 import com.encuestas.encuestas_backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,9 @@ public class EnlaceService {
 
     @Autowired
     private QrCodeService qrCodeService;
+
+    @Value("${frontend.base-url}")
+    private String frontendBaseUrl;
 
     public EnlaceResponseDTO generar(EnlaceRequestDTO dto, Long encuestadorId) {
         Encuesta encuesta = encuestaRepository.findById(dto.getEncuestaId())
@@ -43,6 +47,7 @@ public class EnlaceService {
         Enlace guardado = enlaceRepository.save(enlace);
 
         EnlaceResponseDTO responseDTO = new EnlaceResponseDTO(guardado);
+        responseDTO.setUrlCompleta(frontendBaseUrl + "/responder/" + guardado.getToken());
         responseDTO.setQrCodeBase64(qrCodeService.generarQrBase64(responseDTO.getUrlCompleta()));
         return responseDTO;
     }
