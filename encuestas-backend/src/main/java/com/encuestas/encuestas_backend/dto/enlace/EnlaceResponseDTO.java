@@ -25,6 +25,6 @@ public class EnlaceResponseDTO {
         this.fechaCreacion = enlace.getFechaCreacion();
         this.encuestaId = enlace.getEncuesta().getId();
         this.encuestaTitulo = enlace.getEncuesta().getTitulo();
-        this.urlCompleta = "http://localhost:4200/responder/" + enlace.getToken(); //TODO: Cambiar esto a una constante? O algo asi x si hay q cambiar en produtsion
+        this.urlCompleta = "http://localhost:4200/responder/" + enlace.getToken(); //TODO: Cambiar esto en produtsion?
     }
 }

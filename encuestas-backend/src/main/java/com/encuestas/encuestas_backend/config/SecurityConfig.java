@@ -51,7 +51,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/publico/**").permitAll()
 
                         // Endpoints protegidos por rol
-                        // TODO: Revisar request en base a roles
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers("/api/clientes/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/estadisticas").hasAnyRole("ADMIN", "ENCUESTADOR")
