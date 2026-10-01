@@ -1,7 +1,8 @@
 <div class="editor-container">
-  <header class="editor-header">
-    <button mat-icon-button color="primary" (click)="volver()" aria-label="Volver">
+  <header class="page-header header">
+    <button mat-stroked-button (click)="volver()" aria-label="Volver">
       <mat-icon>arrow_back</mat-icon>
+      Volver al panel
     </button>
     <h2>{{ getTitulo() }}</h2>
   </header>
@@ -17,6 +18,7 @@
       <mat-card class="editor-card">
         <mat-card-header>
           <mat-card-title>Datos de la encuesta</mat-card-title>
+          <mat-icon>info</mat-icon>
         </mat-card-header>
         <mat-card-content>
           <div class="form-grid">
@@ -53,6 +55,7 @@
       <mat-card class="editor-card">
         <mat-card-header>
           <mat-card-title>Preguntas</mat-card-title>
+          <mat-icon>question_mark</mat-icon>
         </mat-card-header>
         <mat-card-content>
           @if (inicializada()) {

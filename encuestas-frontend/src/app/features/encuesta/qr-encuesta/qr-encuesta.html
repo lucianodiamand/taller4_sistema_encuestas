@@ -43,7 +43,7 @@
         </div>
         }
         <div class="qr-url">
-          <span class="url-texto">{{ link.urlCompleta }}</span>
+          <a href="{{ link.urlCompleta }}" target="_blank" class="url-texto">{{ link.urlCompleta }}</a>
           <button mat-icon-button color="primary" (click)="copiarEnlace()" aria-label="Copiar enlace">
             <mat-icon>content_copy</mat-icon>
           </button>

@@ -1,5 +1,5 @@
 <div class="detalle-container">
-  <header class="page-header header">
+  <header class="page-header">
     <button mat-stroked-button (click)="volver()" aria-label="Volver">
       <mat-icon>arrow_back</mat-icon>
       Volver al panel
@@ -23,7 +23,7 @@
         <button
           matButton="filled"
           color="primary"
-          class="detalle-titulo-btn"
+          class="detalle-titulo-btn detalle-titulo-btn-encuestador"
           [disabled]="enc.estado !== estados.ACTIVA"
           (click)="verQR()"
         >
@@ -31,10 +31,15 @@
         </button>
       }
       @if (esAdministrador) {
-        <button matButton="filled" class="detalle-titulo-btn" [disabled]="!puedeExportar()" (click)="exportarCsv()">
-          <mat-icon iconPositionEnd>download</mat-icon> Exportar CSV
-        </button>
         <div class="detalle-header-acciones">
+          <button
+            matButton="filled"
+            class="detalle-titulo-btn"
+            [disabled]="!puedeExportar()"
+            (click)="exportarCsv()"
+          >
+            <mat-icon iconPositionEnd>download</mat-icon> Exportar CSV
+          </button>
           <button matButton="filled" (click)="editarEncuesta()">
             <mat-icon>edit</mat-icon> Editar
           </button>

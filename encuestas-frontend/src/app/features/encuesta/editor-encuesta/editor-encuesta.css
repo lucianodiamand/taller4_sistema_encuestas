@@ -8,18 +8,6 @@
   margin: 0 auto;
 }
 
-.editor-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.editor-header h2 {
-  margin: 0;
-  color: #333;
-}
-
 .editor-error {
   display: flex;
   flex-direction: column;
@@ -51,6 +39,8 @@
 
 .editor-card mat-card-header {
   padding: 16px 16px 0;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .editor-card mat-card-content {
