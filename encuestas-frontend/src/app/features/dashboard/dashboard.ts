@@ -93,7 +93,6 @@ export class Dashboard implements OnInit {
   cargarDatos() {
     this.encuestaService.obtenerTodas().subscribe((data) => this.encuestas.set(data));
     this.respuestaService.obtenerPendientes().subscribe((data) => {
-      console.log('Respuestas pendientes cargadas: ', data);
       this.respuestasPendientes.set(data);
     });
 
@@ -104,12 +103,6 @@ export class Dashboard implements OnInit {
         this.encuestadores.set(data);
       });
     }
-
-    console.log('Datos cargados: ', {
-      clientes: this.clientes(),
-      encuestas: this.encuestas(),
-      encuestadores: this.encuestadores(),
-    });
   }
 
 // 2. Actualizamos las señales computadas

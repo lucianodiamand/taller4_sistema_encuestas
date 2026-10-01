@@ -194,7 +194,33 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: var(--mat-sys-secondary-container);
-  padding: 6px 16px;
+  background-color: #e2e8f07e;
+  padding: 10px 20px;
   border-radius: 8px;
 }
+
+@media (max-width: 820px) {
+  .tab-header-actions-encuestador {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-info {
+    padding: 10px 12px;
+  }
+
+  .role-badge {
+    line-height: 0rem;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .tab-header-actions-lower {
+    flex-wrap: wrap;
+  }
+}
+

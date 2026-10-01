@@ -358,3 +358,12 @@
   /* Distancia entre los botoncitos de acción (el ojito, el tachito) */
   flex-shrink: 0;
 }
+
+@media (max-width: 480px) {
+  .stats-grid {
+    gap: 4px
+  }
+  .stat-tile {
+    padding: 8px;
+  }
+}

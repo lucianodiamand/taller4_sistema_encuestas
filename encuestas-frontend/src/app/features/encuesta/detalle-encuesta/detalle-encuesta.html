@@ -31,7 +31,7 @@
         </button>
       }
       @if (esAdministrador) {
-        <button matButton="filled" class="detalle-titulo-btn" (click)="exportarCsv()">
+        <button matButton="filled" class="detalle-titulo-btn" [disabled]="!puedeExportar()" (click)="exportarCsv()">
           <mat-icon iconPositionEnd>download</mat-icon> Exportar CSV
         </button>
       }

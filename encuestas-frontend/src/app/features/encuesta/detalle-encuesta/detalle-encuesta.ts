@@ -21,7 +21,14 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-detalle-encuesta',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, ListaPreguntas, MatCardModule, ListaRespuestasPendientes],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    ListaPreguntas,
+    MatCardModule,
+    ListaRespuestasPendientes,
+  ],
   templateUrl: './detalle-encuesta.html',
   styleUrl: './detalle-encuesta.css',
 })
@@ -68,11 +75,11 @@ export class DetalleEncuesta implements OnInit {
       this.encuesta.set(encuesta);
 
       this.cargarEstadisticas(encuesta.id);
-  
+
       if (this.esEncuestador) {
         this.cargarPendientes(encuesta.id);
       }
-    }); 
+    });
   }
 
   private cargarPendientes(encuestaId: number) {
@@ -81,10 +88,10 @@ export class DetalleEncuesta implements OnInit {
     });
   }
 
-  private cargarEstadisticas (encuestaId: number) {
-     this.respuestaService.obtenerEstadisticas(encuestaId).subscribe((stats) => {
-        this.estadisticas.set(stats);
-      });
+  private cargarEstadisticas(encuestaId: number) {
+    this.respuestaService.obtenerEstadisticas(encuestaId).subscribe((stats) => {
+      this.estadisticas.set(stats);
+    });
   }
 
   // Navega a la página QR
@@ -100,6 +107,13 @@ export class DetalleEncuesta implements OnInit {
 
   volver() {
     this.router.navigate(['/dashboard']);
+  }
+
+  puedeExportar(): boolean {
+    const enc = this.encuesta();
+    const aprobadas = this.estadisticas()?.respuestasAprobadas ?? 0;
+
+    return !!enc && enc.estado === EstadoEncuesta.CERRADA && aprobadas > 0;
   }
 
   exportarCsv() {
@@ -118,6 +132,4 @@ export class DetalleEncuesta implements OnInit {
       error: () => notificarError(this.snack, 'No se pudo exportar el CSV.'),
     });
   }
-
-
 }

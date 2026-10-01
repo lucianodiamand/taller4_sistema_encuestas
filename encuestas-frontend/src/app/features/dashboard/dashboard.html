@@ -50,7 +50,7 @@
             </mat-form-field>
           </div>
 
-          <div class="tab-header-actions">
+          <div class="tab-header-actions tab-header-actions-lower">
             <button matButton="filled" color="primary" class="btn-add" (click)="nuevaEncuesta()">
               Nueva Encuesta
               <mat-icon iconPositionEnd>post_add</mat-icon>
@@ -289,11 +289,24 @@
           <mat-icon class="tab-icon">article</mat-icon>
         </ng-template>
         <div class="tab-content">
-          <div class="tab-header-actions">
+          <div class="tab-header-actions tab-header-actions-encuestador">
             <mat-form-field appearance="outline" class="buscador" subscriptSizing="dynamic">
               <mat-label>Buscar por título o cliente...</mat-label>
               <mat-icon matPrefix>search</mat-icon>
               <input matInput (input)="terminoBusquedaEncuestas.set($any($event.target).value)" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="ordenador" subscriptSizing="dynamic">
+              <mat-label>Ordenar por</mat-label>
+              <mat-select
+                [value]="ordenEncuestas()"
+                (selectionChange)="ordenEncuestas.set($event.value)"
+              >
+                <mat-option value="id_desc">Más recientes primero</mat-option>
+                <mat-option value="id_asc">Más antiguas primero</mat-option>
+                <mat-option value="nombre_asc">Título (A - Z)</mat-option>
+                <mat-option value="nombre_desc">Título (Z - A)</mat-option>
+              </mat-select>
             </mat-form-field>
 
             <mat-button-toggle-group
@@ -335,6 +348,7 @@
             [matBadgeHidden]="respuestasPendientes().length === 0"
             matBadgeColor="warn"
             matBadgeOverlap="false"
+            aria-hidden="false"
             >grading</mat-icon
           >
         </ng-template>

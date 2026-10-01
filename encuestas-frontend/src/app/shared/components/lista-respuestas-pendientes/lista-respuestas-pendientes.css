@@ -44,7 +44,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: var(--mat-sys-secondary-container);
-  padding: 6px 16px;
+  background-color: #e2e8f07e;
+  padding: 10px 20px;
   border-radius: 8px;
 }
