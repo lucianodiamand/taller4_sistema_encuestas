@@ -117,23 +117,10 @@
           <h3>Respuestas pendientes de esta encuesta</h3>
           <mat-icon>grading</mat-icon>
         </div>
-        <div class="list-grid">
-          @for (res of pendientes(); track res.id) {
-            <div class="card-item">
-              <div class="card-info">
-                <h3>#{{ res.encuestaId }} - {{ res.encuestaTitulo }}</h3>
-                <p>#{{ res.id }} | {{ res.fechaRespuesta | date: 'dd-MM-yyyy hh:mm' }}</p>
-              </div>
-              <div class="card-actions">
-                <button mat-icon-button color="primary" (click)="verRespuesta(res)">
-                  <mat-icon>visibility</mat-icon>
-                </button>
-              </div>
-            </div>
-          } @empty {
-            <p>No hay respuestas pendientes.</p>
-          }
-        </div>
+        <app-lista-respuestas-pendientes
+          [respuestas]="pendientes()"
+          (ver)="verRespuesta($event)"
+        ></app-lista-respuestas-pendientes>
       </section>
     }
   }

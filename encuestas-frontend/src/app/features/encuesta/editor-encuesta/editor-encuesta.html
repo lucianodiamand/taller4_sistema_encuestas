@@ -36,21 +36,15 @@
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Cliente</mat-label>
               <mat-select formControlName="clienteId">
-                @for (cliente of clientes(); track cliente.id) {
-                  <mat-option [value]="cliente.id">{{ cliente.nombre }}</mat-option>
+                @for (cliente of clientesVisibles(); track cliente.id) {
+                  <mat-option [value]="cliente.id">
+                    {{ cliente.nombre }}{{ !cliente.activo ? ' (inactivo)' : '' }}
+                  </mat-option>
                 }
               </mat-select>
               @if (form.get('clienteId')?.hasError('required') && form.get('clienteId')?.touched) {
                 <mat-error>Selecciona un cliente</mat-error>
               }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Estado</mat-label>
-              <mat-select formControlName="estado">
-                <mat-option [value]="estados.ACTIVA">Activa</mat-option>
-                <mat-option [value]="estados.CERRADA">Cerrada</mat-option>
-              </mat-select>
             </mat-form-field>
           </div>
         </mat-card-content>

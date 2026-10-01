@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/services/auth';
 import { EncuestaService } from '../../../core/services/encuesta';
 import { RespuestaService } from '../../../core/services/respuesta';
 import { ListaPreguntas } from '../../../shared/components/lista-preguntas/lista-preguntas';
+import { ListaRespuestasPendientes } from '../../../shared/components/lista-respuestas-pendientes/lista-respuestas-pendientes';
 import { Encuesta } from '../../../shared/models/encuesta-interface';
 import { EstadisticasEncuesta } from '../../../shared/models/estadisticas-encuesta';
 import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
@@ -20,7 +21,7 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-detalle-encuesta',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, ListaPreguntas, MatCardModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, ListaPreguntas, MatCardModule, ListaRespuestasPendientes],
   templateUrl: './detalle-encuesta.html',
   styleUrl: './detalle-encuesta.css',
 })

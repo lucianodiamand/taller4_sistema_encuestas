@@ -1,0 +1,17 @@
+<div class="list-grid">
+  @for (res of respuestas; track res.id) {
+    <div class="card-item">
+      <div class="card-info">
+        <h3>#{{ res.encuestaId }} - {{ res.encuestaTitulo }}</h3>
+        <p>#{{ res.id }} | {{ res.fechaRespuesta | date: 'dd-MM-yyyy hh:mm' }}</p>
+      </div>
+      <div class="card-actions">
+        <button mat-icon-button color="primary" (click)="ver.emit(res)" aria-label="Ver respuesta">
+          <mat-icon>visibility</mat-icon>
+        </button>
+      </div>
+    </div>
+  } @empty {
+    <p>No hay respuestas pendientes.</p>
+  }
+</div>

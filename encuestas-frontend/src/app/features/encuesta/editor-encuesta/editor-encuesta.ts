@@ -14,7 +14,6 @@ import { ClienteService } from '../../../core/services/cliente';
 import { EncuestaService } from '../../../core/services/encuesta';
 import { AuthService } from '../../../core/services/auth';
 import { Cliente } from '../../../shared/models/cliente-interface';
-import { Encuesta } from '../../../shared/models/encuesta-interface';
 import { EstadoEncuesta } from '../../../shared/models/estado-encuesta';
 import { Pregunta } from '../../../shared/models/pregunta-interface';
 import { TipoPregunta } from '../../../shared/models/tipo-pregunta';
@@ -66,6 +65,7 @@ export class EditorEncuesta implements OnInit {
   errorCarga = false;
   inicializada = signal(false);
   preguntasOriginales: Pregunta[] = [];
+  idClienteOriginal: number | null = null;
 
   form: FormGroup = this.fb.group({
     titulo: ['', Validators.required],
@@ -94,6 +94,7 @@ export class EditorEncuesta implements OnInit {
       }
       this.inicializada.set(encuesta.inicializada === true);
       this.preguntasOriginales = encuesta.preguntas;
+      this.idClienteOriginal = encuesta.clienteId;
       this.form.patchValue({
         titulo: encuesta.titulo,
         descripcion: encuesta.descripcion,
@@ -102,6 +103,12 @@ export class EditorEncuesta implements OnInit {
       });
       this.setPreguntas(encuesta.preguntas);
     });
+  }
+
+  clientesVisibles(): Cliente[] {
+    return this.clientes().filter(
+      (c) => c.activo || (this.modoEdicion && c.id === this.idClienteOriginal),
+    );
   }
 
   get preguntas(): FormArray {

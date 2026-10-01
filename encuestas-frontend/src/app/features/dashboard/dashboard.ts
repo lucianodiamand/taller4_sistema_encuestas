@@ -12,6 +12,7 @@ import { EncuestaService } from '../../core/services/encuesta';
 import { RespuestaService } from '../../core/services/respuesta';
 import { UsuarioService } from '../../core/services/usuario';
 import { Modal } from '../../shared/components/modal/modal';
+import { ListaRespuestasPendientes } from '../../shared/components/lista-respuestas-pendientes/lista-respuestas-pendientes';
 import { Cliente } from '../../shared/models/cliente-interface';
 import { Encuesta } from '../../shared/models/encuesta-interface';
 import { EstadoEncuesta } from '../../shared/models/estado-encuesta';
@@ -42,7 +43,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatBadgeModule
+    MatBadgeModule,
+    ListaRespuestasPendientes
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

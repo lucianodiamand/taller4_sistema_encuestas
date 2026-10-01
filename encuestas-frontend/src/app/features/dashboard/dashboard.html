@@ -339,23 +339,10 @@
           >
         </ng-template>
         <div class="tab-content">
-          <div class="list-grid">
-            @for (res of respuestasPendientes(); track res.id) {
-              <div class="card-item">
-                <div class="card-info">
-                  <h3>#{{ res.encuestaId }} - {{ res.encuestaTitulo }}</h3>
-                  <p>#{{ res.id }} | {{ res.fechaRespuesta | date: 'dd-MM-yyyy hh:mm' }}</p>
-                </div>
-                <div class="card-actions">
-                  <button mat-icon-button color="primary" (click)="verRespuesta(res)">
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                </div>
-              </div>
-            } @empty {
-              <p>No hay respuestas pendientes.</p>
-            }
-          </div>
+          <app-lista-respuestas-pendientes
+            [respuestas]="respuestasPendientes()"
+            (ver)="verRespuesta($event)"
+          ></app-lista-respuestas-pendientes>
         </div>
       </mat-tab>
     }
