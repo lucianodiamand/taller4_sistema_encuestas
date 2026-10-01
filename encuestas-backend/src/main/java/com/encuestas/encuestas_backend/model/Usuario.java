@@ -20,7 +20,7 @@ public class Usuario {
     private String email;
 
     @Column(nullable = false)
-    private String password;   // TODO: Encriptarla Luego
+    private String password;  
 
     @Column(nullable = false)
     private String nombre;

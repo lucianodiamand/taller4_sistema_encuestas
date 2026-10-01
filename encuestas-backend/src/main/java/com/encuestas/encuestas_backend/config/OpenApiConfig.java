@@ -7,13 +7,14 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+// Para usar Swagger/Openapi para generar documentacion automaticamente y probar los endpoints
 
 @Configuration
 public class OpenApiConfig {
 
     @Bean
     public OpenAPI encuestasOpenAPI() {
-        final String schemeName = "bearerAuth";
+        final String schemeName = "bearerAuth"; 
 
         return new OpenAPI()
                 .info(new Info()
@@ -22,6 +23,7 @@ public class OpenApiConfig {
                         .version("1.0"))
 
                 // Define el esquema de seguridad: "esta API se autentica con un Bearer Token tipo JWT"
+              //Para poder poner el Bearer Token en Swagger y probar los endpoint una vez implementada la seguridattt
                 .components(new Components()
                         .addSecuritySchemes(schemeName, new SecurityScheme()
                                 .name(schemeName)

@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: encuestas
+      POSTGRES_USER: encuestas
+      POSTGRES_PASSWORD: encuestas123
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U encuestas -d encuestas"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./encuestas-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/encuestas
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: encuestas
+      SPRING_DATASOURCE_PASSWORD: encuestas123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "false"
+      SPRING_H2_CONSOLE_ENABLED: "false"
+      CORS_ALLOWED_ORIGINS: http://localhost
+      FRONTEND_BASE_URL: http://localhost:80
+      JWT_SECRET: EstaEsUnaClaveMuyMuyMuyMuyLargaDeMasDe32CaracteresPorLoMenosLalalalala
+      # SPRING_SQL_INIT_MODE: always   # ver nota sobre data.sql más abajo
+
+  frontend:
+    build: ./encuestas-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  db_data:

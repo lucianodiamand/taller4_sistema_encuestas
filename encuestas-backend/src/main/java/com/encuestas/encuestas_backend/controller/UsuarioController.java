@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController            // combina @Controller + @ResponseBody: devuelve JSON directamente
 @RequestMapping("/api/usuarios")   // prefijo común para todos los endpoints de esta clase
-public class UsuarioController { //TODO: /api/usuarios recuperar propio usuario y cambiar contrasenia
+public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;

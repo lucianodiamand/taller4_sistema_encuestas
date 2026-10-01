@@ -5,7 +5,24 @@
 .vscode/
 .idea/
 .kilo/
+*.iml
 
 # Archivos basura del Sistema Operativo
 Thumbs.db
 .DS_Store
+
+# Backend (Maven / Spring Boot)
+target/
+*.log
+HELP.md
+
+# Frontend (Angular / Node)
+node_modules/
+dist/
+.angular/
+out-tsc/
+npm-debug.log*
+
+# Variables de entorno y secretos
+.env
+.env.*
