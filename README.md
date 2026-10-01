@@ -41,9 +41,9 @@ El sistema define *2 tipos de usuarios registrados* (los encuestados NO se regis
 | # | Entidad | Descripción |
 |---|---------|-------------|
 | 1 | *Usuario* | Administradores y encuestadores. Contiene credenciales, rol, datos de contacto. |
-| 2 | *Encuestador* | Genera QR de las encuestas, filtra respuestas y las valida. |
-| 3 | *Cliente* | Empresa o persona para la cual se crea una encuesta. |
-| 4 | *Encuesta* | Contenedor de preguntas, asociada a un cliente y a un encuestador (usuario, creador). Tiene estado (activa, cerrada). |
+| 2 | *Cliente* | Empresa o persona para la cual se crea una encuesta. |
+| 3 | *Encuesta* | Contenedor de preguntas, asociada a un cliente y a un encuestador (usuario, creador). Tiene estado (activa, cerrada). |
+| 4 | *Enlace* | Conecta un token de respuesta con una encuesta. |
 | 5 | *RespuestaEncuesta* | Respuesta completa enviada por un encuestado anónimo a través de un enlace. Tiene estado de validación (pendiente, aprobada, rechazada). |
 
 ### Relaciones principales
