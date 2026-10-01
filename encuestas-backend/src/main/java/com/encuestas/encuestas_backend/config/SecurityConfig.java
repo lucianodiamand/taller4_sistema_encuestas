@@ -59,6 +59,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/encuestas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/encuestas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/encuestas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/encuestas/**").hasRole("ADMIN")
                         .requestMatchers("/api/enlaces/**").hasRole("ENCUESTADOR")
                         // .requestMatchers("/api/respuestas/**").hasRole("ENCUESTADOR")
 

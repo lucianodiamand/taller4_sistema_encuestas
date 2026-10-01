@@ -26,7 +26,7 @@ public class EncuestaService {
     private UsuarioRepository usuarioRepository;
 
     public List<EncuestaResponseDTO> listarTodas() {
-        return encuestaRepository.findAll()
+        return encuestaRepository.findByEliminadoFalse()
                 .stream()
                 .map(EncuestaResponseDTO::new)
                 .collect(Collectors.toList());
@@ -35,6 +35,9 @@ public class EncuestaService {
     public EncuestaResponseDTO obtenerPorId(Long id) {
         Encuesta encuesta = encuestaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + id));
+        if (encuesta.getEliminado()){
+            throw new RuntimeException("Esta encuesta ha sido eliminada.");
+        }
         return new EncuestaResponseDTO(encuesta);
     }
 
@@ -63,7 +66,9 @@ public class EncuestaService {
     public EncuestaResponseDTO cambiarEstado(Long id, EstadoEncuesta nuevoEstado) {
         Encuesta encuesta = encuestaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + id));
-
+        if (encuesta.getEliminado()){
+            throw new RuntimeException("No se puede cambiar el estado de una encuesta eliminada.");
+        }
         encuesta.setEstado(nuevoEstado);
         Encuesta actualizada = encuestaRepository.save(encuesta);
         return new EncuestaResponseDTO(actualizada);
@@ -86,6 +91,9 @@ public class EncuestaService {
     public EncuestaResponseDTO editar(Long id, EncuestaEditRequestDTO dto) {
         Encuesta encuesta = encuestaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + id));
+        if (encuesta.getEliminado()){
+            throw new RuntimeException("No se puede editar una encuesta eliminada.");
+        }
 
         // Regla de negocio: una vez que la encuesta recibió su primera respuesta,
         // ya no se puede editar (evita inconsistencias con respuestas ya guardadas,
@@ -109,4 +117,16 @@ public class EncuestaService {
         Encuesta actualizada = encuestaRepository.save(encuesta);
         return new EncuestaResponseDTO(actualizada);
     }
+    
+    public void eliminar(Long id) { //eliminar logico de encuesta 
+        Encuesta encuesta = encuestaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Encuesta no encontrada con id: " + id));
+        if (encuesta.getEliminado()){
+            throw new RuntimeException("Esta encuesta ya ha sido eliminada.");
+        }
+        encuesta.setEliminado(true);
+        encuesta.setEstado(EstadoEncuesta.CERRADA);
+        encuestaRepository.save(encuesta);
+    }
+
 }

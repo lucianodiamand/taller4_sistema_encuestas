@@ -46,4 +46,7 @@ public class Encuesta {
 
     @Column(nullable = false)
     private Boolean inicializada = false;
+    
+    @Column(nullable = false)
+    private Boolean eliminado = false;
 }

@@ -43,7 +43,7 @@ public class ClienteService {
         return new ClienteResponseDTO(guardado);
     }
 
-    //Metodos para editar o desactivar (eliminado soft) un Cliente
+    //Metodos para editar o desactivar un Cliente
     public ClienteResponseDTO editar(Long id, ClienteEditRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + id));
